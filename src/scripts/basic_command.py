@@ -1,6 +1,5 @@
 """Basic Command Interpeter for driving the ESP 32 over serial"""
 
-from os import write
 import serial
 from time import sleep
 
@@ -8,8 +7,7 @@ from time import sleep
 BAUD_RATE = 115200
 
 # Set to whatever device the ESP 32 controller is opperating on
-DEVICE_PATH = "/dev/serial0"
-
+DEVICE_PATH = "/dev/tty.usbmodem1811"
 
 def initiateSerialConnection(s: serial.Serial):
     """Initate communication with ESP32"""
@@ -74,7 +72,6 @@ def genericCommand(s: serial.Serial):
     for line in s.readlines():
         print(line)
 
-    
 def menu(s: serial.Serial):
     """Display a menu with options to control the driver board"""
     print("Welcome to a very basic driver interface for commanding an ESP 32 controller!\n")
@@ -100,16 +97,17 @@ def menu(s: serial.Serial):
     elif user_input == "6":
         genericCommand(s)
 
-
 if __name__ == "__main__":
     # Create the serial device to communicate over
     deviceSerial = serial.Serial(DEVICE_PATH, BAUD_RATE)
 
     initiateSerialConnection(deviceSerial)
+
     try:
         while True:
-            menu(None)
-    except KeyboardInterrupt    :
+            menu(deviceSerial)
+    except KeyboardInterrupt:
+        # Inform the user that a KeyboardInterrupt has occurred and close the serial communication
         print("\nCtrl-C terminated the program")
         deviceSerial.close()
         pass
