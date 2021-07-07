@@ -29,7 +29,7 @@ def goToXY(s: serial.Serial):
     x = input("Input the X Coordinate (mm): ")
     y = input("Input the Y Coordinate (mm): ")
     speed = input("Input the feed rate (mm/min): ")
-    s.write(f"G1 X{x} Y{y} F{speed}\n")
+    s.write(f"$J=X{x} Y{y} F{speed}\n")
     print("GRBL Response: " + s.readline().strip())
 
 def sendGCode(s: serial.Serial):

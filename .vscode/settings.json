@@ -1,6 +1,14 @@
 {
-    "python.pythonPath": "C:\\Users\\Will\\AppData\\Local\\Programs\\Python\\Python39\\python.exe",
+    "python.pythonPath": "/usr/bin/python3",
     "cSpell.words": [
         "roscore"
+    ],
+    "python.autoComplete.extraPaths": [
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/hyperrail/Documents/ROS/HyperRail/HyperRail/src/hyper_rail/src"
+    ],
+    "python.analysis.extraPaths": [
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/hyperrail/Documents/ROS/HyperRail/HyperRail/src/hyper_rail/src"
     ]
 }

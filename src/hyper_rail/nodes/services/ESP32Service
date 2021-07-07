@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+"""Forwards commands along to the ESP32 GRBL to be interpreted"""
+
+from hyper_rail.srv import GRBLService, GRBLServiceResponse, GRBLServiceRequest
+from serial.ESP32_Driver import SerialDriver
+import rospy
+
+SERIAL_DRIVER = None
+
+def on_service_contact(request: GRBLServiceRequest):
+    packet_type = request.command_id
+
+    # If there is data set it if not then there is no data
+    data = request.command_data if (len(request.command_data) > 0) else None
+
+    
+
+def init_node():
+    """Initialize a ROS node to run the service from and then start the service"""
+    global SERIAL_DRIVER
+
+    SERIAL_DRIVER = SerialDriver(115_200, "/dev/tty.usbmodem1811")
+
+    # Start the node to run the service from
+    rospy.init_node("GRBL_Controller_Service")
+
+    # Start the service grbl_controller to handle communication with the ESP 32
+    service = rospy.Service("grbl_controller", GRBLService, handler=on_service_contact)
+
+    # Inform the user that the node and service have been started successfully
+    rospy.loginfo(f"{rospy.get_name()}: awaiting requests...")
+
+    # Wait for requests
+    rospy.spin()
+
+
+if __name__ == "__main__":
+    init_node()
+
+
