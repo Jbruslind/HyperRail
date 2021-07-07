@@ -1,6 +1,6 @@
-# HyperRail - Stripped
+# ROS - Initial
 
-### Contains a stripped version of the overall repository to only contain code and required firmware
+### Initial ROS project setup
 <br>
 
 ### Basic File Structure Information
