@@ -5,15 +5,39 @@ from hyper_rail.srv import GRBLService, GRBLServiceResponse, GRBLServiceRequest
 import rospy
 
 from serial.ESP32_Driver import SerialDriver
-from communication.enums import RequestType
+from communication.enums import RequestType, Axis
 
 SERIAL_DRIVER = None
 
 def on_service_contact(request: GRBLServiceRequest):
+    global SERIAL_DRIVER
     packet_type = request.command_id
 
     # If there is data set it if not then there is no data
     data = request.command_data if (len(request.command_data) > 0) else None
+
+    if packet_type == 0:
+        SERIAL_DRIVER.send_gcode(data)
+    elif packet_type == 1:
+        SERIAL_DRIVER.home_machine(Axis.ALL)
+    elif packet_type == 2:
+        SERIAL_DRIVER.home_machine(Axis.X)
+    elif packet_type == 3:
+        SERIAL_DRIVER.home_machine(Axis.Y)
+    elif packet_type == 4:
+        SERIAL_DRIVER.home_machine(Axis.Z)
+    elif packet_type == 5:
+        SERIAL_DRIVER.sleep()
+    elif packet_type == 6:
+        values = []
+
+        # Create the required list of data to feed to the driver: X, Y and Feed rate
+        values.append(float(data.split(" ")[0].replace("X", "").strip()))
+        values.append(float(data.split(" ")[1].replace("Y", "").strip()))
+        values.append(float(data.split(" ")[2].replace("F", "").strip()))
+        
+        # Drive the ESP32 to that position at the specified rate
+        SERIAL_DRIVER.jog_machine(values[0], values[1], values[2])
 
     
 
