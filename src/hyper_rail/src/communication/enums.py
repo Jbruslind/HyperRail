@@ -1,8 +1,9 @@
-"""Hold a global reference to an enum that maps ESP 32 command requests to integers"""
+"""Holds references to enums to make for easier readability of code"""
 
 from enum import Enum
 
 class RequestType(Enum):
+    """"""
     GCODE = 0           # Standard G-code instruction
     HOME_ALL = 1        # $H
     HOME_X = 2          # $HX
@@ -10,3 +11,10 @@ class RequestType(Enum):
     HOME_Z = 4          # $HZ
     SYSTEM_SLEEP = 5    # $SLP
     JOG = 6             # $J=X<val> Y<val> F<val>
+
+class Axis(Enum):
+    """Represents all possible axis"""
+    ALL = 0
+    X = 1
+    Y = 2
+    Z = 3

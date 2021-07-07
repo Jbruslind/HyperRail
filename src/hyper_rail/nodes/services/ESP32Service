@@ -2,8 +2,10 @@
 """Forwards commands along to the ESP32 GRBL to be interpreted"""
 
 from hyper_rail.srv import GRBLService, GRBLServiceResponse, GRBLServiceRequest
-from serial.ESP32_Driver import SerialDriver
 import rospy
+
+from serial.ESP32_Driver import SerialDriver
+from communication.enums import RequestType
 
 SERIAL_DRIVER = None
 
@@ -19,6 +21,7 @@ def init_node():
     """Initialize a ROS node to run the service from and then start the service"""
     global SERIAL_DRIVER
 
+    # Create a new serial driver 
     SERIAL_DRIVER = SerialDriver(115_200, "/dev/tty.usbmodem1811")
 
     # Start the node to run the service from
