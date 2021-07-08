@@ -9,6 +9,7 @@ class SerialDriver():
     def __init__(self, baud_rate, device_path) -> None:
         self.BaudRate = baud_rate
         self.DevicePath = device_path
+        self.position_poll_type = 1
 
     def initialize_serial_connection(self):
         """Create and open a serial communication to the ESP 32 and send a wake-up packet"""
@@ -18,6 +19,9 @@ class SerialDriver():
 
         # Send the wake-up packet to the ESP 32 driver
         self.send_wakeup()
+
+        # Sent the type of data to return when '?' is sent
+        self.deviceSerial.write(f"$10={self.position_poll_type}")
         
     def close(self):
         """Close the serial communication"""
@@ -70,5 +74,18 @@ class SerialDriver():
 
         # Return the response from the ESP32
         return self.deviceSerial.readline().strip()
+    
+    def _get_status_report(self):
+        """Request and read a status report from the GRBL driver"""
+        self.deviceSerial.write("?\n")
+
+        # Remove line endings from response
+        return map(str.strip, self.deviceSerial.readlines())
+
+    def get_position(self):
+        """TODO: Gets the machines current position"""
+        machine_state = self._get_status_report()
+
+        return None
 
         

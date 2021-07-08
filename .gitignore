@@ -49,3 +49,15 @@ qtcreator-*
 
 # Catkin custom files
 CATKIN_IGNORE
+
+# Python Specific
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Jetbrains Based
+.idea
+
+#VSCode
+c_cpp_properties.json

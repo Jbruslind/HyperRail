@@ -11,6 +11,8 @@ class RequestType(Enum):
     HOME_Z = 4          # $HZ
     SYSTEM_SLEEP = 5    # $SLP
     JOG = 6             # $J=X<val> Y<val> F<val>
+    POSITION = 7        # Get the current machine position; "$10=1, ?"
+    WAKE = 8            # Pull the machine out of sleep
 
 class Axis(Enum):
     """Represents all possible axis"""

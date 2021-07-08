@@ -16,30 +16,52 @@ def on_service_contact(request: GRBLServiceRequest):
     # If there is data set it if not then there is no data
     data = request.command_data if (len(request.command_data) > 0) else None
 
+    # Send generic GCODE 
     if packet_type == 0:
-        SERIAL_DRIVER.send_gcode(data)
+        return GRBLServiceResponse(SERIAL_DRIVER.send_gcode(data))
+
+    # Home all axis of the machine
     elif packet_type == 1:
-        SERIAL_DRIVER.home_machine(Axis.ALL)
+        return GRBLServiceResponse(SERIAL_DRIVER.home_machine(Axis.ALL))
+
+    # Home X axis of the machine
     elif packet_type == 2:
-        SERIAL_DRIVER.home_machine(Axis.X)
+        return GRBLServiceResponse(SERIAL_DRIVER.home_machine(Axis.X))
+
+    # Home Y axis of the machine
     elif packet_type == 3:
-        SERIAL_DRIVER.home_machine(Axis.Y)
+        return GRBLServiceResponse(SERIAL_DRIVER.home_machine(Axis.Y))
+
+    # Home Z axis of the machine
     elif packet_type == 4:
-        SERIAL_DRIVER.home_machine(Axis.Z)
+        return GRBLServiceResponse(SERIAL_DRIVER.home_machine(Axis.Z))
+
+    # Set the ESP32 into a sleep mode
     elif packet_type == 5:
-        SERIAL_DRIVER.sleep()
+        return GRBLServiceResponse(SERIAL_DRIVER.sleep())
+    
+    # Send a jog command to the driver to move to a set position
     elif packet_type == 6:
         values = []
 
         # Create the required list of data to feed to the driver: X, Y and Feed rate
+        # Formated as such: X<value> Y<value> F<value>
         values.append(float(data.split(" ")[0].replace("X", "").strip()))
         values.append(float(data.split(" ")[1].replace("Y", "").strip()))
         values.append(float(data.split(" ")[2].replace("F", "").strip()))
         
         # Drive the ESP32 to that position at the specified rate
-        SERIAL_DRIVER.jog_machine(values[0], values[1], values[2])
+        return GRBLServiceResponse(SERIAL_DRIVER.jog_machine(values[0], values[1], values[2]))
 
+    # Get the current machine position
+    elif packet_type == 7:
+        return GRBLServiceResponse(SERIAL_DRIVER.get_position())
     
+    # Wake-up the machine from sleep
+    elif packet_type == 8:
+        SERIAL_DRIVER.send_wakeup()
+        return GRBLServiceResponse("Attempting Wake-up...")
+
 
 def init_node():
     """Initialize a ROS node to run the service from and then start the service"""
