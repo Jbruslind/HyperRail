@@ -9,6 +9,8 @@ class SerialDriver():
     def __init__(self, baud_rate, device_path) -> None:
         self.BaudRate = baud_rate
         self.DevicePath = device_path
+
+        # Data to return when '?' is sent
         self.position_poll_type = 1
 
     def initialize_serial_connection(self):

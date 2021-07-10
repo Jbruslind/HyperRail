@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 """Forwards commands along to the ESP32 GRBL to be interpreted"""
+"""TODO: If serial communication is getting screwed up add a queue to the serial driver to mitigate conflicts"""
+
+import rospy
 
 from hyper_rail.srv import GRBLService, GRBLServiceResponse, GRBLServiceRequest
-import rospy
+from geometry_msgs.msg import Vector3
 
 from serial.ESP32_Driver import SerialDriver
 from communication.enums import RequestType, Axis
+
 
 SERIAL_DRIVER = None
 
@@ -71,16 +75,29 @@ def init_node():
     SERIAL_DRIVER = SerialDriver(115_200, "/dev/tty.usbmodem1811")
 
     # Start the node to run the service from
-    rospy.init_node("GRBL_Controller_Service")
+    rospy.init_node("GRBL_Controller")
 
     # Start the service grbl_controller to handle communication with the ESP 32
     service = rospy.Service("grbl_controller", GRBLService, handler=on_service_contact)
 
+    # Publish the current position of the machine to a topic
+    publisher = rospy.Publisher("machine_position", Vector3, queue_size=10)
+
+    # Rate at which to publish the position of the "spindle"
+    pub_rate = rospy.Rate(30)
+
     # Inform the user that the node and service have been started successfully
     rospy.loginfo(f"{rospy.get_name()}: awaiting requests...")
 
-    # Wait for requests
-    rospy.spin()
+    while not rospy.is_shutdown():
+        # Get the current position from the controller
+        currentPos = SERIAL_DRIVER.get_position()
+
+        # Publish that to the machine position topic
+        publisher.publish(currentPos[0], currentPos[1], currentPos[2])
+
+        # Repeat 30 times a second
+        pub_rate.sleep()
 
 
 if __name__ == "__main__":
