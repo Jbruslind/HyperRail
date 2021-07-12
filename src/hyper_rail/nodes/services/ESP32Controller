@@ -9,7 +9,7 @@ from hyper_rail.msg import MachinePosition, GCodeFeed
 
 from geometry_msgs.msg import Vector3
 
-from serial.ESP32_Driver import SerialDriver
+from serial_comms.ESP32_Driver import SerialDriver
 from communication.enums import RequestType, Axis
 
 

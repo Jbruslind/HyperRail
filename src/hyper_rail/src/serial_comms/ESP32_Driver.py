@@ -13,6 +13,8 @@ class SerialDriver():
         # Data to return when '?' is sent
         self.position_poll_type = 3
 
+        self.initialize_serial_connection()
+
     def initialize_serial_connection(self):
         """Create and open a serial communication to the ESP 32 and send a wake-up packet"""
 
