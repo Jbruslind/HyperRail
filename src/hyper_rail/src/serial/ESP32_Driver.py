@@ -79,15 +79,28 @@ class SerialDriver():
     
     def _get_status_report(self):
         """Request and read a status report from the GRBL driver"""
+        """Format: <Idle,MPos:X,Y,Z,WPos:X,Y,Z>"""
         self.deviceSerial.write("?\n")
 
         # Remove line endings from response
-        return map(str.strip, self.deviceSerial.readlines())
+        return self.deviceSerial.readline().strip()
 
-    def get_position(self):
-        """TODO: Gets the machines current position"""
+    def get_machine_position(self):
+        """Gets the machines current position"""
         machine_state = self._get_status_report()
 
-        return None
+        # Pulls the X,Y,Z coordinates out of the machine position, and converts the values to floats
+        m_pos = list(map(float, machine_state.split("MPos:")[1].split("WPos:")[0].split(",")))
+        
+        return m_pos
+    
+    def get_work_position(self):
+        """Gets the machines current position with configured offsets"""
+        machine_state = self._get_status_report()
+
+        # Pulls the X,Y,Z coordinates out of the work position, and converts the values to floats
+        w_pos = list(map(float, machine_state.split("WPos:")[1].replace(">", "").split(",")))
+
+        return w_pos
 
         

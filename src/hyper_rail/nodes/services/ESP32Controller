@@ -5,6 +5,8 @@
 import rospy
 
 from hyper_rail.srv import GRBLService, GRBLServiceResponse, GRBLServiceRequest
+from hyper_rail.msg import MachinePosition
+
 from geometry_msgs.msg import Vector3
 
 from serial.ESP32_Driver import SerialDriver
@@ -81,7 +83,7 @@ def init_node():
     service = rospy.Service("grbl_controller", GRBLService, handler=on_service_contact)
 
     # Publish the current position of the machine to a topic
-    publisher = rospy.Publisher("machine_position", Vector3, queue_size=10)
+    publisher = rospy.Publisher("current_position", MachinePosition, queue_size=10)
 
     # Rate at which to publish the position of the "spindle"
     pub_rate = rospy.Rate(30)
@@ -91,10 +93,14 @@ def init_node():
 
     while not rospy.is_shutdown():
         # Get the current position from the controller
-        currentPos = SERIAL_DRIVER.get_position()
+        machinePos = SERIAL_DRIVER.get_machine_position()
+        workPos = SERIAL_DRIVER.get_work_position()
 
-        # Publish that to the machine position topic
-        publisher.publish(currentPos[0], currentPos[1], currentPos[2])
+        # Publish the current position
+        publisher.publish(
+            Vector3(machinePos[0],machinePos[1],machinePos[2]), 
+            Vector3(workPos[0], workPos[1], workPos[2])
+            )
 
         # Repeat 30 times a second
         pub_rate.sleep()
