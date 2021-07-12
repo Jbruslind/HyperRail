@@ -5,3 +5,6 @@ geometry_msgs/Vector3 machinePosition
 
 # The current position with offsets
 geometry_msgs/Vector3 workPosition
+
+# The current running state of the machine
+string runningState

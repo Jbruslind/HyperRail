@@ -11,7 +11,7 @@ class SerialDriver():
         self.DevicePath = device_path
 
         # Data to return when '?' is sent
-        self.position_poll_type = 1
+        self.position_poll_type = 3
 
     def initialize_serial_connection(self):
         """Create and open a serial communication to the ESP 32 and send a wake-up packet"""
@@ -51,6 +51,20 @@ class SerialDriver():
 
         # Return the response from the ESP32
         return self.deviceSerial.readline().strip()
+
+    def hold_feed(self):
+        """Decelerates the machine to a stop and will remain that way until a cycle start is issued"""
+        self.deviceSerial.write("!\n")
+
+        # Return the response from the ESP32
+        return self.deviceSerial.readline().strip()
+    
+    def resume_cycle(self):
+        """Resumes or starts any motion in the machine buffer"""
+        self.deviceSerial.write("~\n")
+
+        # Return the response from the ESP32
+        return self.deviceSerial.readline().strip()
     
     def home_machine(self, axis: Axis):
         """Home the machine on a given axis"""
@@ -77,7 +91,7 @@ class SerialDriver():
         # Return the response from the ESP32
         return self.deviceSerial.readline().strip()
     
-    def _get_status_report(self):
+    def get_status_report(self):
         """Request and read a status report from the GRBL driver"""
         """Format: <Idle,MPos:X,Y,Z,WPos:X,Y,Z>"""
         self.deviceSerial.write("?\n")
@@ -85,22 +99,27 @@ class SerialDriver():
         # Remove line endings from response
         return self.deviceSerial.readline().strip()
 
-    def get_machine_position(self):
+    def get_machine_position(self, state):
         """Gets the machines current position"""
-        machine_state = self._get_status_report()
+        """Format: <Idle,MPos:X,Y,Z,WPos:X,Y,Z>"""
 
         # Pulls the X,Y,Z coordinates out of the machine position, and converts the values to floats
-        m_pos = list(map(float, machine_state.split("MPos:")[1].split("WPos:")[0].split(",")))
+        return list(map(float, state.split("MPos:")[1].split("WPos:")[0].split(",")))
         
-        return m_pos
-    
-    def get_work_position(self):
+    def get_work_position(self, state):
         """Gets the machines current position with configured offsets"""
-        machine_state = self._get_status_report()
+        """Format: <Idle,MPos:X,Y,Z,WPos:X,Y,Z>"""
 
         # Pulls the X,Y,Z coordinates out of the work position, and converts the values to floats
-        w_pos = list(map(float, machine_state.split("WPos:")[1].replace(">", "").split(",")))
+        return list(map(float, state.split("WPos:")[1].replace(">", "").split(",")))
 
-        return w_pos
+    def get_machine_state(self, state):
+        """Gets the machines current running state"""
+        """Format: <Idle,MPos:X,Y,Z,WPos:X,Y,Z>"""
+
+        # Get the current running state of the machine and return it
+        return state.split(",")[0].replace("<", "")
+
+         
 
         

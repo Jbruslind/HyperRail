@@ -13,6 +13,8 @@ class RequestType(Enum):
     JOG = 6             # $J=X<val> Y<val> F<val>
     POSITION = 7        # Get the current machine position; "$10=1, ?"
     WAKE = 8            # Pull the machine out of sleep
+    HOLD = 9            # Stops the current command/code in a controlled manner
+    RESUME = 10         # Resumes/Starts whatever instructions are in the buffer
 
 class Axis(Enum):
     """Represents all possible axis"""

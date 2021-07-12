@@ -5,7 +5,7 @@
 import rospy
 
 from hyper_rail.srv import GRBLService, GRBLServiceResponse, GRBLServiceRequest
-from hyper_rail.msg import MachinePosition
+from hyper_rail.msg import MachinePosition, GCodeFeed
 
 from geometry_msgs.msg import Vector3
 
@@ -22,7 +22,7 @@ def on_service_contact(request: GRBLServiceRequest):
     # If there is data set it if not then there is no data
     data = request.command_data if (len(request.command_data) > 0) else None
 
-    # Send generic GCODE 
+    # Send generic GCODE (Should really only be used for one-liners as the topic should be handling all others)
     if packet_type == 0:
         return GRBLServiceResponse(SERIAL_DRIVER.send_gcode(data))
 
@@ -67,6 +67,20 @@ def on_service_contact(request: GRBLServiceRequest):
     elif packet_type == 8:
         SERIAL_DRIVER.send_wakeup()
         return GRBLServiceResponse("Attempting Wake-up...")
+    
+    # Controlled Stop
+    elif packet_type == 9:
+        return GRBLServiceResponse(SERIAL_DRIVER.hold_feed())
+    
+    # Start/Resume
+    elif packet_type == 10:
+        return GRBLServiceResponse(SERIAL_DRIVER.resume_cycle())
+
+def gcode_handler(data: GCodeFeed):
+    """Recieves and forwards G-code to the driver"""
+
+    # Send the current line of g-code along the device
+    SERIAL_DRIVER.send_gcode(data.code.strip())
 
 
 def init_node():
@@ -79,27 +93,37 @@ def init_node():
     # Start the node to run the service from
     rospy.init_node("GRBL_Controller")
 
-    # Start the service grbl_controller to handle communication with the ESP 32
-    service = rospy.Service("grbl_controller", GRBLService, handler=on_service_contact)
-
     # Publish the current position of the machine to a topic
     publisher = rospy.Publisher("current_position", MachinePosition, queue_size=10)
 
+    # Subscribe to the GCode feeder topic with a large queue as to not lose any g-code segments
+    gcode_sub = rospy.Subscriber('gcode_feeder', GCodeFeed, callback=gcode_handler, queue_size=5000)
+
+    # Start the service grbl_controller to handle communication with the ESP 32
+    service = rospy.Service("grbl_controller", GRBLService, handler=on_service_contact)
+
     # Rate at which to publish the position of the "spindle"
-    pub_rate = rospy.Rate(30)
+    pub_rate = rospy.Rate(50)
 
     # Inform the user that the node and service have been started successfully
     rospy.loginfo(f"{rospy.get_name()}: awaiting requests...")
 
     while not rospy.is_shutdown():
-        # Get the current position from the controller
-        machinePos = SERIAL_DRIVER.get_machine_position()
-        workPos = SERIAL_DRIVER.get_work_position()
+        
+        # Get the current status report
+        status = SERIAL_DRIVER.get_status_report()
+
+        # Parse the current position of the machine
+        machinePos = SERIAL_DRIVER.get_machine_position(status)
+        workPos = SERIAL_DRIVER.get_work_position(status)
+        runningState = SERIAL_DRIVER.get_machine_state(status)
+
 
         # Publish the current position
         publisher.publish(
-            Vector3(machinePos[0],machinePos[1],machinePos[2]), 
-            Vector3(workPos[0], workPos[1], workPos[2])
+            machinePosition=Vector3(machinePos[0],machinePos[1],machinePos[2]), 
+            workPosition=Vector3(workPos[0], workPos[1], workPos[2]),
+            runningState=runningState
             )
 
         # Repeat 30 times a second
