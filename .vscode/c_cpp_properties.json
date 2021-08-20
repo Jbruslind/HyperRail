@@ -6,9 +6,21 @@
         "limitSymbolsToIncludedHeaders": true
       },
       "includePath": [
+        "/home/hyperrail/Documents/ROS/HyperRail/HyperRail/devel/include/**",
         "/opt/ros/noetic/include/**",
         "/usr/include/**",
-        "/home/hyperrail/Documents/ROS/HyperRail/HyperRail/src/eGreenhouse/**"
+        "/home/hyperrail/Downloads/arduino-1.8.15/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/cores/arduino/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/libraries/EEPROM/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/libraries/SPI/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/libraries/SoftwareSerial/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/libraries/Wire/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/avr/include/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/avr/include/avr/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/avr/include/compat/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/avr/include/util/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/lib/gcc/avr/4.*.*/include/",
+        "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/lib/gcc/avr/4.*.*/include-fixed/"
       ],
       "name": "ROS"
     }
