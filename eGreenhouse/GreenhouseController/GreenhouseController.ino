@@ -1,8 +1,12 @@
+//Sensor Libs
 #include <K30.h>
 #include <Adafruit_SHT31.h>
 #include <Adafruit_TSL2591.h>
 
-// CO2 Sensor
+#include <ArduinoJson.h>
+
+
+// CO2 Sensor (RX: 2, TX: 3)
 K30 k30 = K30(2, 3);
 
 // Temperature and Humidity sensor (Docs: https://learn.adafruit.com/adafruit-sht31-d-temperature-and-humidity-sensor-breakout/wiring-and-test)
@@ -32,5 +36,4 @@ void loop(){
     Serial.println("Temperature: " + String(sht31.readTemperature()));
     Serial.println("Humdity: " + String(sht31.readHumidity()));
     Serial.println("Luminosity (Visible): " + String(ts1.getLuminosity(TSL2591_VISIBLE)));
-    delay(20);
 }

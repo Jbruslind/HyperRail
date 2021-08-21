@@ -22,7 +22,8 @@
                 "${workspaceFolder}/eGreenhouse/Adafruit/Adafruit_SHT31-master",
                 "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/libraries/Wire/src",
                 "${workspaceFolder}/eGreenhouse/Adafruit/Adafruit_BusIO-master",
-                "${workspaceFolder}/eGreenhouse/Adafruit/Adafruit_TSL2591_Library-master"
+                "${workspaceFolder}/eGreenhouse/Adafruit/Adafruit_TSL2591_Library-master",
+                "${workspaceFolder}/eGreenhouse/ArduinoJson-6.x/src"
             ],
             "forcedInclude": [],
             "cStandard": "",
