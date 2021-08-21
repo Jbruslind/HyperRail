@@ -16,7 +16,13 @@
                 "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/lib/gcc/avr/7.3.0/include-fixed",
                 "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/avr/include",
                 "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/libraries/SoftwareSerial/src",
-                "${workspaceFolder}/eGreenhouse/K30"
+                "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/libraries/Wire",
+                "${workspaceFolder}/eGreenhouse/K30",
+                "${workspaceFolder}/eGreenhouse/Adafruit/Adafruit_Sensor-master",
+                "${workspaceFolder}/eGreenhouse/Adafruit/Adafruit_SHT31-master",
+                "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/libraries/Wire/src",
+                "${workspaceFolder}/eGreenhouse/Adafruit/Adafruit_BusIO-master",
+                "${workspaceFolder}/eGreenhouse/Adafruit/Adafruit_TSL2591_Library-master"
             ],
             "forcedInclude": [],
             "cStandard": "",
