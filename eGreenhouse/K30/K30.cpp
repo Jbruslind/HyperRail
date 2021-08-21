@@ -11,11 +11,7 @@
 /**
  * Construct a new CO2 object
  */
-K30::K30(int rx, int tx)
-{
-    SoftwareSerial tempSerial(rx, tx);
-    K_30_Serial = &tempSerial;
-}
+K30::K30(int rx, int tx) : K_30_Serial(rx, tx) {}
 
 /**
  * Start reading data from the sensor
@@ -28,8 +24,7 @@ void K30::initSensor()
 /**
  * Attempt to send the request packet to the sensor
  */ 
-unsigned long K30::getCO2Reading()
-{
+unsigned long K30::getCO2Reading() {
     byte response[] = {0,0,0,0,0,0,0};
     byte readCO2[] = {0xFE, 0X44, 0X00, 0X08, 0X02, 0X9F, 0X25};
 
@@ -56,7 +51,7 @@ unsigned long K30::getCO2Reading()
         response[i] = K_30_Serial.read();
     }
 
-    return K30::getValue(response)
+    return K30::getValue(response);
 }
 
 /**

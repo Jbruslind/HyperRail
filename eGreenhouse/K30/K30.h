@@ -3,7 +3,7 @@
  * Created by Will Richards, August 20, 2021
  */
 
-#ifdef K30_h
+#ifndef K30_h
 #define K30_h
 
     #include "Arduino.h"
@@ -17,5 +17,5 @@
         private:
             SoftwareSerial K_30_Serial;
             unsigned long getValue(byte packet[]);
-    }
+    };
 #endif
