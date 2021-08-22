@@ -16,7 +16,7 @@ Adafruit_SHT31 sht31 = Adafruit_SHT31();
 Adafruit_TSL2591 ts1 = Adafruit_TSL2591();
 
 // JSON Configuration
-const int capacity = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(4);
+const int capacity = 223;
 StaticJsonDocument<capacity> doc;
 
 
@@ -59,4 +59,7 @@ void loop(){
 
     // Write the serialized data to the Serial bus
     serializeJson(doc, Serial);
+    
+    //100ms to not overload the microcontroller
+    delay(100);
 }
