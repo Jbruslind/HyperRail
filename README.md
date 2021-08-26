@@ -1,6 +1,6 @@
-# ROS - Initial
+# eGreenhouse 2.0
 
-### Initial ROS project setup
+### Rewrite for cleaner faster eGreenhouse sensor package
 
 The following should be added to your bash.rc or zsh equivalent
 ```Bash
