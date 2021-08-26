@@ -15,6 +15,9 @@ Adafruit_SHT31 sht31 = Adafruit_SHT31();
 // Light Sensor (Docs: https://learn.adafruit.com/adafruit-tsl2591/wiring-and-test)
 Adafruit_TSL2591 ts1 = Adafruit_TSL2591();
 
+// Byte Received when new data is requested
+int inByte = 0;
+
 // JSON Configuration
 const int capacity = 223;
 StaticJsonDocument<capacity> doc;
@@ -22,9 +25,6 @@ StaticJsonDocument<capacity> doc;
 
 void setup(){
     Serial.begin(9600);
-
-    // Wait for the serial port
-    while (!Serial) continue;
 
     // Init sensors for reading
     k30.initSensor();
@@ -44,22 +44,30 @@ void setup(){
 
 void loop(){
 
-    // Get CO2 Data
-    doc[0]["time"] = millis();
-    doc[0]["value"] = k30.getCO2Reading();
+    // Wait until Serial data is received, Single byte (eg. "A") from the controller board and then respond with sensor data
+    if(Serial.available() > 0){
 
-    //Get Temp and humidity data
-    doc[1]["time"] = millis();
-    doc[1]["temp"] = sht31.readTemperature();
-    doc[1]["humidity"] = sht31.readHumidity();
-    
-    // Get luminosity data
-    doc[2]["time"] = millis();
-    doc[2]["value"] = ts1.getLuminosity(TSL2591_VISIBLE);
+        // Read data from serial buffer
+        inByte = Serial.read();
 
-    // Write the serialized data to the Serial bus
-    serializeJson(doc, Serial);
-    
-    //100ms to not overload the microcontroller
-    delay(100);
+        // Get CO2 Data
+        doc[0]["time"] = millis();
+        doc[0]["value"] = k30.getCO2Reading();
+        delay(10);
+
+        //Get Temp and humidity data
+        doc[1]["time"] = millis();
+        doc[1]["temp"] = sht31.readTemperature();
+        doc[1]["humidity"] = sht31.readHumidity();
+
+        delay(10);
+
+        // Get luminosity data
+        doc[2]["time"] = millis();
+        doc[2]["value"] = ts1.getLuminosity(TSL2591_VISIBLE);
+
+
+        // Write the serialized data to the Serial bus
+        serializeJson(doc, Serial);
+    }
 }
