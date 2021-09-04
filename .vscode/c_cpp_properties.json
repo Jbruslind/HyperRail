@@ -50,6 +50,7 @@
                 "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/variants/leonardo",
                 "/home/hyperrail/Downloads/arduino-1.8.15/libraries/K30",
                 "/home/hyperrail/Downloads/arduino-1.8.15/hardware/arduino/avr/libraries/SoftwareSerial/src",
+                "/home/hyperrail/Arduino/libraries/ArduinoJson/src",
                 "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/lib/gcc/avr/7.3.0/include",
                 "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/lib/gcc/avr/7.3.0/include-fixed",
                 "/home/hyperrail/Downloads/arduino-1.8.15/hardware/tools/avr/avr/include"
