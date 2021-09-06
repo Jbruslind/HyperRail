@@ -19,7 +19,7 @@ class SerialDriver():
         """Create and open a serial communication to the ESP 32 and send a wake-up packet"""
 
         # Open a serial connection on the given device at the set baud rate
-        self.deviceSerial = serial.Serial(self.BaudRate, self.DevicePath)
+        self.deviceSerial = serial.Serial(self.DevicePath, self.BaudRate)
 
         # Send the wake-up packet to the ESP 32 driver
         self.send_wakeup()

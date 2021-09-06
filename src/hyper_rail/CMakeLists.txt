@@ -49,6 +49,7 @@ add_message_files(
   FILES
   MachinePosition.msg
   GCodeFeed.msg
+  GreenhouseSensorReadings.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -161,6 +162,7 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
    nodes/services/ESP32Controller
+   nodes/GreenhouseSensorParser
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

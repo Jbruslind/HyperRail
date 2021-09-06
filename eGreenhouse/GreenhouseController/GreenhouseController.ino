@@ -5,6 +5,7 @@
 
 #include <ArduinoJson.h>
 
+// NOTE: In the future we may want to sync the "time" key in the returned JSON object to a synced time with the main controller
 
 // CO2 Sensor (RX: 2, TX: 3)
 K30 k30 = K30(2, 3);

@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+import rospy
+
+from hyper_rail.msg import GreenhouseSensorReadings
+
+def init_node():
+    """Create the ros node an add basic topic functionality (Technical functions are stored in an src file)"""
+    rospy.init_node("eGreenhouseParser")
+
+    # Publisher object to maintain the sensor output topic
+    publisher = rospy.Publisher("greenhouse_sensor_readings", GreenhouseSensorReadings)
+
+    # Pull data from sensor end effector at 105ms intervals
+    publish_rate = rospy.Rate(9.5)
+
+    # Inform the user that the node and service have been started successfully
+    rospy.loginfo(f"{rospy.get_name()}: topic created...")
+
+    # Wait until ros is stopped
+    while not rospy.is_shutdown():
+
+        # Maintain the correct interval for pulling data
+        publish_rate.sleep()
+
+
+if __name__ == "__main__":
+    """Called when the node is started"""
+    init_node()
