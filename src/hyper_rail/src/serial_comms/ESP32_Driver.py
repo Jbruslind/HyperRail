@@ -3,7 +3,7 @@
 import serial
 from time import sleep
 
-from communication.enums import Axis
+from communication.constants import Axis
 
 class SerialDriver():
     def __init__(self, baud_rate, device_path) -> None:

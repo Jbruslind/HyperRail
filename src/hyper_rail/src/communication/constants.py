@@ -1,6 +1,10 @@
-"""Holds references to enums to make for easier readability of code"""
+"""Holds references to constants to make for easier readability of code"""
 
 from enum import Enum
+
+# Device paths for communication over serial
+GREENHOUSE_SENSOR_PORT = "/dev/ttyUSB0"
+GRBL_DRIVER_PORT = "/dev/tty.usbmodem1811"
 
 class RequestType(Enum):
     """"""

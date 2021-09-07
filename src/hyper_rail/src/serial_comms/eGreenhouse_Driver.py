@@ -6,6 +6,7 @@ from time import sleep
 
 from hyper_rail.msg import GreenhouseSensorReadings
 
+
 class GreenhouseDriver():
     def __init__(self, baud_rate, device_path) -> None:
         """

@@ -10,7 +10,7 @@ from hyper_rail.msg import MachinePosition, GCodeFeed
 from geometry_msgs.msg import Vector3
 
 from serial_comms.ESP32_Driver import SerialDriver
-from communication.enums import RequestType, Axis
+from communication.constants import RequestType, Axis, GRBL_DRIVER_PORT
 
 
 SERIAL_DRIVER = None
@@ -88,7 +88,7 @@ def init_node():
     global SERIAL_DRIVER
 
     # Create a new serial driver 
-    SERIAL_DRIVER = SerialDriver(115_200, "/dev/tty.usbmodem1811")
+    SERIAL_DRIVER = SerialDriver(115_200, GRBL_DRIVER_PORT)
 
     # Start the node to run the service from
     rospy.init_node("GRBL_Controller")
