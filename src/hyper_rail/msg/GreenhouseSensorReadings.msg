@@ -1,7 +1,8 @@
 # Represents the current readings from the eGreenhouse package
 
-# The time at which the reading was taken
-float64 reading_time
+# The time at which the readings started being taken and stopped being taken
+float64 start_read_time
+float64 end_read_time
 
 # The current CO2 value (K30)
 float64 co2

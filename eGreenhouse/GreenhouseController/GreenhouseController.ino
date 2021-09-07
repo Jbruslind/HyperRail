@@ -64,8 +64,8 @@ void loop(){
         delay(10);
 
         // Get luminosity data
-        doc[2]["time"] = millis();
         doc[2]["value"] = ts1.getLuminosity(TSL2591_VISIBLE);
+        doc[2]["time"] = millis();
 
 
         // Write the serialized data to the Serial bus

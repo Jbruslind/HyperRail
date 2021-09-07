@@ -32,7 +32,7 @@ class GreenhouseDriver():
 
         return GreenhouseSensorReadings(
             # Pull the time and value for the CO2 sensor
-            reading_time=json_data[0]["time"],
+            start_read_time=json_data[0]["time"],
             co2 = json_data[0]["value"],
 
             # Pull the temp and humidity from the SHT31
@@ -40,5 +40,6 @@ class GreenhouseDriver():
             humidity = json_data[1]["humidity"],
 
             # Pull the light levels from the TSL2591
-            luminosity = json_data[2]["value"]
+            luminosity = json_data[2]["value"],
+            end_read_time = json_data[2]["time"]
             )
