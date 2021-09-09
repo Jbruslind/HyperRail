@@ -8,7 +8,7 @@ from hyper_rail.msg import GreenhouseSensorReadings
 
 
 class GreenhouseDriver():
-    def __init__(self, baud_rate, device_path) -> None:
+    def __init__(self, device_path, baud_rate) -> None:
         """
         Construct a new eGreenhouse Driver
 

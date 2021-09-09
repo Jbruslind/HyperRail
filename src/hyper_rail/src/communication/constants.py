@@ -3,8 +3,8 @@
 from enum import Enum
 
 # Device paths for communication over serial
-GREENHOUSE_SENSOR_PORT = "/dev/ttyUSB0"
-GRBL_DRIVER_PORT = "/dev/tty.usbmodem1811"
+GREENHOUSE_SENSOR_SERIAL = ("/dev/ttyUSB0", 9600)
+GRBL_DRIVER_SERIAL = ("/dev/tty.usbmodem1811", 115200)
 
 class RequestType(Enum):
     """"""

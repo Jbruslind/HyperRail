@@ -6,7 +6,7 @@ from time import sleep
 from communication.constants import Axis
 
 class SerialDriver():
-    def __init__(self, baud_rate, device_path) -> None:
+    def __init__(self, device_path, baud_rate) -> None:
         self.BaudRate = baud_rate
         self.DevicePath = device_path
 
