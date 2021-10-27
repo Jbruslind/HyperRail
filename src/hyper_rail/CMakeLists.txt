@@ -50,12 +50,15 @@ add_message_files(
   MachinePosition.msg
   GCodeFeed.msg
   GreenhouseSensorReadings.msg
+  InstructionFeed.msg
 )
 
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
   GRBLService.srv
+  PathService.srv
+  InterfaceService.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -163,6 +166,9 @@ include_directories(
 catkin_install_python(PROGRAMS
    nodes/services/ESP32Controller
    nodes/GreenhouseSensorParser
+   nodes/PathPlanner
+   nodes/PathInputTester
+   nodes/LocationTester
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

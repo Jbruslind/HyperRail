@@ -1,0 +1,9 @@
+# Structure for packets sent from the LocationTracker to the PathPlanner
+# Tells path planner whent to continue to the next location
+
+# int8 status_id # Tells PathPlanner whether or not to send the next action
+string command_data # Any other required data
+
+---
+
+string path_response # Response from the PathPlanner if any
