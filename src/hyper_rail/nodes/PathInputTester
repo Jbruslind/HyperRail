@@ -9,9 +9,9 @@ from hyper_rail.srv import InterfaceService, InterfaceServiceRequest, InterfaceS
 
 
 def path_client(x):
-    rospy.wait_for_service('InterfaceServiceA')
+    rospy.wait_for_service('interface_service')
     try:
-        message = rospy.ServiceProxy('InterfaceServiceA', InterfaceService)
+        message = rospy.ServiceProxy('interface_service', InterfaceService)
         resp1 = message(x)
         return resp1.path_response
     except rospy.ServiceException as e:

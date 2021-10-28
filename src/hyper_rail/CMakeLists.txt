@@ -59,6 +59,8 @@ add_service_files(
   GRBLService.srv
   PathService.srv
   InterfaceService.srv
+  LocationService.srv
+  SensorService.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -169,6 +171,9 @@ catkin_install_python(PROGRAMS
    nodes/PathPlanner
    nodes/PathInputTester
    nodes/LocationTester
+   nodes/LocationTracker
+   nodes/PositionTester
+   nodes/CameraMock
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

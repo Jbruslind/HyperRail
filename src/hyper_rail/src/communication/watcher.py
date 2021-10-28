@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
+# FIXME: change the name of this file.
+
 import time
 from queue import Queue
 from hyper_rail.srv import PathService, PathServiceRequest
 
 class Watcher:
-    def __init__(self, q):
+    def __init__(self, q, publisher):
         self.q = q
         self.response_status = ""
         self.w = ""
+        self.publisher = publisher
 
     def watch(self):
         while True:
@@ -20,25 +23,25 @@ class Watcher:
                     self.execute(program)
 
     def execute(self, program):
-         print("executing %s"%(program))
-         self.waitForResponse()
-         """
-         To implement:
-         waypoints = db.get(FROM waypoints WHERE programId == program)
-         for w in waypoints:
-             # Either build Gcode or read from a table attribute, whatever we end up storing
-             # Reading Gcode would probably be better because it puts the code creation closer
-             # To the user
-             code = "G0 x{} y{}".format(w.x, w.y)
-             action = w.action
-             publisher.publish(InstructionFeed(code=code, action=action))
-             waitForResponse()
-         """
+        print("executing %s"%(program))
+        self.publisher.publish(action="action", code="code")
+        self.waitForResponse()
+        """
+        To implement:
+        waypoints = db.get(FROM waypoints WHERE programId == program)
+        for w in waypoints:
+            # Either build Gcode or read from a table attribute, whatever we end up storing
+            # Reading Gcode would probably be better because it puts the code creation closer
+            # To the user
+            code = "G0 x{} y{}".format(w.x, w.y)
+            action = w.action
+            publisher.publish(InstructionFeed(code=code, action=action))
+            waitForResponse()
+        """
 
     def waitForResponse(self):
         while True:
             time.sleep(1)
-            print("waiting")
             if self.response_status == "success":
                 print(self.w)
                 self.response_status = ""

@@ -10,36 +10,36 @@ InstructionQueue = Queue()
 
 from hyper_rail.srv import InterfaceService, InterfaceServiceRequest, InterfaceServiceResponse
 from hyper_rail.srv import PathService
-from hyper_rail.msg import GCodeFeed                                                # Message formate for Gcode messages
+from hyper_rail.msg import GCodeFeed, InstructionFeed                                                # Message formate for Gcode messages
 from hyper_rail.msg import MachinePosition                                          # Message format for current position polling
 # from hyper_rail.msg import PathActions
 # from serial_comms.eGreenhouse_Driver import SerialDriver                            # Grbl communication
-from communication.watcher import Watcher                                           # Serial port used by ESP-32
+from communication.watcher import Watcher                                           # Class for keeping track of in progress waypoints
 
 # Called when service receives new request
 def add_to_queue(req: InterfaceService):
-    InstructionQueue.put(req.command_data)
-    print(req.command_data)
-    if req.command_data == "show":
-        while not InstructionQueue.empty():
-            print("i")
-            print(InstructionQueue.get())
+    print(" received", req.program_id)
+    if req.program_id== "show":
+        print("queue currently contains:")
+        for element in list(InstructionQueue.queue):
+            print(element)
+    else:
+        InstructionQueue.put(req.program_id)
     return("received")
 
 def init_node():
     """Create the ros node an add basic topic functionality (Technical functions are stored in an src file)"""
     rospy.init_node("PathPlanner")
 
-    watcher = Watcher(InstructionQueue)
+    # Publisher object to notify the location tracking node of the next destination and action
+    publisher = rospy.Publisher("instructions", InstructionFeed, queue_size=10)
+    watcher = Watcher(InstructionQueue, publisher)
 
     # Service to find out when to send next instruction
-    action_watcher = rospy.Service("action_status", PathService, handler=watcher.setResponse)
-
-    # Publisher object to notify the location tracking node of the next destination and action
-    # publisher = rospy.Publisher("GCodeFeed", PathActions)
+    action_watcher = rospy.Service("action_service", PathService, handler=watcher.setResponse)
 
     # Start the service for receiving commands from the UI
-    service = rospy.Service("InterfaceServiceA", InterfaceService, handler=add_to_queue)
+    service = rospy.Service("interface_service", InterfaceService, handler=add_to_queue)
 
     # Pull data from sensor end effector at 111ms intervals
     # TODO: Don't need to be constantly publishing. Should this be a service/msg instead?

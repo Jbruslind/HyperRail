@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+
+import rospy
+import time
+
+# Figure out the deal with SensorServiceRequest
+from hyper_rail.srv import SensorService, SensorServiceRequest
+
+#Called when service receives new request
+def receive_command(req: SensorServiceRequest):
+    print("Camera Mock: received action:", req.action)
+    for i in range(3):
+        print(i)
+        time.sleep(1)
+    return("success")
+
+
+def init_node():
+    """Create the ros node and basic functionality"""
+    rospy.init_node("CameraMock")
+
+    # Sleep once per second. This may not actually be necessary
+    publish_rate = rospy.Rate(1)
+
+    # Service to receive camera commands
+    service = rospy.Service("camera_service", SensorService, handler=receive_command)
+
+    # Inform the user that the node and service have been started successfully
+    rospy.loginfo(f"{rospy.get_name()}: serial connection established...") 
+
+    while not rospy.is_shutdown():
+        publish_rate.sleep()
+
+if __name__ == "__main__":
+    init_node()

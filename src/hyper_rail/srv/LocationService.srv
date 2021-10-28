@@ -1,7 +1,8 @@
 # Structure for packets sent from the user interface to the PathPlanner
 # Sends the uuid of the program to be executed
 
-string program_id # Any other required data
+string status       # Status sent by location to trigger the next waypoint
+# string waypoint_id # Maybe use for error checking?
 
 ---
 
