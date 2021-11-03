@@ -51,6 +51,7 @@ add_message_files(
   GCodeFeed.msg
   GreenhouseSensorReadings.msg
   InstructionFeed.msg
+  ProgramFeed.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -61,6 +62,7 @@ add_service_files(
   InterfaceService.srv
   LocationService.srv
   SensorService.srv
+  MotionService.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -174,6 +176,9 @@ catkin_install_python(PROGRAMS
    nodes/LocationTracker
    nodes/PositionTester
    nodes/CameraMock
+   nodes/ESPMock
+   nodes/MotionNode
+   nodes/ProgramNode
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

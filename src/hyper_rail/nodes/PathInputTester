@@ -18,7 +18,7 @@ def path_client(x):
         print("Service call failed: %s"%e)
 
 def usage():
-    return "%s [x y]"%sys.argv[0]
+    return "%s [program id placeholder]"%sys.argv[0]
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:

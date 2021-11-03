@@ -1,0 +1,8 @@
+# Structure for packets sent from the Program Node to the Motion Node
+
+int8 x       # x coordinate in mm
+int8 y       # y coordinate in mm
+
+---
+
+string status # location status, should include or change this to an int?

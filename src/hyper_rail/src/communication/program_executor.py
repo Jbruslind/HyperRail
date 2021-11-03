@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
+# This class watches for programs to be added to the queue and executes them as the come in.
 # FIXME: change the name of this file and move to a better spot
 
+import rospy
 import time
 from queue import Queue
-from hyper_rail.srv import PathService, PathServiceRequest
+from hyper_rail.srv import PathService, PathServiceRequest, MotionService
 
 class Watcher:
     def __init__(self, q, publisher):
@@ -12,20 +14,46 @@ class Watcher:
         self.response_status = ""
         self.w = ""
         self.publisher = publisher
+        self.test_program = [{'x': 10, 'y': 15}, {'x': 16, 'y': 21}, {'x': 2, 'y': 13}]
+        self.home_program = [{'x': 0, 'y': 0}]
 
     def watch(self):
         while True:
             # FIXME: change to if not empty once working with database
-            # if not self.q.empty():
-            if self.q.qsize() > 2:
-                while not self.q.empty():
-                    program = self.q.get()
-                    self.execute(program)
+            if not self.q.empty():
+                program = self.q.get()
+                status = self.execute(self.test_program)
+                print(status)
+                self.execute(self.home_program)
+
+    def goTo(self, x, y):
+        rospy.wait_for_service('motion_service')
+        try:
+            message = rospy.ServiceProxy('motion_service', MotionService)
+            resp1 = message(x, y)
+            return resp1.status
+        except rospy.ServiceException as e:
+            print("Service call failed: %s"%e)
+    
+
 
     def execute(self, program):
         print("executing %s"%(program))
-        self.publisher.publish(action="action", code="code")
-        self.waitForResponse()
+
+        # waypoints = db.get(FROM waypoints WHERE programId == program)
+        # for w in waypoints:
+        for w in program:
+            # Go to location
+            print(w)
+            status = self.goTo(w['x'], w['y'])
+            # if status != 'ok':
+                # return 'failed'
+            # else:
+        return 'ok'
+            # Execute Actions
+            # data = self.collectData(w.action)
+            # Save Data
+
         """
         To implement:
         waypoints = db.get(FROM waypoints WHERE programId == program)

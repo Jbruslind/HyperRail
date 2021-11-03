@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+
+"""
+The motion tracker is the event coordinator for the motion/data collection operation.
+It is responsible for keeping track of the location of the end effector, notifying
+the camera and sensor modules when to collect data, updating the database, and
+telling the path planner when to send the next destination to the ESP32
+"""
+
+import rospy
+
+from queue import Queue                                                             # Queue is threadsafe, use for keeping keeping track of Programs
+from threading import Thread                                                        # Each service spins off a request
+from communication.motion_executor import MotionWatcher                             # Class for keeping track of in progress waypoints
+import time
+
+from hyper_rail.srv import MotionService, MotionServiceRequest, MotionServiceResponse
+
+# Probably don't need these, see about using functions available thru ESP32Controller
+from hyper_rail.msg import GCodeFeed                                                # Message formate for Gcode messages
+from hyper_rail.msg import MachinePosition                                          # Message format for current position polling
+# need ESP32Controller for polling
+
+# Track motion, send response when location = destination
+# FIXME: Assume remove this, was going to be used in former design
+# def watch_location(Action: InstructionFeed):
+    # pass
+
+def init_node():
+    """Create the ros node an add basic topic functionality (Technical functions are stored in an src file)"""
+    rospy.init_node("MotionNode")
+
+    # Publisher object to notify the location tracking node of the next destination and action
+    publisher = rospy.Publisher("gcode_feeder", GCodeFeed, queue_size=10)
+
+    # Tracks current location and contains handler functions
+    motionExecutor = MotionWatcher(publisher)
+
+    # Service to find out when to send next instruction
+    motionService = rospy.Service("motion_service", MotionService, handler=motionExecutor.receive_waypoint)
+
+    # TODO: Figure out how concurrency works with topics. Will waypoint and location cause eachother to block at some point?
+    # Subscribe to the GCode feeder topic with a large queue as to not lose any g-code segments
+    location_sub = rospy.Subscriber('current_position', MachinePosition, callback=motionExecutor.update_position, queue_size=5000)
+
+    # Subscribe to waypoint feed
+    # waypoint_sub = rospy.Subscriber("instructions", InstructionFeed, callback=manage_action, queue_size=10)
+
+    # Pull data from sensor end effector at 111ms intervals
+    # TODO: Don't need to be constantly publishing. Should this be a service/msg instead?
+    # Check how publish_rate works. Can probably still publish in an event style and rate just comes into effect if multiple events happen to line up
+    publish_rate = rospy.Rate(1)
+
+    # Inform the user that the node and service have been started successfully
+    rospy.loginfo(f"{rospy.get_name()}: serial connection established...")
+
+    while not rospy.is_shutdown():
+        # Publish the sensor readings to the topic
+        # publisher.publish(greenHouseController.poll_data())
+        
+        # Maintain the correct interval for pulling data
+        publish_rate.sleep()
+
+
+if __name__ == "__main__":
+    """Called when the node is started"""
+    init_node()
