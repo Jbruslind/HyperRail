@@ -176,6 +176,7 @@ catkin_install_python(PROGRAMS
    nodes/LocationTracker
    nodes/PositionTester
    nodes/CameraMock
+   nodes/SensorMock
    nodes/ESPMock
    nodes/MotionNode
    nodes/ProgramNode

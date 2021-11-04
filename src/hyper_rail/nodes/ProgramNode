@@ -1,26 +1,28 @@
 #!/usr/bin/env python3
 
+"""
+This node coordinates the actions of the hyper rail. Receives program ids from the UI
+through the ProgramFeed, sends movement requests to the MotionNode, sends data collection
+requests to the SensorNode and CameraNode.
+"""
+
 import rospy
 
 from queue import Queue                                                             # Queue is threadsafe, use for keeping keeping track of Programs
-from threading import Thread                                                        # Each service spins off a request
+from threading import Thread                                                         
 import time
-
-# FIXME: Looking for a better solution. Making this queue global since it needs to be accessed
-# by 
-InstructionQueue = Queue()
 
 from hyper_rail.srv import InterfaceService, InterfaceServiceRequest, InterfaceServiceResponse
 from hyper_rail.srv import PathService
 
 from hyper_rail.msg import ProgramFeed                                              # Topic that UI publishes to
-from hyper_rail.msg import GCodeFeed, InstructionFeed                               # Message formate for Gcode messages
+from hyper_rail.msg import GCodeFeed, InstructionFeed                               # Message format for Gcode messages FIXME: Verify that these arent being used anymore
 from hyper_rail.msg import MachinePosition                                          # Message format for current position polling
-# from hyper_rail.msg import PathActions
-# from serial_comms.eGreenhouse_Driver import SerialDriver                          # Grbl communication
-from communication.program_executor import Watcher                                           # Class for keeping track of in progress waypoints
+from communication.program_executor import Watcher                                  # Class for keeping track of in progress waypoints
 
-# Called when service receives new request
+InstructionQueue = Queue()
+
+# Called when service receives new program_id through ProgramFeed
 def add_to_queue(req: InterfaceService):
     print(" received", req.program_id)
     if req.program_id== "show":
@@ -33,14 +35,11 @@ def add_to_queue(req: InterfaceService):
 
 def init_node():
     """Create the ros node an add basic topic functionality (Technical functions are stored in an src file)"""
-    rospy.init_node("PathPlanner")
+    rospy.init_node("ProgramNode")
 
     # Publisher object to notify the location tracking node of the next destination and action
     publisher = rospy.Publisher("instructions", InstructionFeed, queue_size=10)
     watcher = Watcher(InstructionQueue, publisher)
-
-    # Service to find out when to send next instruction
-    action_watcher = rospy.Service("action_service", PathService, handler=watcher.setResponse)
 
     # Start the service for receiving commands from the UI
     service = rospy.Service("interface_service", InterfaceService, handler=add_to_queue)
@@ -51,8 +50,6 @@ def init_node():
 
 
     # Pull data from sensor end effector at 111ms intervals
-    # TODO: Don't need to be constantly publishing. Should this be a service/msg instead?
-    # Check how publish_rate works. Can probably still publish in an event style and rate just comes into effect if multiple events happen to line up
     publish_rate = rospy.Rate(1)
 
     # TODO: Channge USB port as it will likely be different on the actual device
@@ -63,9 +60,9 @@ def init_node():
     rospy.loginfo(f"{rospy.get_name()}: serial connection established...")
 
     # Start watcher thread to start processing waypoints when a program is received
-    programWatcher = Thread(target = watcher.watch)
-    programWatcher.daemon = True
-    programWatcher.start()
+    watcherThread= Thread(target = watcher.watch)
+    watcherThread.daemon = True
+    watcherThread.start()
 
     while not rospy.is_shutdown():
         # TODO: Is there anything to use this loop for? is it necessary for the node

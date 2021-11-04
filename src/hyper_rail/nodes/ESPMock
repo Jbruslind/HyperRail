@@ -12,13 +12,14 @@ import time
 from geometry_msgs.msg import Vector3
 from hyper_rail.srv import MotionService, MotionServiceRequest, MotionServiceResponse
 
-# Probably don't need these, see about using functions available thru ESP32Controller
 from hyper_rail.msg import GCodeFeed                                                # Message formate for Gcode messages
 from hyper_rail.msg import MachinePosition                                          # Message format for current position polling
 
+# Initialize 'state'
 machinePos = [0, 0, 0]
 workPos = [0, 0, 0]
 runningState = "ok"
+
 def gcode_handler(data: GCodeFeed):
     print("GCodeFeed Received: ", data.code)
     dest = data.code.split(" ")
@@ -44,7 +45,7 @@ def gcode_handler(data: GCodeFeed):
             machinePos[2] += int(zdiff/abs(zdiff))
             workPos[2] = machinePos[2]
 
-        print("curent position: ", machinePos)
+        print("curent position: {}                           ESP32 Mock".format(machinePos))
         time.sleep(1)
 
 
