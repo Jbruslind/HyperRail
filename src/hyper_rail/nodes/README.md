@@ -17,9 +17,9 @@ The following nodes were used for testing and will ultimately be removed
 * PathPlanner
 * PositionTester 
 
-Related topics and services used by the nodes are located in ../srv and ../msg
+Related topics and services used by the nodes are located in `../srv` and `../msg`
 
-Class definitions used in ProgramNode and MotionNode are located in ../src/communication
+Class definitions used in ProgramNode and MotionNode are located in `../src/communication`
 
 To run the provided nodes and mocks, run `catkin_make` in the root directory then run the following
     rosrun hyper_rail ProgramNode
