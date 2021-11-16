@@ -1,0 +1,7 @@
+<!-- app/sessions/new.html.erb -->
+<%= form_tag(session_path) do |form| %>
+  Password: <%= password_field_tag :password %>
+  <div class="actions">
+    <%= submit_tag 'Log in' %>
+  </div>
+<% end %>

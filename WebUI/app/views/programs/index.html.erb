@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<div class="h1">Programs <%= link_to 'New', new_program_path, class: 'btn btn-xs btn-success' %></div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Total Runs</th>
+      <th>Last Run</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @programs.each do |program| %>
+      <tr>
+        <td><%= link_to program.name, program %></td>
+        <td><%= program.run_count %></td>
+        <td><%= program.last_run_at&.strftime('%Y-%m-%d') || 'never' %></td>
+        <td>
+          <%= link_to 'Edit', edit_program_path(program) %>
+          <%= link_to 'Archive', '#n' unless program.archived? %>
+          <%= link_to 'Destroy', program, method: :delete, data: { confirm: 'Are you sure you wish to delete this program and all associated data?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
