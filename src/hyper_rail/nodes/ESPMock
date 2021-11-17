@@ -46,7 +46,7 @@ def gcode_handler(data: GCodeFeed):
             workPos[2] = machinePos[2]
 
         print("curent position: {}                           ESP32 Mock".format(machinePos))
-        time.sleep(1)
+        time.sleep(0.1)
 
 
 def init_node():

@@ -1,7 +1,7 @@
 # Structure for packets sent from the Program Node to the Motion Node
 
-int8 x       # x coordinate in mm
-int8 y       # y coordinate in mm
+int16 x       # x coordinate in mm
+int16 y       # y coordinate in mm
 
 ---
 

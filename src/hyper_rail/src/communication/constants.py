@@ -26,3 +26,6 @@ class Axis(Enum):
     X = 1
     Y = 2
     Z = 3
+
+# Path database
+DB_PATH = "~/HyperRail/WebUI/db"

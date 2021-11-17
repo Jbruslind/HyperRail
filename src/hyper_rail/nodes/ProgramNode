@@ -50,7 +50,7 @@ def init_node():
 
 
     # Pull data from sensor end effector at 111ms intervals
-    publish_rate = rospy.Rate(1)
+    publish_rate = rospy.Rate(10)
 
     # TODO: Channge USB port as it will likely be different on the actual device
     # Create a new driver object with the baudrate and location pulled from the constants file

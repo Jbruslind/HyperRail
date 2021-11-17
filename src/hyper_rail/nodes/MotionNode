@@ -49,7 +49,7 @@ def init_node():
     # Pull data from sensor end effector at 111ms intervals
     # TODO: Don't need to be constantly publishing. Should this be a service/msg instead?
     # Check how publish_rate works. Can probably still publish in an event style and rate just comes into effect if multiple events happen to line up
-    publish_rate = rospy.Rate(1)
+    publish_rate = rospy.Rate(10)
 
     # Inform the user that the node and service have been started successfully
     rospy.loginfo(f"{rospy.get_name()}: serial connection established...")
