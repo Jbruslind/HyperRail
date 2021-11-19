@@ -64,6 +64,6 @@ class AnalysesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def analysis_params
-      params.fetch(:analysis, {})
+      params.fetch(:analysis).permit(:name)
     end
 end

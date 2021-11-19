@@ -11,7 +11,12 @@
     </div>
   <% end %>
 
-  <h3>This is where we'd put the name field and your SVG magic thingie</h3>
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <h3>This is where we'd put your SVG magic thingie</h3>
   <div class="actions">
     <%= form.submit %>
   </div>
