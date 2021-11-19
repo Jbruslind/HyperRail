@@ -14,6 +14,7 @@
         <% if logged_in? %>
           <li class="active"><%= link_to "Dashboard", root_path %></li>
           <li><%= link_to 'Programs', programs_path %></li>
+          <li><%= link_to 'Analyses', analyses_path %></li>
           <li><a href="#export">Export</a></li>
           <li><%= link_to 'Logout', session_path, method: :delete %></li>
         <% else %>

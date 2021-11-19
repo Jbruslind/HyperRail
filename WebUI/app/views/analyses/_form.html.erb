@@ -1,0 +1,18 @@
+<%= form_with(model: analysis) do |form| %>
+  <% if analysis.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(analysis.errors.count, "error") %> prohibited this analysis from being saved:</h2>
+
+      <ul>
+        <% analysis.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h3>This is where we'd put the name field and your SVG magic thingie</h3>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
