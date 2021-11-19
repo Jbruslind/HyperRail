@@ -1,5 +1,6 @@
 # Clear out all existing data
 Program.destroy_all
+Analysis.destroy_all
 
 # Create some programs
 program1 = Program.create!(name: 'Program 1')
@@ -48,5 +49,15 @@ runs.times do |i|
         end
       end
     end
+  end
+end
+
+# Create 4 Analyses
+4.times do |i|
+  analysis = Analysis.create(name: "Analysis #{i+1}")
+
+  # Create a random number of areas of interest
+  rand(5..15).times do |j|
+    analysis.areas_of_interest.create(x: ((j % 2) + i) * 10, y: (j.div(2)*10), width: 10, height: 10)
   end
 end
