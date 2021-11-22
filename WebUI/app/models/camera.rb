@@ -3,7 +3,7 @@ class Camera
               :fov,     # degrees, like 47º
 
   def self.from_settings
-    new(height_m: Setting.fetch('camera_height'), fov: Setting.fetch('camera_fov'))
+    new(height_m: Setting.fetch('camera_height').to_f, fov: Setting.fetch('camera_fov').to_f)
   end
 
   def initialize(height_m: 1.75, fov: 47)
@@ -15,24 +15,30 @@ class Camera
     Math.tan((fov / 2.0) * (Math::PI / 180)) * height_m * 2
   end
 
-  # Given a camera, return a series of x/y coordinates given the greenhouse dimensions in meters
-  def to_centroids(rail_x: 20, rail_y: 5, crop: 25)
+  def unit_sizes(rail_x: 20, rail_y: 5, crop: 25)
     # Size of image in meters after crop
-    unit_size = width_m * ((100 - crop) / 100.0)
+    sizes = {unit_size: width_m * ((100 - crop) / 100.0)}
 
     # The number of units across in the x/y directions, rounding up to account for overage
-    x_units = (rail_x / unit_size).ceil
-    x_unit_size = rail_x / x_units.to_f
-    y_units = (rail_y / unit_size).ceil
-    y_unit_size = rail_y / y_units.to_f
+    sizes[:x_units] = (rail_x / sizes[:unit_size]).ceil
+    sizes[:x_unit_size] = rail_x / sizes[:x_units].to_f
+    sizes[:y_units] = (rail_y / sizes[:unit_size]).ceil
+    sizes[:y_unit_size] = rail_y / sizes[:y_units].to_f
+
+    sizes
+  end
+
+  # Given a camera, return a series of x/y coordinates given the greenhouse dimensions in meters
+  def to_centroids(rail_x: 20, rail_y: 5, crop: 25)
+    sizes = unit_sizes(rail_x: rail_x, rail_y: rail_y, crop: crop)
 
     # An array of arrays
-    rows = x_units.times.map do |x|
-      y_units.times.map do |y|
+    rows = sizes[:x_units].times.map do |x|
+      sizes[:y_units].times.map do |y|
         # The X and Y units, rounded and offset to be centroids
         [
-          (x*x_unit_size + x_unit_size/2).round(3),
-          (y*y_unit_size + y_unit_size/2).round(3)
+          (x*sizes[:x_unit_size] + sizes[:x_unit_size]/2).round(3),
+          (y*sizes[:y_unit_size] + sizes[:y_unit_size]/2).round(3)
         ]
       end
     end
