@@ -27,5 +27,9 @@ class Axis(Enum):
     Y = 2
     Z = 3
 
-# Path database
+
+
+# Path to database
 DB_PATH = "~/HyperRail/WebUI/db"
+IMAGE_PATH = "~/HyperRail/images"
+IMAGE_OUTPUT_PATH = "~/HyperRail/images/output"

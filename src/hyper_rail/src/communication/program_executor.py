@@ -8,6 +8,7 @@ import time
 from threading import Thread
 from queue import Queue
 from hyper_rail.srv import PathService, PathServiceRequest, MotionService, SensorService
+from stitcher import HRStitcher
 from db_queries import DatabaseReader
 import ast
 
@@ -24,13 +25,12 @@ class Watcher:
 
     def watch(self):
         while True:
-            # FIXME: change to if not empty once working with database
             if not self.q.empty():
                 self.db = DatabaseReader()
                 program = self.q.get()
                 status = self.execute(program)
                 print(status)
-                self.execute(self.home_program)
+                # self.execute(self.home_program)
                 del self.db
 
     # sends the x, y coordinates of a waypoint to the the motion node
@@ -44,7 +44,7 @@ class Watcher:
             print("Service call failed: %s"%e)
     
     # sends the action to the sensor node
-    def sensorAction(self, action):
+    def sensorAction(self, program_run_id, waypoint_id, action):
         print("action: ", action)
         if action == 1:
             srv = 'sensor_service'
@@ -52,8 +52,9 @@ class Watcher:
             srv = 'camera_service'
         rospy.wait_for_service(srv)
         try:
+            print(program_run_id, waypoint_id)
             message = rospy.ServiceProxy(srv, SensorService)
-            resp1 = message(str(action))
+            resp1 = message(program_run_id, waypoint_id, str(action))
             print("%s returned: %s"%(srv, resp1.status))
             return resp1.status
         except rospy.ServiceException as e:
@@ -61,14 +62,14 @@ class Watcher:
 
     def execute(self, program):
         print("executing %s"%(program))
-        # Program lookup will go here
+        # 1. get waypoints for the specified program
+        print("program: {}".format(program))
         waypoints = self.db.get_waypoints_for_program(program)
+        run_id = self.db.create_program_run(program)
 
-        # for w in waypoints:
+        # 2. Execute each waypoint/action
         for w in waypoints:
-            # Go to location
             print(w['actions'])
-            # actions = w['actions'].strip('[]').split(',')
             actions = ast.literal_eval(w['actions'])
             for action in actions:
                 print(action)
@@ -79,10 +80,10 @@ class Watcher:
             for action in actions:
                 print(action)
                 if action == "temperature":
-                    threads.append(Thread(target = self.sensorAction, args=(1,)))
+                    threads.append(Thread(target = self.sensorAction, args=(run_id, w['id'], 1,)))
                     threads[-1].daemon = True
                 elif action == "image":
-                    threads.append(Thread(target = self.sensorAction, args=(2,)))
+                    threads.append(Thread(target = self.sensorAction, args=(run_id, w['id'], 2,)))
                     threads[-1].daemon = True
 
             
@@ -91,19 +92,16 @@ class Watcher:
             
             for t in threads:
                 t.join()
-
-            # if 'action' in w:
-            #     if w['action'] == 3:
-            #         t1 = Thread(target = self.sensorAction, args=(1,))
-            #         t2 = Thread(target = self.sensorAction, args=(2,))
-            #         t1.daemon = True
-            #         t2.daemon = True
-            #         t1.start()
-            #         t2.start()
-            #         t1.join()
-            #         t2.join()
-            #     else:
-            #         status = self.sensorAction(w['action'])
         
+        # 3. Create stitched image
+        # TODO: run_id is being set here for testing with mock data. Remove this line for implementation
+        run_id = 10
+        paths = self.db.get_image_paths(run_id)
+        print(paths)
+        outfile = f"output{run_id}.png"
+        stitcher = HRStitcher(paths, outfile)
+        stitcher.stitch()
+
+
         # TODO: add error handling
         return 'ok'

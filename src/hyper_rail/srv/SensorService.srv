@@ -1,6 +1,8 @@
 # Structure for packets sent from the user interface to the PathPlanner
 # Sends the uuid of the program to be executed
 
+uint32 program_run_id
+uint32 waypoint_id
 string action           # type of action to be sent this is kind of unnecessary, maybe switch with datapoint id?
 
 ---

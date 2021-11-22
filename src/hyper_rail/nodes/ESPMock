@@ -9,6 +9,7 @@ import rospy
 from queue import Queue                                                             # Queue is threadsafe, use for keeping keeping track of Programs
 from threading import Thread                                                        # Each service spins off a request
 import time
+import math
 from geometry_msgs.msg import Vector3
 from hyper_rail.srv import MotionService, MotionServiceRequest, MotionServiceResponse
 
@@ -24,7 +25,7 @@ def gcode_handler(data: GCodeFeed):
     print("GCodeFeed Received: ", data.code)
     dest = data.code.split(" ")
     dest.pop(0)
-    dest = list(map(int, dest))
+    dest = list(map(float, dest))
     print("  Reformatted: ", dest)
     while machinePos != dest:
 
@@ -32,18 +33,27 @@ def gcode_handler(data: GCodeFeed):
         ydiff = dest[1] - machinePos[1]
         zdiff = dest[2] - machinePos[2]
 
+        # Fake movements - set the machine position to the destination.
+        # This will be replaced by actual movements with the ESPController
+        machinePos[0] = dest[0]
+        workPos[0] = machinePos[0]
+        machinePos[1] = dest[1]
+        workPos[1] = machinePos[1]
+        machinePos[2] = dest[2]
+        workPos[2] = machinePos[2]
+
         # Increment each coordinate by 1 until destination is reached
-        if machinePos[0] != dest[0]:
-            machinePos[0] += int(xdiff/abs(xdiff))
-            workPos[0] = machinePos[0]
+        # if not math.isclose(machinePos[0], dest[0], abs_tol=.01):
+        #     machinePos[0] += float(xdiff/abs(xdiff))*(xdiff/2)
+        #     workPos[0] = machinePos[0]
 
-        if machinePos[1] != dest[1]:
-            machinePos[1] += int(ydiff/abs(ydiff))
-            workPos[1] = machinePos[1]
+        # if not math.isclose(machinePos[1], dest[1], abs_tol=.01):
+        #     machinePos[1] += float(ydiff/abs(ydiff))*(ydiff/2)
+        #     workPos[1] = machinePos[1]
 
-        if machinePos[2] != dest[2]:
-            machinePos[2] += int(zdiff/abs(zdiff))
-            workPos[2] = machinePos[2]
+        # if not math.isclose(machinePos[2], dest[2], abs_tol=0.01):
+        #     machinePos[2] += float(zdiff/abs(zdiff))*(zdiff/2)
+        #     workPos[2] = machinePos[2]
 
         print("curent position: {}                           ESP32 Mock".format(machinePos))
         time.sleep(0.1)
