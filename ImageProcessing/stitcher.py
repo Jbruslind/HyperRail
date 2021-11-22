@@ -39,6 +39,9 @@ images = [images1, images2]
 print("[INFO] stitching images...")
 
 i = 0
+
+
+
 for image_arr in images:
 	stitcher = cv2.createStitcher() if imutils.is_cv3() else cv2.Stitcher_create(mode=1)
 	(status, stitched) = stitcher.stitch(image_arr)
@@ -54,3 +57,5 @@ for image_arr in images:
 	else:
 		print("[INFO] image stitching failed ({})".format(status))
 	i += 1
+
+

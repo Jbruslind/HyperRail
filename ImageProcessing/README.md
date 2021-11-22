@@ -1,0 +1,1 @@
+This folder contains some test images and programs for working with image stitching and compositing. It isn't used by any active modules, but is included as a reference in case it is useful in the future
