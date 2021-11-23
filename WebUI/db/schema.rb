@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_31_143759) do
+ActiveRecord::Schema.define(version: 2021_11_19_030801) do
+
+  create_table "analyses", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "area_of_interests", force: :cascade do |t|
+    t.integer "analysis_id", null: false
+    t.integer "x", null: false
+    t.integer "y", null: false
+    t.integer "width", null: false
+    t.integer "height", null: false
+    t.index ["analysis_id"], name: "index_area_of_interests_on_analysis_id"
+  end
 
   create_table "camera_images", force: :cascade do |t|
     t.integer "run_waypoint_id", null: false
@@ -73,6 +88,7 @@ ActiveRecord::Schema.define(version: 2021_10_31_143759) do
     t.index ["program_id", "position"], name: "index_waypoints_on_program_id_and_position", unique: true
   end
 
+  add_foreign_key "area_of_interests", "analyses", on_delete: :cascade
   add_foreign_key "camera_images", "run_waypoints", on_delete: :cascade
   add_foreign_key "program_runs", "programs", on_delete: :cascade
   add_foreign_key "run_waypoints", "program_runs", on_delete: :cascade

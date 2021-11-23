@@ -1,31 +1,36 @@
 # Clear out all existing data
 Program.destroy_all
+Analysis.destroy_all
+Setting.destroy_all
 
-# Create some programs
-program1 = Program.create!(name: 'Program 1')
-program2 = Program.create!(name: 'Program 2', last_run_at: Time.now)
-program3 = Program.create!(name: 'Program 3', last_run_at: 5.days.ago, archived_at: 1.days.ago)
+# Create default settings
+{
+  'password' => 'default-password',
+  'rail_x' => '20',
+  'rail_y' => '5',
+  'camera_height' => '1.75',
+  'camera_fov' => '47',
+  'camera_crop' => '25',
+}.each do |name, value|
+  Setting.create name: name, value: value
+end
 
-# Create a number of waypoints for each program
-10.times do |i|
-  program1.waypoints.create!(position: i, x: (i.div(2)*100), y: (i % 2) * 100, actions: ['image', 'temperature'])
-  program2.waypoints.create!(position: i, x: (i.div(2)*100), y: (i % 2) * 100, actions: ['humidity', 'lux'])
-end
-10.times do |i|
-  program3.waypoints.create!(position: i, x: (i.div(2)*100), y: (i % 2) * 100 + 200, actions: ['image', 'temperature', 'humidity', 'lux'])
-end
+# Create a default program
+program = Program.create_from_settings
+program.last_run_at = 1.day.ago
+program.save!
 
 # Now create a number of program runs for each program
 runs = 5
 runs.times do |i|
-  [program2, program3].each do |program|
+  Program.transaction do
     run = program.runs.create!(
       started_at: program.last_run_at - (runs-i).days,
       finished_at: program.last_run_at - (runs-i).days + 1.hours
     )
 
     # For each run, create a set of program_run_waypoints
-    program1.waypoints.each.with_index do |waypoint, idx|
+    program.waypoints.each.with_index do |waypoint, idx|
       run_waypoint = run.run_waypoints.create!(
         waypoint: waypoint,
         x: waypoint.x,
@@ -47,6 +52,26 @@ runs.times do |i|
           # TODO: Seed images here once we figure out how
         end
       end
+    end
+  end
+end
+
+# Create 4 Analyses
+camera = Camera.from_settings
+centroids = []
+camera.to_centroids.each do |row|
+  centroids.concat(row)
+end
+sizes = camera.unit_sizes
+
+4.times do |i|
+  Analysis.transaction do
+    analysis = Analysis.create(name: "Analysis #{i+1}")
+
+    # Create a random number of areas of interest
+    rand(5..15).times do |j|
+      sample = centroids.sample
+      analysis.areas_of_interest.create(x: sample[0], y: sample[1], width: sizes[:x_unit_size], height: sizes[:y_unit_size])
     end
   end
 end

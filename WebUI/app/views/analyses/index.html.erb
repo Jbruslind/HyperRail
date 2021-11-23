@@ -1,0 +1,24 @@
+<div class="h1">Analyses <%= link_to 'New', new_analysis_path, class: 'btn btn-xs btn-success' %></div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Created</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @analyses.each do |analysis| %>
+      <tr>
+        <td><%= link_to analysis.name, analysis %></td>
+        <td><%= analysis.created_at.strftime('%Y-%m-%d') %></td>
+        <td>
+          <%= link_to 'Edit', edit_analysis_path(analysis) %>
+          <%= link_to 'Destroy', analysis, method: :delete, data: { confirm: 'Are you sure you wish to delete this analysis?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
