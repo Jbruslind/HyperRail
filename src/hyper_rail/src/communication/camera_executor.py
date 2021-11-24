@@ -13,6 +13,7 @@ from hyper_rail.srv import PathService, PathServiceRequest, MotionService, Senso
 from stitcher import HRStitcher
 from db_queries import DatabaseReader
 from communication.constants import DEFAULT_CAMERA_HOST
+from src.db_queries import DatabaseReader
 import requests
 from requests.exceptions import HTTPError
 import sqlite3
@@ -23,6 +24,35 @@ from pathlib import Path, PosixPath
 # side note: not sure if this go in constants since it is very particular to this class.
 #  (or if should even be a constant?)
 CAPTURE_PARAMS = "/capture?store_capture=true&cache_jpeg=31&cache_raw=31&block=true:"
+
+# will take this away at some point, just using for testing. might just put in a another file.
+TEST_FILE_RESPONSE =  {
+        "status" : "complete",
+        "id" : "i89jfi73irj49f74",
+        "time" : "2014-10-08T20:27:16.321Z",
+        "jpeg_cache_path" : {
+            "1" : "/images/i89jfi73irj49f74_1.jpg",
+            "2" : "/images/i89jfi73irj49f74_2.jpg",
+            "5" : "/images/i89jfi73irj49f74_5.jpg"
+        },
+        "raw_cache_path" : {
+            "1" : "/images/i89jfi73irj49f74_1.tif",
+            "2" : "/images/i89jfi73irj49f74_2.tif",
+            "5" : "/images/i89jfi73irj49f74_5.tif"
+        },
+        "jpeg_storage_path" : {
+            "1" : "/files/0021SET/000/IMG_0000_1.jpg",
+            "2" : "/files/0021SET/000/IMG_0000_2.jpg",
+            "3" : "/files/0021SET/000/IMG_0000_3.jpg",
+            "4" : "/files/0021SET/000/IMG_0000_4.jpg"
+        },
+        "raw_storage_path" : {
+            "1" : "/files/0021SET/000/IMG_0000_1.tif",
+            "2" : "/files/0021SET/000/IMG_0000_2.tif",
+            "3" : "/files/0021SET/000/IMG_0000_3.tif",
+            "4" : "/files/0021SET/000/IMG_0000_4.tif"
+        }
+    }
 
 class Camera:
     def __init__(self, root=None, program_id=None, waypoint_id=None):
@@ -81,7 +111,45 @@ class Micasense(Camera):
 
     #TODO: utilize the branch ros_camera to finish this
     def transfer_to_local_storage(self):
-        pass
+        # storage_path_files = get_capture(id)
+        # replace this with get_capture(id)
+        storage_path_files = TEST_FILE_RESPONSE
+        # get the directory path for run from param
+        self.add_micasense_images(storage_path_files['raw_storage_path'])
+
+    #TODO: make more progress on micasense images, need to add details
+    def add_micasense_images(self, image_paths):
+        print(image_paths)
+        # iterates through dictionary and write to running program path directories
+        count = 1
+        for key in image_paths:
+            image_name_path = image_paths[str(count)].split('/')
+            print(image_paths[str(count)])
+            try:
+                r = requests.get(self.host + image_paths[str(count)], stream=True,  timeout=(1, 3)) # this makes a request to get data from SD
+                print(self.host + image_paths[str(count)])
+                # get image name
+                with open(self.image_path + image_name_path[4], 'wb') as f:
+                    for chunk in r.iter_content(10240):
+                        f.write(chunk)
+
+                camera_dict = {
+                    'run_waypoint_id': "", 
+                    'camera_name': "", 
+                    'image_type': "",
+                    'uri': "",
+                    'metadata': ""}
+                # TODO: post the image to the sql-Lite database
+                DatabaseReader.add_image(camera_dict)
+
+                r = requests.get(self.host + "deletefile/%s" % image_paths[str(count)], timeout=(1, 3) )
+                count = count + 1        
+            except requests.exceptions.RequestException as e:
+                print("Error: " + str(e))
+    
+
+
+        
 
     def set_camera_host(self, host):
         if host == '' or host != str(host):
