@@ -84,7 +84,7 @@ class Micasense(Camera):
         pass
 
     def set_camera_host(self, host):
-        if host == '' and host != str(host):
+        if host == '' or host != str(host):
             return DEFAULT_CAMERA_HOST
         else:
             self.host = host
