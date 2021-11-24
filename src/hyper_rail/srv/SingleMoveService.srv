@@ -1,0 +1,18 @@
+# Structure for packets sent from the user interface to the PathPlanner
+# Sends the uuid of the program to be executed
+
+string gcode         
+
+---
+
+string gcode_sent # Whether or not the data collection was successful
+# string data # A json string containing:
+#                    {
+#                        type: <img>, <environ>,
+#                        data: {
+#                            [filepath: <absolute_path>]
+#                            [temp: float,
+#                            humidity: float,
+#                            CO2: float]
+#                        }
+#                    }
