@@ -43,12 +43,10 @@ class MotionWatcher:
         angle = math.atan2(y_distance, x_distance)
         x_inc = 5 * math.cos(angle)
         y_inc = 5 * math.sin(angle)
-        print("xinc {} yinc{}".format(x_inc, y_inc))
+        print("x-increment {} y-increment{}".format(round(x_inc, 5), round(y_inc, 5)))
 
 
         while abs(x_dest - x) > x_inc or abs(y_dest - y) > y_inc:
-            print("x: {} x dest: {} x_inc: {}".format(x, x_dest, x_inc))
-            print("y: {} y dest: {} y_inc: {}".format(y, y_dest, y_inc))
             if x_dest - (x) > 0:
                 x += x_inc
             elif x_dest - (x) < 0:
@@ -57,7 +55,7 @@ class MotionWatcher:
                 y += y_inc 
             elif y_dest - (y ) < 0:
                 y -= y_inc 
-            next_code = "G00 {} {} 0".format(x, y)
+            next_code = "G00 {} {} 0".format(round(x, 5), round(y, 5))
             print(next_code)
             codes.append(next_code)
             time.sleep(0.1)
@@ -65,9 +63,10 @@ class MotionWatcher:
         if not math.isclose(x, x_dest, abs_tol=0.001) or not math.isclose(y, y_dest, abs_tol=0.001):
             x = x_dest
             y = y_dest
-            codes.append("G00 {} {} 0".format(x, y))
+            codes.append("G00 {} {} 0".format(round(x, 5), round(y, 5)))
 
 
+        # NOTE: Superceded, remove this section
         # Split dest - curr up into 5 cm segments in x then y direction
         # Create GCode for each and add to codes list
         # while x != req.x:
@@ -84,7 +83,6 @@ class MotionWatcher:
         #         y -= min(5, y - req.y)
         #     codes.append("G00 {} {} 0".format(x, y))
 
-        # print(codes)
         for code in codes:
             self.publisher.publish(code)
             self.publish_rate.sleep()

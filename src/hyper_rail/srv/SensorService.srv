@@ -2,7 +2,7 @@
 # Sends the uuid of the program to be executed
 
 uint32 program_run_id
-uint32 waypoint_id
+uint32 run_waypoint_id
 string action           # type of action to be sent this is kind of unnecessary, maybe switch with datapoint id?
 
 ---

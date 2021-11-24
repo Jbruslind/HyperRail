@@ -11,6 +11,7 @@ from hyper_rail.srv import PathService, PathServiceRequest, MotionService, Senso
 from stitcher import HRStitcher
 from db_queries import DatabaseReader
 import ast
+import os
 
 class Watcher:
     def __init__(self, q, publisher):
@@ -44,24 +45,29 @@ class Watcher:
             print("Service call failed: %s"%e)
     
     # sends the action to the sensor node
-    def sensorAction(self, program_run_id, waypoint_id, action):
+    def sensorAction(self, program_run_id, run_waypoint_id, action):
         print("action: ", action)
-        if action == 1:
+        if action == "temperature":
             srv = 'sensor_service'
-        elif action == 2:
+        elif action == "image":
             srv = 'camera_service'
+        elif action == "humidity":
+            print("Humidity not available")
+            return 
+        elif action == "lux":
+            print("Lux not available")
+            return
+
         rospy.wait_for_service(srv)
         try:
-            print(program_run_id, waypoint_id)
             message = rospy.ServiceProxy(srv, SensorService)
-            resp1 = message(program_run_id, waypoint_id, str(action))
+            resp1 = message(program_run_id, run_waypoint_id, str(action))
             print("%s returned: %s"%(srv, resp1.status))
             return resp1.status
         except rospy.ServiceException as e:
             print("Service call failed: %s"%e)
 
     def execute(self, program):
-        print("executing %s"%(program))
         # 1. get waypoints for the specified program
         print("program: {}".format(program))
         waypoints = self.db.get_waypoints_for_program(program)
@@ -69,22 +75,30 @@ class Watcher:
 
         # 2. Execute each waypoint/action
         for w in waypoints:
-            print(w['actions'])
+            print(f"\nExecuting waypoint {w['id']}, actions: {w['actions']}\n")
             actions = ast.literal_eval(w['actions'])
-            for action in actions:
-                print(action)
+            # for action in actions:
+            #     print(action)
 
             status = self.goTo(w['x'], w['y'])
+            run_waypoint_id = self.db.create_run_waypoint_id(w['id'], run_id, w['x'], w['y'], w['z'])
+            #TODO: Need to create run waypoints to send to camera node
 
             threads = []
             for action in actions:
-                print(action)
-                if action == "temperature":
-                    threads.append(Thread(target = self.sensorAction, args=(run_id, w['id'], 1,)))
-                    threads[-1].daemon = True
-                elif action == "image":
-                    threads.append(Thread(target = self.sensorAction, args=(run_id, w['id'], 2,)))
-                    threads[-1].daemon = True
+                threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, action,)))
+                # if action == "temperature":
+                #     threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, 1,)))
+                #     threads[-1].daemon = True
+                # elif action == "image":
+                #     threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, 2,)))
+                #     threads[-1].daemon = True
+                # elif action == "humidity":
+                #     threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, 3,)))
+                #     threads[-1].daemon = True
+                # elif action == "lux":
+                #     threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, 4,)))
+                #     threads[-1].daemon = True
 
             
             for t in threads:
@@ -92,16 +106,29 @@ class Watcher:
             
             for t in threads:
                 t.join()
+            
+        self.db.update_run_waypoint_id_finished(run_waypoint_id)
         
         # 3. Create stitched image
-        # TODO: run_id is being set here for testing with mock data. Remove this line for implementation
         run_id = 10
-        paths = self.db.get_image_paths(run_id)
-        print(paths)
-        outfile = f"output{run_id}.png"
-        stitcher = HRStitcher(paths, outfile)
-        stitcher.stitch()
+        image_types = self.db.get_image_types_for_program_run(run_id)
+        print(image_types)
+        for t in image_types:
 
+            #TODO: Need to handle each type of image - get image types for program run. for each type, stitch
+            # TODO: run_id is being set here for testing with mock data. Remove this line for implementation
+            paths = self.db.get_image_paths(run_id, t['image_type'])
+            relative_paths = []
+            for path in paths:
+                relative_paths.append(f"{run_id}/{t['image_type']}/{path}")
+            print(relative_paths)
+            dir = f"{run_id}/{t['image_type']}"
 
+            outfile = f"{t['image_type']}_stitch.tiff"
+            stitcher = HRStitcher(paths, outfile, dir)
+            stitcher.stitch()
+
+        self.db.update_program_run_finished(run_id)
+        # TODO: Add update to include the finished_at time for program_run
         # TODO: add error handling
         return 'ok'

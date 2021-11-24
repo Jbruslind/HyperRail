@@ -26,7 +26,6 @@ def gcode_handler(data: GCodeFeed):
     dest = data.code.split(" ")
     dest.pop(0)
     dest = list(map(float, dest))
-    print("  Reformatted: ", dest)
     while machinePos != dest:
 
         xdiff = dest[0] - machinePos[0]
@@ -55,8 +54,8 @@ def gcode_handler(data: GCodeFeed):
         #     machinePos[2] += float(zdiff/abs(zdiff))*(zdiff/2)
         #     workPos[2] = machinePos[2]
 
-        print("curent position: {}                           ESP32 Mock".format(machinePos))
-        time.sleep(0.1)
+        print("position updated to: {}                           ESP32 Mock\n".format(machinePos))
+        time.sleep(0.2)
 
 
 def init_node():

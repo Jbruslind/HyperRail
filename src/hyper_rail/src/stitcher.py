@@ -8,9 +8,12 @@ import cv2
 from communication.constants import IMAGE_PATH, IMAGE_OUTPUT_PATH
 
 class HRStitcher():
-	def __init__(self, args, out):
+	def __init__(self, args, out, dir):
 		self.image_paths = args
 		self.output_file = out
+		self.output_dir = f"{os.path.expanduser(IMAGE_OUTPUT_PATH)}/{dir}"
+		print(self.output_dir)
+		os.makedirs(self.output_dir, exist_ok=True)
 		pass
 
 	def stitch(self):
@@ -35,7 +38,9 @@ class HRStitcher():
 
 		stitcher = cv2.createStitcher() if imutils.is_cv3() else cv2.Stitcher_create(mode=1)
 		(status, stitched) = stitcher.stitch(images)
-		path = (str(os.path.join(os.path.expanduser(IMAGE_OUTPUT_PATH), self.output_file)))
+		path = (str(os.path.join(self.output_dir, self.output_file)))
+		# FIXME: makesure the above path is good to go and delete the version below
+		# path = (str(os.path.join(os.path.expanduser(IMAGE_OUTPUT_PATH), self.output_file)))
 		print(path)
 		cv2.imwrite(path, stitched)
 		if status != 0:
