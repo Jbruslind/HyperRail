@@ -209,6 +209,26 @@ class DatabaseReader:
             cur.execute ("INSERT into camera_images(run_waypoint_id, camera_name, image_type, uri, created_at) VALUES(?,?,?,?,?)", (i, c, it, p, t,))
             self.conn.commit()
         cur.close
+    
+
+    def add_image(self, camera_image):
+        cur = self.conn.cursor()
+        t = datetime.fromtimestamp(time.time()) 
+        cur.execute ("INSERT into camera_images(\
+            run_waypoint_id,\
+            camera_name,\
+            image_type,\
+            uri,\
+            metadata,\
+            created_at) VALUES(?,?,?,?,?,?)",
+            (camera_image['run_waypoint_id'],
+             camera_image['camera_name'],
+             camera_image['image_type'],
+             camera_image['uri'],
+             camera_image['metadata'],
+             t,))
+        self.conn.commit()
+        cur.close
 
     def get_images(self):
         cur = self.conn.cursor()
@@ -221,6 +241,7 @@ class DatabaseReader:
 
     def __del__(self):
         self.conn.close()
+
 
 if __name__ == "__main__":
     db = DatabaseReader()

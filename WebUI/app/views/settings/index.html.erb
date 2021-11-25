@@ -1,0 +1,34 @@
+<h1 class="text-center">Settings</h1>
+
+<%= form_tag(update_settings_path) do |form| %>
+
+  <div class="col-md-6 col-md-offset-3">
+    <div class="form-group">
+      <label for="settings_password">Password</label>
+      <%= text_field_tag 'settings[password]', Setting.fetch('password', params[:settings].try(:[], 'password'), force: true), class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <label for="settings_rail_x">HyperRail X and Y</label>
+      <%= text_field_tag 'settings[rail_x]', Setting.fetch('rail_x', params[:settings].try(:[], 'rail_x'), force: true), class: 'form-control', placeholder: "Length of HyperRail in X direction in meters (eg. 18.5)"%>
+      <%= text_field_tag 'settings[rail_y]', Setting.fetch('rail_y', params[:settings].try(:[], 'rail_y'), force: true), class: 'form-control', placeholder: "Width of HyperRail in Y direction in meters (eg. 4.5)"%>
+    </div>
+
+    <div class="form-group">
+      <label for="settings_camera_height">Camera Height</label>
+      <%= text_field_tag 'settings[camera_height]', Setting.fetch('camera_height', params[:settings].try(:[], 'camera_height'), force: true), class: 'form-control', placeholder: "Height of camera from the ground in meters (eg. 1.5)" %>
+    </div>
+
+    <div class="form-group">
+      <label for="settings_camera_fov">Camera Field of View</label>
+      <%= text_field_tag 'settings[camera_fov]', Setting.fetch('camera_fov', params[:settings].try(:[], 'camera_fov'), force: true), class: 'form-control', placeholder: "Camera field of view in degrees (eg. 47)" %>
+    </div>
+
+    <div class="form-group">
+      <label for="settings_camera_crop">Image Parallax Crop %</label>
+      <%= text_field_tag 'settings[camera_crop]', Setting.fetch('camera_crop', params[:settings].try(:[], 'camera_crop'), force: true), class: 'form-control', placeholder: "Percent of image border to crop to compensate for parallax in % (eg. 10)" %>
+    </div>
+
+    <%= submit_tag 'Submit', class: 'btn btn-default' %>
+  </div>
+<% end %>
