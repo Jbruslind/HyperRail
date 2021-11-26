@@ -212,5 +212,5 @@ class Micasense(Camera):
                 if exc.errno != errno.EEXIST:
                     raise
 
-cam = Micasense(1,1,1)
-cam.capture_image()
+# cam = Micasense(1,1,1)
+# cam.capture_image()
