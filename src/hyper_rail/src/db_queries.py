@@ -212,6 +212,7 @@ class DatabaseReader:
     
 
     def add_image(self, camera_image):
+        print(camera_image)
         cur = self.conn.cursor()
         t = datetime.fromtimestamp(time.time()) 
         cur.execute ("INSERT into camera_images(\

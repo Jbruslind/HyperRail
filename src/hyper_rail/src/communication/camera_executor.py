@@ -5,21 +5,21 @@
 # for the user to be switch out classes .
 # TODO: finish transfer function, look over functions and practicality/make comments
 # and clean up unused things
-import rospy
-import time
-from threading import Thread
-from queue import Queue
-from hyper_rail.srv import PathService, PathServiceRequest, MotionService, SensorService
-from stitcher import HRStitcher
+
+# additional features could be:
+# adding how many bands the user would like
 from db_queries import DatabaseReader
 from communication.constants import DEFAULT_CAMERA_HOST
-from src.db_queries import DatabaseReader
 import requests
 from requests.exceptions import HTTPError
-import sqlite3
 import time
 from datetime import datetime
 from pathlib import Path, PosixPath
+import json
+import os
+import errno
+
+DB_QUERIES = DatabaseReader()
 
 # side note: not sure if this go in constants since it is very particular to this class.
 #  (or if should even be a constant?)
@@ -59,7 +59,7 @@ class Camera:
         self.root = self.set_root(root)
         self.program_id = self.set_program_id(program_id)
         self.waypoint_id = self.set_waypoint_id(waypoint_id)
-        self.image_path = self.set_image_path(root, program_id, waypoint_id)
+        self.image_path = self.set_image_path(root, program_id)
         print("camera")
         
     # need to put if conditions in setters for testing purposes
@@ -84,18 +84,19 @@ class Camera:
     def get_image_path(self):
         return self.image_path()
 
-    def set_image_path(self, root, program_id, waypoint_id):
-        return "%s/%s/%s" % (str(root), str(program_id), str(waypoint_id))
+    def set_image_path(self, root, program_id):
+        return "%s/%s" % (str(root), str(program_id))
         
 
 class Micasense(Camera):
-    def __init__(self=None, root=None, program_id=None, waypoint_id=None):
+    def __init__(self, root=None, program_id=None, waypoint_id=None, bands=[1,1,1,1,1]):
         super().__init__(root, program_id, waypoint_id)
-        self.band_spectrum = '31'
+        self.band_spectrum = self.set_band_spectrum(bands)
         self.raw_format = 'TIFF' # raw format
         self.enabled_bands_jpeg = '31'
         self.host = DEFAULT_CAMERA_HOST
         self.preview_band = 'band1'
+        self.capture_id = ''
 
     def capture_image(self):
         try:
@@ -103,64 +104,84 @@ class Micasense(Camera):
             self.set_config()
             # capture picture and get request
             response = requests.get(self.host + CAPTURE_PARAMS, timeout=(1, 3))
+            capture_id = response.json()["id"]
+
             if response.status_code == 200:
                 print('Success!')
-            self.transfer_to_local_storage()
+                return True
         except requests.exceptions.RequestException as e:
-            print("Error: " + str(e)) 
-
-    #TODO: utilize the branch ros_camera to finish this
+            print("Error: " + str(e))
+            return False 
+ 
+    #when connected to micasense, uncomment [1]
     def transfer_to_local_storage(self):
-        # storage_path_files = get_capture(id)
-        # replace this with get_capture(id)
+
+        #storage_path_files = self.get_capture(self.capture_id) [1]
+        
         storage_path_files = TEST_FILE_RESPONSE
+        
         # get the directory path for run from param
         self.add_micasense_images(storage_path_files['raw_storage_path'])
 
-    #TODO: make more progress on micasense images, need to add details
+
     def add_micasense_images(self, image_paths):
-        print(image_paths)
         # iterates through dictionary and write to running program path directories
         count = 1
-        for key in image_paths:
-            image_name_path = image_paths[str(count)].split('/')
-            print(image_paths[str(count)])
+        for band_type in image_paths:
+            print(self.image_path + "/" + str(band_type) + '/' + str(self.get_waypoint_id()) + ".tiff")
+            # image_name_path = image_paths[str(count)].split('/')
             try:
-                r = requests.get(self.host + image_paths[str(count)], stream=True,  timeout=(1, 3)) # this makes a request to get data from SD
-                print(self.host + image_paths[str(count)])
-                # get image name
-                with open(self.image_path + image_name_path[4], 'wb') as f:
+                # request specific image file data
+                r = requests.get(self.host + image_paths[str(count)], stream=True,  timeout=(1, 3)) 
+                file_path = self.set_file_path(band_type, self.get_waypoint_id())
+                self.create_path(file_path)
+                # write file path
+                with open(file_path, 'wb') as f:
                     for chunk in r.iter_content(10240):
                         f.write(chunk)
-
+                        
+                # not sure what to put in camera_name or uri
                 camera_dict = {
-                    'run_waypoint_id': "", 
-                    'camera_name': "", 
-                    'image_type': "",
-                    'uri': "",
-                    'metadata': ""}
-                # TODO: post the image to the sql-Lite database
-                DatabaseReader.add_image(camera_dict)
+                    'run_waypoint_id': self.get_waypoint_id, 
+                    'camera_name': "Example Camera", 
+                    'image_type': band_type,
+                    'uri': file_path,
+                    'metadata': ""
+                    }
 
-                r = requests.get(self.host + "deletefile/%s" % image_paths[str(count)], timeout=(1, 3) )
+                DB_QUERIES.add_image(camera_dict)
+                r = requests.get(self.host + "deletefile%s" % image_paths[str(count)], timeout=(1, 3) )
                 count = count + 1        
             except requests.exceptions.RequestException as e:
                 print("Error: " + str(e))
     
 
-
-        
+    #gets a json object with picture info based on id from micasense
+    def get_capture(self, id):
+        # get the /capture/:id
+        try:
+            url = self.host + '/capture/' + id
+            r = requests.get(url, timeout=1)
+            # return a json object
+            r = json.dumps(r)
+            return r
+        except requests.exceptions.RequestException:
+            print('Waiting for camera response')
 
     def set_camera_host(self, host):
         if host == '' or host != str(host):
             return DEFAULT_CAMERA_HOST
         else:
             self.host = host
-
+    
     def set_config(self):
         payload = self.config_payload()
         r = requests.post(url = self.host + '/config/', data = payload, timeout=(1, 3))
         r.raise_for_status()
+
+    # sets file path to ~/HyperRail/images/image_type/run_waypoint_id.tiff
+    def set_file_path(self, band, waypoint):
+        return self.image_path + '/' + str(band) + '/' + str(waypoint) + ".tiff"
 
     def config_payload(self):
         payload = {
@@ -171,13 +192,25 @@ class Micasense(Camera):
             }
         return payload
 
-        
-
+    # picture has 5 bands, each is represented as binary. Ex. 11111 = all bands
+    # this sets the binary to be decimal for micasense band specification
+    def set_band_spectrum(self, bands):
+        print(''.join(str(x) for x in bands))
+        bands_enabled = ''.join(str(x) for x in bands)
+        int_bands_enabled = int(bands_enabled, 2)
+        return int_bands_enabled
     
+    def get_band_spectrum(self):
+        return self.band_spectrum
 
+    def create_path(self, file_path):
+        # define the name of the directory to be created
+        if not os.path.exists(os.path.dirname(file_path)):
+            try:
+                os.makedirs(os.path.dirname(file_path))
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
 
-
-
-# Cam = Micasense(1, 2, 3)   
-# print(Cam.root)   
-        
+cam = Micasense(1,1,1)
+cam.capture_image()

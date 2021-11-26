@@ -15,14 +15,15 @@ from communication.constants import IMAGE_PATH, DEFAULT_CAMERA_HOST
 
 from hyper_rail.srv import SensorService, SensorServiceRequest, SensorServiceResponse
 
-#Called when service receives new request
+# capture and store image files
 def process_camera(req: SensorServiceRequest):
-    # create a path for the program
-    # query database program_run, way point
-    camera_obj = Camera(IMAGE_PATH, req.program_run_id, req.waypoint_id)
-    # TODO: utilize communication.camera_executor classes to capture ands store photos 
-
-    # complete_path = "%s/%s/%s" % (IMAGE_PATH, req.program_run_id, req.waypoint_id)
+    # last parameter defines the bands (image type) the user would use when capturing an image
+    Cam = Micasense(IMAGE_PATH, req.program_run_id, req.program_run_id, [1, 1, 1, 1, 1])
+    captured = Cam.capture_image()
+    if captured:
+        Cam.transfer_to_local_storage()
+    else:
+        print("Error: Image not capture")
     
     for i in range(3):
         print("sleeping", i)

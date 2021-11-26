@@ -7,7 +7,7 @@ GREENHOUSE_SENSOR_SERIAL = ("/dev/ttyUSB0", 9600)
 GRBL_DRIVER_SERIAL = ("/dev/tty.usbmodem1811", 115200)
 
 # Host IPS
-DEFAULT_CAMERA_HOST =  "http://192.168.1.83/"
+DEFAULT_CAMERA_HOST =  "http://192.168.1.83"
 DEFAULT_ROSBRIDGE_HOST = ''
 
 class RequestType(Enum):
