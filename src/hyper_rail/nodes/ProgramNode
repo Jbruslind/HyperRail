@@ -18,6 +18,7 @@ from hyper_rail.srv import PathService
 from hyper_rail.msg import ProgramFeed                                              # Topic that UI publishes to
 from hyper_rail.msg import GCodeFeed, InstructionFeed                               # Message format for Gcode messages FIXME: Verify that these arent being used anymore
 from hyper_rail.msg import MachinePosition                                          # Message format for current position polling
+from hyper_rail.msg import MotionStatus                                            
 from communication.program_executor import Watcher                                  # Class for keeping track of in progress waypoints
 
 InstructionQueue = Queue()
@@ -48,9 +49,10 @@ def init_node():
     # Arbitrarily chosing queue size of 50. Hitting more than 10 seems really unlikely anyways
     program_sub = rospy.Subscriber('programs', ProgramFeed, callback=add_to_queue, queue_size=50)
 
+    status_sub = rospy.Subscriber("motion_status", MotionStatus, callback = watcher.update_motion_status, queue_size=50)
 
     # Pull data from sensor end effector at 111ms intervals
-    publish_rate = rospy.Rate(50)
+    publish_rate = rospy.Rate(9)
 
     # TODO: Channge USB port as it will likely be different on the actual device
     # Create a new driver object with the baudrate and location pulled from the constants file
