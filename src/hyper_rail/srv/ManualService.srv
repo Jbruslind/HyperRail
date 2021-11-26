@@ -1,0 +1,8 @@
+# Structure for packets sent from the user interface to the motion node.
+# For sending individual gcodes to the ESP32
+
+string GCode                        # Single instruction from UI
+
+---
+
+string status                       # Status of the request, whether or not it was received or if the machine is busy

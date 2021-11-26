@@ -219,11 +219,21 @@ class DatabaseReader:
             print(i['run_waypoint_id'])
 
 
+# Settings functions
+
+    def get_image_dir(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT value FROM settings WHERE name = 'image_path'")
+        path = cur.fetchone()
+        return path['value']
+
+    
     def __del__(self):
         self.conn.close()
 
 if __name__ == "__main__":
     db = DatabaseReader()
+    print(db.get_image_dir())
     # db.get_program_headings()
     # db.get_all_programs()
     # db.get_waypoints_for_program(5)
@@ -238,6 +248,6 @@ if __name__ == "__main__":
     # db.create_test_images()
     # db.get_images()
     # db.get_image_paths(10)
-    id = db.create_run_waypoint_id(19, 17, 400, 100, None)
-    print(id)
-    db.update_run_waypoint_id_finished(id)
+    # id = db.create_run_waypoint_id(19, 17, 400, 100, None)
+    # print(id)
+    # db.update_run_waypoint_id_finished(id)

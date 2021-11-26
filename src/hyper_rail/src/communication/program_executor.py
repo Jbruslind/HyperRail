@@ -8,6 +8,7 @@ import time
 from threading import Thread
 from queue import Queue
 from hyper_rail.srv import PathService, PathServiceRequest, MotionService, SensorService
+from hyper_rail.msg import MotionStatus
 from stitcher import HRStitcher
 from db_queries import DatabaseReader
 import ast
@@ -17,6 +18,7 @@ class Watcher:
     def __init__(self, q, publisher):
         self.q = q
         self.response_status = ""
+        self.program_status = "idle"
         self.w = ""
         self.publisher = publisher
         self.test_program = [{'x': 10, 'y': 15}, {'x': 16, 'y': 21}, {'x': 2, 'y': 13}]
@@ -27,19 +29,24 @@ class Watcher:
     def watch(self):
         while True:
             if not self.q.empty():
-                self.db = DatabaseReader()
-                program = self.q.get()
-                status = self.execute(program)
-                print(status)
-                # self.execute(self.home_program)
-                del self.db
+                if self.motion_status == 'idle':
+                    self.db = DatabaseReader()
+                    program = self.q.get()
+                    self.program_status = f"executing: program {program}"
+                    status = self.execute(program)
+                    print(status)
+                    # self.execute(self.home_program)
+                    del self.db
+
+    def update_motion_status(self, Status: MotionStatus):
+        self.motion_status = Status.status 
 
     # sends the x, y coordinates of a waypoint to the the motion node
-    def goTo(self, x, y):
+    def goTo(self, x, y, program):
         rospy.wait_for_service('motion_service')
         try:
             message = rospy.ServiceProxy('motion_service', MotionService)
-            resp1 = message(x, y)
+            resp1 = message(x, y, program)
             return resp1.status
         except rospy.ServiceException as e:
             print("Service call failed: %s"%e)
@@ -74,14 +81,18 @@ class Watcher:
         run_id = self.db.create_program_run(program)
 
         # 2. Execute each waypoint/action
+        w_count = 0
         for w in waypoints:
+            run_waypoint_id = self.db.create_run_waypoint_id(w['id'], run_id, w['x'], w['y'], w['z'])
             print(f"\nExecuting waypoint {w['id']}, actions: {w['actions']}\n")
             actions = ast.literal_eval(w['actions'])
             # for action in actions:
             #     print(action)
 
-            status = self.goTo(w['x'], w['y'])
-            run_waypoint_id = self.db.create_run_waypoint_id(w['id'], run_id, w['x'], w['y'], w['z'])
+            if w_count < len(waypoints):
+                status = self.goTo(w['x'], w['y'], program)
+            else:
+                status = self.goTo(w['x'], w['y'], None)
             #TODO: Need to create run waypoints to send to camera node
 
             threads = []
@@ -106,8 +117,9 @@ class Watcher:
             
             for t in threads:
                 t.join()
-            
-        self.db.update_run_waypoint_id_finished(run_waypoint_id)
+
+            self.db.update_run_waypoint_id_finished(run_waypoint_id)
+            w_count += 1
         
         # 3. Create stitched image
         run_id = 10

@@ -15,10 +15,12 @@ from communication.motion_executor import MotionWatcher                         
 import time
 
 from hyper_rail.srv import MotionService, MotionServiceRequest, MotionServiceResponse
+from hyper_rail.srv import ManualService
 
 # Probably don't need these, see about using functions available thru ESP32Controller
 from hyper_rail.msg import GCodeFeed                                                # Message formate for Gcode messages
 from hyper_rail.msg import MachinePosition                                          # Message format for current position polling
+from hyper_rail.msg import MotionStatus                                             # Message format for monitoring whether to wait on additional motions
 # need ESP32Controller for polling
 
 # Track motion, send response when location = destination
@@ -39,26 +41,34 @@ def init_node():
     # Service to find out when to send next instruction
     motionService = rospy.Service("motion_service", MotionService, handler=motionExecutor.receive_waypoint)
 
-    # TODO: Figure out how concurrency works with topics. Will waypoint and location cause eachother to block at some point?
+    # Service to receive manual input from UI
+    manualService = rospy.Service("manual_service", ManualService, handler = motionExecutor.receive_manual_operation)
+
+    motion_status_pub = rospy.Publisher("motion_status", MotionStatus, queue_size=10)
+
     # Subscribe to the GCode feeder topic with a large queue as to not lose any g-code segments
     location_sub = rospy.Subscriber('current_position', MachinePosition, callback=motionExecutor.update_position, queue_size=5000)
 
     # Subscribe to waypoint feed
     # waypoint_sub = rospy.Subscriber("instructions", InstructionFeed, callback=manage_action, queue_size=10)
 
-    # Pull data from sensor end effector at 111ms intervals
-    # TODO: Don't need to be constantly publishing. Should this be a service/msg instead?
-    # Check how publish_rate works. Can probably still publish in an event style and rate just comes into effect if multiple events happen to line up
-    publish_rate = rospy.Rate(100)
+    # Pull data from sensor end effector at 100ms intervals
+    publish_rate = rospy.Rate(10)
 
     # Inform the user that the node and service have been started successfully
     rospy.loginfo(f"{rospy.get_name()}: serial connection established...")
+
+    # Start watcher thread to watch for single gcodes
+    watcherThread= Thread(target = motionExecutor.watch_for_single_codes)
+    watcherThread.daemon = True
+    watcherThread.start()
 
     while not rospy.is_shutdown():
         # Publish the sensor readings to the topic
         # publisher.publish(greenHouseController.poll_data())
         
         # Maintain the correct interval for pulling data
+        motion_status_pub.publish(motionExecutor.motion_status)
         publish_rate.sleep()
 
 

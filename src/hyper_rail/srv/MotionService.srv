@@ -2,6 +2,7 @@
 
 float32 x       # x coordinate in mm
 float32 y       # y coordinate in mm
+int16 program   # flag to indicate final waypoint in a program
 
 ---
 
