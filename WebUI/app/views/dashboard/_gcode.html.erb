@@ -16,10 +16,17 @@
 <script>
   $(document).ready(function() {
     $('#send_gcode_btn').click(function(event) {
-      var gcode = $('#gcode_command').val();
-      // TODO: Send this gcode value to roslib instead of nowhere
-      alert('TODO: Sending ' + gcode);
+      // Stop this event from propagating
       event.preventDefault();
+
+      // Fetch the text value, if there is one
+      var gcode = $('#gcode_command').val();
+
+      // Return if there is no gcode to send
+      if (gcode == '') { return }
+
+      // TODO: Send this gcode value to roslib instead of alert
+      alert('TODO: Sending ' + gcode);
     })
   });
 </script>
