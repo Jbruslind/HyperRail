@@ -17,7 +17,7 @@
 <script>
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
-    var image_path = <%= '/images/space-2.jpg'.to_json.html_safe %>;
+    var image_path = <%= '/camera_images/space-2.jpg'.to_json.html_safe %>;
     var areas_of_interest = [];
 
     function buildGrid(height, width, rectWidth, rectHeight)

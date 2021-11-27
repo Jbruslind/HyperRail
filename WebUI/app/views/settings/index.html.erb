@@ -32,7 +32,7 @@
     <div class="form-group">
       <label for="settings_camera_crop">Base Image Path</label>
       <%= text_field_tag 'settings[image_path]', Setting.fetch('image_path', params[:settings].try(:[], 'image_path'), force: true), class: 'form-control', placeholder: "Path on the filesystem for reading raw/stitched images" %>
-      <small>Defaults to <%= Rails.root.join('public/images') %></small>
+      <small>Defaults to <%= Rails.root.join('camera_images') %></small>
     </div>
 
     <%= submit_tag 'Submit', class: 'btn btn-primary btn-sm' %>

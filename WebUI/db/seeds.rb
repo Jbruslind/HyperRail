@@ -11,7 +11,7 @@ Setting.destroy_all
   'camera_height' => '1.75',
   'camera_fov' => '47',
   'camera_crop' => '25',
-  'image_path' => Rails.root.join('public/images').to_s
+  'image_path' => Rails.root.join('camera_images').to_s
 }.each do |name, value|
   Setting.create name: name, value: value
 end
