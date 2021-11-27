@@ -8,79 +8,84 @@
 <script>
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
-    var image_path = <%= 'https://www.unoosa.org/res/timeline/index_html/space-2.jpg'.to_json.html_safe %>;
+    console.log(unit_sizes);
+    var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
     var areas_of_interest = [];
     const areasOfInterest = new Map();
+    var PIXEL_CONVERSION_FACTOR = 3779.5275590551;
 
-    function buildGrid(width, height)
+    var gridWith_Actual = unit_sizes.x_unit_size * unit_sizes.x_units;
+    var gridHeight_Actual = unit_sizes.y_unit_size * unit_sizes.y_units;
+    var rectWidth_Actual = unit_sizes.x_unit_size;
+    var rectHeight_Actual = unit_sizes.y_unit_size;
+    var rectXOrigin_Actual = 0;
+    var rectYOrigin_Actual = 0;
+    var rectXCenter_Actual = 0;
+    var rectYCenter_Actual = 0;
+    
+
+    gridWidth_Display = 1000;
+    numPerRow_Display = 10;
+    rectWidth_Display = gridWidth_Display/numPerRow_Display;
+    gridHeight_Display = 560.9375;
+    rectHeight_Display = gridHeight_Display/10;
+    numOfRects_Display = 100;
+    var rectID = "rect";
+    var rectXOrigin_Display = 0;
+    var rectYOrigin_Display = 0;
+    
+    var SVG_NS = "http://www.w3.org/2000/svg";
+    var XLINK_NS = "http://www.w3.org/1999/xlink";
+    var svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute("width", gridWidth_Display);
+    svg.setAttribute("height", gridHeight_Display);
+
+    var image = document.createElementNS(SVG_NS, "image");
+    image.setAttributeNS(null, "width", gridWidth_Display);
+    image.setAttributeNS(null, "height", gridHeight_Display);
+    image.setAttributeNS(null, "x", 0);
+    image.setAttributeNS(null, "y", 0);
+    image.setAttributeNS(XLINK_NS, 'xlink:href', image_path);
+    svg.appendChild(image);
+
+    var g = document.createElementNS(SVG_NS, 'g');
+    g.setAttribute("style", "cursor: pointer; cursor: hand");
+    for (var i = 1; i <= numOfRects_Display; i++)
     {
-        var rectWidth = width/10;
-        var rectHeight = (rectWidth*height)/width;
-        var numOfRects = (height*rectHeight)*10;
-        var numPerRow = width/rectWidth;
-        var gridWidth = height;
-        var gridHeight = width;
-        var rectID = "rect";
-        var rectXOrigin = 0;
-        var rectYOrigin = 0;
-        var rectXCenter = 0;
-        var rectYCenter = 0;
-        var SVG_NS = "http://www.w3.org/2000/svg";
-        var XLINK_NS = "http://www.w3.org/1999/xlink";
-
-        var svg = document.createElementNS(SVG_NS, 'svg');
-        svg.setAttribute("width", width);
-        svg.setAttribute("height", height);
-
-        var image = document.createElementNS(SVG_NS, "image");
-        image.setAttributeNS(null, "width", width);
-        image.setAttributeNS(null, "height", height);
-        image.setAttributeNS(null, "x", 0);
-        image.setAttributeNS(null, "y", 0);
-        image.setAttributeNS(XLINK_NS, 'xlink:href', image_path);
-
-        svg.appendChild(image);
-
-        var g = document.createElementNS(SVG_NS, 'g');
-        g.setAttribute("style", "cursor: pointer; cursor: hand");
-
-        for (var i = 1; i <= numOfRects; i++)
+        var rectangle = document.createElementNS(SVG_NS, 'rect');
+        rectID += (i);
+        rectXCenter_Actual = rectXOrigin_Actual + (rectWidth_Actual/2);
+        rectYCenter_Actual = rectYOrigin_Actual + (rectHeight_Actual/2);
+        rectangle.setAttribute("id", rectID);
+        rectangle.setAttribute("x", rectXOrigin_Display);
+        rectangle.setAttribute("y", rectYOrigin_Display);
+        rectangle.setAttribute("width", rectWidth_Display);
+        rectangle.setAttribute("height", rectHeight_Display);
+        rectangle.setAttribute("rectXCenter_Actual", rectXCenter_Actual);
+        rectangle.setAttribute("rectYCenter_Actual", rectYCenter_Actual);
+        rectangle.setAttribute("stroke", "black");
+        rectangle.setAttribute("fill", "transparent");
+        rectangle.setAttribute("stroke-width", 1);
+        g.appendChild(rectangle);
+        
+        if (i%numPerRow_Display == 0)
         {
-            var rectangle = document.createElementNS(SVG_NS, 'rect');
-            rectID += (i);
-            rectXCenter = rectXOrigin + (rectWidth/2);
-            rectYCenter = rectYOrigin + (rectHeight/2);
-            rectangle.setAttribute("id", rectID);
-            rectangle.setAttribute("x", rectXOrigin);
-            rectangle.setAttribute("y", rectYOrigin);
-            rectangle.setAttribute("width", rectWidth);
-            rectangle.setAttribute("height", rectHeight);
-            rectangle.setAttribute("rectXCenter", rectXCenter);
-            rectangle.setAttribute("rectYCenter", rectYCenter);
-            rectangle.setAttribute("stroke", "black");
-            rectangle.setAttribute("fill", "transparent");
-            rectangle.setAttribute("stroke-width", 1);
-            g.appendChild(rectangle);
-            
-            if (i%10 == 0)
-            {
-                rectXOrigin = 0;
-                rectYOrigin += rectHeight;
-            }
-            else
-            {
-                rectXOrigin += rectWidth;
-            }
-            
-            rectID = "rect";
+            rectXOrigin_Display = 0;
+            rectYOrigin_Display += rectHeight_Display;
+            rectXOrigin_Actual = 0;
+            rectYOrigin_Actual += rectHeight_Actual;
         }
-        svg.appendChild(g);
-        document.getElementById("grid").appendChild(svg);
+        else
+        {
+            rectXOrigin_Display += rectWidth_Display;
+            rectXOrigin_Actual += rectWidth_Actual;
+        }
+        
+        rectID = "rect";
     }
+    svg.appendChild(g);
+    document.getElementById("grid").appendChild(svg);
 
-    buildGrid(429, 268);
-
-    waypoints = [];
     $('rect').click(function() {
         var svgElement = document.getElementById($(this).attr('id'));
 
@@ -95,10 +100,9 @@
         {
             svgElement.setAttribute('fill-opacity', '0.4');
             svgElement.setAttribute('fill', 'black');
-            //waypoints.push(svgElement.getAttribute('id'));
-            var rectXCenter = svgElement.getAttribute('rectXCenter');
-            var rectYCenter = svgElement.getAttribute('rectYCenter');
-            areasOfInterest.set(svgElement.getAttribute('id'), {rectXCenter, rectYCenter});
+            var x = svgElement.getAttribute('rectXCenter_Actual');
+            var y = svgElement.getAttribute('rectYCenter_Actual');
+            areasOfInterest.set(svgElement.getAttribute('id'), {x,y});
             console.log(areasOfInterest);
         }
     });
