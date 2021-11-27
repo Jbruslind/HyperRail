@@ -1,72 +1,60 @@
-<h1>Quick Control</h1>
-
 <div class="row">
-  <div class="container col-md-4">
-    <svg id="jog_dial" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="-5 -5 110 110">
-        <circle cx="50" cy="50" r="50" style="fill: #eee; stroke-width: 0.5; stroke: black">
-            <title>100 centimeters</title>
-        </circle>
-        <circle cx="50" cy="50" r="37.5" style="fill: #ccc">
-            <title>10 centimeters</title>
-        </circle>
-        <circle cx="50" cy="50" r="25" style="fill: #aaa">
-            <title>1 centimeter</title>
-        </circle>
-        <circle cx="50" cy="50" r="12.5" style="fill: white"></circle>
-        <g style="fill: #777; stroke-width:0.5; cursor: pointer; cursor: hand">
-          <polygon points="30,10 50,2.5 70,10" data-action="Move up 100cm" />
-          <polygon points="10,30 2.5,50 10,70" data-action="Move left 100cm" />
-          <polygon points="90,30 97.5,50 90,70" data-action="Move right 100cm" />
-          <polygon points="30,90 50,97.5 70,90" data-action="Move down 100cm" />
-        </g>
-        <g style="fill: #555; stroke-width:0.5; cursor: pointer; cursor: hand">
-          <polygon points="32.5,22.5 50,15 67.5,22.5" data-action="Move up 10cm" />
-          <polygon points="22.5,32.5 15,50 22.5,67.5" data-action="Move left 10cm" />
-          <polygon points="77.5,32.5 85,50 77.5,67.5" data-action="Move right 10cm" />
-          <polygon points="32.5,77.5 50,85 67.5,77.5" data-action="Move down 10cm" />
-        </g>
-        <g style="fill: #333; stroke-width:0.5; cursor: pointer; cursor: hand">
-          <polygon points="35,35 50,27.5 65,35" data-action="Move up 1cm" />
-          <polygon points="35,35 27.5,50 35,65" data-action="Move left 1cm" />
-          <polygon points="65,35 72.5,50 65,65" data-action="Move right 1cm" />
-          <polygon points="35,65 50,72.5 65,65" data-action="Move down 1cm" />
-        </g>
-    </svg>
+  <div class="col-lg-4 col-md-6 col-md-offset-0 col-sm-8 col-sm-offset-2 col-xs-12">
+    <%= render 'dashboard/status' %>
+  </div>
+  <div class="col-lg-4 col-md-6 col-md-offset-0 col-sm-8 col-sm-offset-2 col-xs-12">
+    <%= render 'dashboard/gcode' %>
+  </div>
+  <div class="col-lg-4 col-md-6 col-md-offset-0 col-sm-8 col-sm-offset-2 col-xs-12">
+    <%= render 'dashboard/quick_controls' %>
   </div>
 </div>
 
+<div class="row">
+  <div id="grid"></div>
+</div>
+
 <script>
-    $('polygon').click(function() {
-      alert('Movement dial clicked: ' + $(this).data('action'));
-    });
+    // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
+    var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
+    var image_path = <%= '/images/space-2.jpg'.to_json.html_safe %>;
+    var areas_of_interest = [];
 
     function buildGrid(height, width, rectWidth, rectHeight)
     {
+        var image = document.createElement("img");
+        /*image.src = image_path;
+        image.setAttribute("width", "100%");
+        image.setAttribute("height", "100%");
+        document.getElementById("grid").appendChild(image);*/
+
+        var xmlns = "http://www.w3.org/2000/svg";
+
         var numOfRects = (12*5)/(1*.8);
         var gridWidth = height;
         var gridHeight = width;
         var rectID = "rect";
         let xFactor = .01;
         let yFactor = .01;
-        var svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
-        svg.setAttribute("version", "1.1");
+
+        var svg = document.createElementNS(xmlns, 'svg');
         svg.setAttribute("width", width);
         svg.setAttribute("height", height);
 
-        var image = document.createElement("image");
-        image.getAttribute("xlink:href", "https://www.esri.com/content/dam/esrisites/en-us/arcgis/capabilities/imagery-remote-sensing-2/images/content-atlas-world-imagery.jpg");
-        image.getAttribute("width", "100%");
-        image.getAttribute("height", "100%");
-        image.getAttribute("x", 0);
-        image.getAttribute("y", 0);
+        var image = document.createElementNS(xmlns, "image");
+        image.setAttributeNS(null, "width", "50%");
+        image.setAttributeNS(null, "height", "70%");
+        image.setAttributeNS(null, "x", 10);
+        image.setAttributeNS(null, "y", -180);
+        image.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', image_path);
         svg.appendChild(image);
 
-        var g = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+        var g = document.createElementNS(xmlns, 'g');
         g.setAttribute("style", "cursor: pointer; cursor: hand");
 
-        for (var i = 1; i <= 100; i++)
+        for (var i = 1; i <= numOfRects; i++)
         {
-            var rectangle = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+            var rectangle = document.createElementNS(xmlns, 'rect');
             rectID += (i);
             rectangle.setAttribute("id", rectID);
             rectangle.setAttribute("x", xFactor*gridWidth);
@@ -87,10 +75,10 @@
             {
                 xFactor += .05;
             }
-            
+            rectID = "rect";
         }
         svg.appendChild(g);
-        document.body.appendChild(svg);
+        document.getElementById("grid").appendChild(svg);
     }
 
     buildGrid(1000, 1000, 50, 50);
