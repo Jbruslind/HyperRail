@@ -1,9 +1,19 @@
 # Imports:
 # Image: Image class, contains basic attribute functions
 # DrawableCompositeImage: Method for creating a composite
+import argparse
+import sys
+from pathlib import PosixPath
 from pgmagick.api import Image
 from pgmagick import DrawableCompositeImage, DrawableGravity, GravityType
 from pgmagick import CompositeOperator as co
+
+QUERIES_PATH = PosixPath("~/HyperRailsrc/hyper_rail/src/").expanduser()
+print(QUERIES_PATH)
+
+sys.path.append(str(QUERIES_PATH))
+print(sys.path)
+from db_queries import DatabaseReader
 
 class Compositor:
 
@@ -61,3 +71,11 @@ class Compositor:
     def create_composite(self):
         self.calculate_dimensions()
         self.draw_composite()
+    
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-p", "--programrun", type=str, required=True, nargs='+',
+    	help="path to input directory of images to stitch")
+    args = vars(ap.parse_args())
+    
+    print(args["programrun"])

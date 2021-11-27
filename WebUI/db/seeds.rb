@@ -11,6 +11,7 @@ Setting.destroy_all
   'camera_height' => '1.75',
   'camera_fov' => '47',
   'camera_crop' => '25',
+  'image_path' => '~/HyperRail/images',
 }.each do |name, value|
   Setting.create name: name, value: value
 end
