@@ -165,11 +165,17 @@ class DatabaseReader:
         cur.close()
         return rows
 
-
-
-    def get_image_dir(self):
+    def get_images_for_composite(self, program_run_id):
         cur = self.conn.cursor()
-        
+        query = "SELECT * FROM run_waypoints JOIN camera_images on run_waypoints.id = camera_images.run_waypoint_id WHERE program_run_id = ?"
+        # query = "SELECT * FROM run_waypoints JOIN program_runs on run_waypoints.program_run_id = program_runs.id WHERE program_run_id = 1"
+        cur.execute(query, (program_run_id,))
+        rows = cur.fetchall()
+        # for row in rows:
+        #     print(tuple(row))
+        cur.close()
+        return rows
+
     def image_path(self, run_waypoint_id, image_type):
         cur = self.conn.cursor()
         cur.execute("SELECT uri FROM camera_images WHERE run_waypoint_id=? and image_type=?", (run_waypoint_id, image_type,))
@@ -200,7 +206,7 @@ class DatabaseReader:
     def create_test_images(self):
         cur = self.conn.cursor()
         cur.execute("DELETE from camera_images")
-        id = [97, 98, 99, 100]
+        id = [1, 2, 3, 4, 5]
         path = ["4.png", "5.png", "6.png", "7.png", "8.png"]
         c = "camera_mock"
         it = "image_mock"
@@ -234,6 +240,8 @@ class DatabaseReader:
 if __name__ == "__main__":
     db = DatabaseReader()
     print(db.get_image_dir())
+    # db.test()
+    # print(db.get_image_dir())
     # db.get_program_headings()
     # db.get_all_programs()
     # db.get_waypoints_for_program(5)
@@ -251,3 +259,7 @@ if __name__ == "__main__":
     # id = db.create_run_waypoint_id(19, 17, 400, 100, None)
     # print(id)
     # db.update_run_waypoint_id_finished(id)
+    # images = db.get_images_for_composite(1)
+
+
+
