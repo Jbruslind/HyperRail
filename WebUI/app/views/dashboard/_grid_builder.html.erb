@@ -1,0 +1,95 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Selection Grid</h3>
+  </div>
+  <center><div id="grid" class="panel-body"></div></center>
+</div>
+
+<script>
+    // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
+    var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
+    var image_path = <%= 'https://www.unoosa.org/res/timeline/index_html/space-2.jpg'.to_json.html_safe %>;
+    var areas_of_interest = [];
+
+    function buildGrid(width, height)
+    {
+        var rectWidth = width/10;
+        var rectHeight = (rectWidth*height)/width;
+        var numOfRects = (height*rectHeight)*10;
+        var numPerRow = width/rectWidth;
+        var gridWidth = height;
+        var gridHeight = width;
+        var rectID = "rect";
+        var rectXOrigin = 0;
+        var rectYOrigin = 0;
+        var SVG_NS = "http://www.w3.org/2000/svg";
+        var XLINK_NS = "http://www.w3.org/1999/xlink";
+
+        var svg = document.createElementNS(SVG_NS, 'svg');
+        svg.setAttribute("width", width);
+        svg.setAttribute("height", height);
+
+        var image = document.createElementNS(SVG_NS, "image");
+        image.setAttributeNS(null, "width", width);
+        image.setAttributeNS(null, "height", height);
+        image.setAttributeNS(null, "x", 0);
+        image.setAttributeNS(null, "y", 0);
+        image.setAttributeNS(XLINK_NS, 'xlink:href', image_path);
+
+        svg.appendChild(image);
+
+        var g = document.createElementNS(SVG_NS, 'g');
+        g.setAttribute("style", "cursor: pointer; cursor: hand");
+
+        for (var i = 1; i <= numOfRects; i++)
+        {
+            var rectangle = document.createElementNS(SVG_NS, 'rect');
+            rectID += (i);
+            rectangle.setAttribute("id", rectID);
+            rectangle.setAttribute("x", rectXOrigin);
+            rectangle.setAttribute("y", rectYOrigin);
+            rectangle.setAttribute("width", rectWidth);
+            rectangle.setAttribute("height", rectHeight);
+            rectangle.setAttribute("stroke", "black");
+            rectangle.setAttribute("fill", "transparent");
+            rectangle.setAttribute("stroke-width", 1);
+            g.appendChild(rectangle);
+
+            if (i%10 == 0)
+            {
+                rectXOrigin = 0;
+                rectYOrigin += rectHeight;
+            }
+            else
+            {
+                rectXOrigin += rectWidth;
+            }
+            
+            rectID = "rect";
+        }
+        svg.appendChild(g);
+        document.getElementById("grid").appendChild(svg);
+    }
+
+    buildGrid(429, 268);
+
+    waypoints = [];
+    $('rect').click(function() {
+        var svgElement = document.getElementById($(this).attr('id'));
+
+        if(svgElement.getAttribute('fill') == 'black')
+        {
+            svgElement.setAttribute('fill', 'transparent');
+            var target = svgElement.getAttribute('id');
+            var result = waypoints.indexOf(target);
+            console.log(result);
+        }
+        else
+        {
+            svgElement.setAttribute('fill-opacity', '0.4');
+            svgElement.setAttribute('fill', 'black');
+            waypoints.push(svgElement.getAttribute('id'));
+            console.log(waypoints.length);
+        }
+    });
+</script>
