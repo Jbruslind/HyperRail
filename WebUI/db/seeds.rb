@@ -11,9 +11,13 @@ Setting.destroy_all
   'camera_height' => '1.75',
   'camera_fov' => '47',
   'camera_crop' => '25',
+  'image_path' => Rails.root.join('public/images').to_s
 }.each do |name, value|
   Setting.create name: name, value: value
 end
+
+# Make the default image directory
+FileUtils.mkdir_p Setting.fetch('image_path')
 
 # Create a default program
 program = Program.create_from_settings
