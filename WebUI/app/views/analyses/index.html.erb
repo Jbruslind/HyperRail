@@ -1,4 +1,4 @@
-<div class="h1">Analyses <%= link_to 'New', new_analysis_path, class: 'btn btn-xs btn-success' %></div>
+<div class="h1">Analyses</div>
 
 <table class="table table-striped">
   <thead>
@@ -16,9 +16,13 @@
         <td><%= analysis.created_at.strftime('%Y-%m-%d') %></td>
         <td>
           <%= link_to 'Edit', edit_analysis_path(analysis) %>
-          <%= link_to 'Destroy', analysis, method: :delete, data: { confirm: 'Are you sure you wish to delete this analysis?' } %>
+          <%= link_to 'Destroy', analysis, method: :delete, data: { confirm: 'Are you sure you wish to delete this analysis? It will not delete any of the underlying data.' } %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<hr/>
+
+<%= button_to 'New analysis', new_analysis_path, method: :get, class: 'btn btn-sm btn-primary' %>
