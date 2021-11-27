@@ -1,3 +1,4 @@
+<!-- app/views/dashboard/_quick_controls -->
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">Quick Controls</h3>
@@ -38,6 +39,7 @@
 
 <script>
   $('polygon').click(function() {
+    // TODO: This should use roslibjs to send a command to the machine to move
     alert('Movement dial clicked: ' + $(this).data('action'));
   });
 </script>
