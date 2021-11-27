@@ -10,6 +10,7 @@
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
     var image_path = <%= 'https://www.unoosa.org/res/timeline/index_html/space-2.jpg'.to_json.html_safe %>;
     var areas_of_interest = [];
+    const areasOfInterest = new Map();
 
     function buildGrid(width, height)
     {
@@ -22,6 +23,8 @@
         var rectID = "rect";
         var rectXOrigin = 0;
         var rectYOrigin = 0;
+        var rectXCenter = 0;
+        var rectYCenter = 0;
         var SVG_NS = "http://www.w3.org/2000/svg";
         var XLINK_NS = "http://www.w3.org/1999/xlink";
 
@@ -45,16 +48,20 @@
         {
             var rectangle = document.createElementNS(SVG_NS, 'rect');
             rectID += (i);
+            rectXCenter = rectXOrigin + (rectWidth/2);
+            rectYCenter = rectYOrigin + (rectHeight/2);
             rectangle.setAttribute("id", rectID);
             rectangle.setAttribute("x", rectXOrigin);
             rectangle.setAttribute("y", rectYOrigin);
             rectangle.setAttribute("width", rectWidth);
             rectangle.setAttribute("height", rectHeight);
+            rectangle.setAttribute("rectXCenter", rectXCenter);
+            rectangle.setAttribute("rectYCenter", rectYCenter);
             rectangle.setAttribute("stroke", "black");
             rectangle.setAttribute("fill", "transparent");
             rectangle.setAttribute("stroke-width", 1);
             g.appendChild(rectangle);
-
+            
             if (i%10 == 0)
             {
                 rectXOrigin = 0;
@@ -81,15 +88,18 @@
         {
             svgElement.setAttribute('fill', 'transparent');
             var target = svgElement.getAttribute('id');
-            var result = waypoints.indexOf(target);
-            console.log(result);
+            areasOfInterest.delete(target);
+            console.log(areasOfInterest);
         }
         else
         {
             svgElement.setAttribute('fill-opacity', '0.4');
             svgElement.setAttribute('fill', 'black');
-            waypoints.push(svgElement.getAttribute('id'));
-            console.log(waypoints.length);
+            //waypoints.push(svgElement.getAttribute('id'));
+            var rectXCenter = svgElement.getAttribute('rectXCenter');
+            var rectYCenter = svgElement.getAttribute('rectYCenter');
+            areasOfInterest.set(svgElement.getAttribute('id'), {rectXCenter, rectYCenter});
+            console.log(areasOfInterest);
         }
     });
 </script>
