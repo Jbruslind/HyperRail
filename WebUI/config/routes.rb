@@ -6,7 +6,8 @@ Rails.application.routes.draw do
       post 'default'
     end
   end
-  resources :analyses
+
+  get '/camera_images/*path', format: false, to: 'camera_images#show', as: :camera_image
 
   get '/settings', to: 'settings#index', as: :settings
   post '/settings', to: 'settings#update', as: :update_settings
