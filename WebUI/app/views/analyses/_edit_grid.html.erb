@@ -1,5 +1,5 @@
-//This needs to be modified to pull the selected squares from the previous screen. It still should
-//be editable though.
+<%#This needs to be modified to pull the selected squares from the previous screen. It still should%>
+<%#be editable though.%>
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">Selection Grid</h3>
@@ -10,7 +10,6 @@
 <script>
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
-    console.log(unit_sizes);
     var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
     var PIXEL_CONVERSION_FACTOR = 3779.5275590551;
 
@@ -65,6 +64,8 @@
         rectangle.setAttribute("height", rectHeight_Display);
         rectangle.setAttribute("rectXCenter_Actual", rectXCenter_Actual);
         rectangle.setAttribute("rectYCenter_Actual", rectYCenter_Actual);
+        rectangle.setAttribute("rectWidth_Actual", rectWidth_Actual);
+        rectangle.setAttribute("rectHeight_Actual", rectHeight_Actual);
         rectangle.setAttribute("stroke", "black");
         rectangle.setAttribute("fill", "transparent");
         rectangle.setAttribute("stroke-width", 1);
@@ -96,7 +97,6 @@
             svgElement.setAttribute('fill', 'transparent');
             var target = svgElement.getAttribute('id');
             delete areasOfInterest[target];
-            //console.log(areasOfInterest);
         }
         else
         {
@@ -104,14 +104,15 @@
             svgElement.setAttribute('fill', 'black');
             var x = svgElement.getAttribute('rectXCenter_Actual');
             var y = svgElement.getAttribute('rectYCenter_Actual');
-            areasOfInterest[svgElement.getAttribute('id')] = {x,y};
-            //console.log(areasOfInterest);
+            var width = svgElement.getAttribute('rectWidth_Actual');
+            var height = svgElement.getAttribute('rectHeight_Actual');
+            areasOfInterest[svgElement.getAttribute('id')] = {x,y,width,height};
         }
     });
 
     $("input[name*='commit']").click(function() {
         const json = JSON.parse(areasOfInterest);
         console.log(areasOfInterest);
-        //$('#analysis_areas_of_interest').value(json);
+        $('#analysis_areas_of_interest').value(json);
     });
 </script>

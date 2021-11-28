@@ -8,7 +8,6 @@
 <script>
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
-    console.log(unit_sizes);
     var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
     var PIXEL_CONVERSION_FACTOR = 3779.5275590551;
 

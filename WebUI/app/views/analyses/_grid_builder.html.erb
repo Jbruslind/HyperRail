@@ -62,6 +62,8 @@
         rectangle.setAttribute("height", rectHeight_Display);
         rectangle.setAttribute("rectXCenter_Actual", rectXCenter_Actual);
         rectangle.setAttribute("rectYCenter_Actual", rectYCenter_Actual);
+        rectangle.setAttribute("rectWidth_Actual", rectWidth_Actual);
+        rectangle.setAttribute("rectHeight_Actual", rectHeight_Actual);
         rectangle.setAttribute("stroke", "black");
         rectangle.setAttribute("fill", "transparent");
         rectangle.setAttribute("stroke-width", 1);
@@ -93,7 +95,6 @@
             svgElement.setAttribute('fill', 'transparent');
             var target = svgElement.getAttribute('id');
             delete areasOfInterest[target];
-            //console.log(areasOfInterest);
         }
         else
         {
@@ -101,13 +102,14 @@
             svgElement.setAttribute('fill', 'black');
             var x = svgElement.getAttribute('rectXCenter_Actual');
             var y = svgElement.getAttribute('rectYCenter_Actual');
-            areasOfInterest[svgElement.getAttribute('id')] = {x,y};
-            console.log(areasOfInterest);
+            var width = svgElement.getAttribute('rectWidth_Actual');
+            var height = svgElement.getAttribute('rectHeight_Actual');
+            areasOfInterest[svgElement.getAttribute('id')] = {x,y,width,height};
         }
     });
 
     $("input[name*='commit']").click(function() {
-        const json = JSON.parse(areasOfInterest);
+        const json = JSON.stringify(areasOfInterest);
         $('#analysis_areas_of_interest').value(json);
     });
 </script>
