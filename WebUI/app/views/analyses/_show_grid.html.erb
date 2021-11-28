@@ -65,6 +65,13 @@
         rectangle.setAttribute("stroke", "black");
         rectangle.setAttribute("fill", "transparent");
         rectangle.setAttribute("stroke-width", 1);
+
+        if (i > 40 && i < 90)
+        {
+            rectangle.setAttribute('fill-opacity', '0.4');
+            rectangle.setAttribute('fill', 'black');
+        }
+        
         g.appendChild(rectangle);
         
         if (i%numPerRow_Display == 0)
