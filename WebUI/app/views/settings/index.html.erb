@@ -40,6 +40,7 @@
       <small>Defaults to <%= Rails.root.join('camera_images') %></small>
     </div>
 
-    <%= submit_tag 'Submit', class: 'btn btn-primary btn-sm' %>
+    <%= submit_tag 'Update', class: 'btn btn-primary btn-sm' %>
+    <%= link_to 'Cancel', :back, class: 'btn btn-default btn-sm'  %>
   </div>
 <% end %>
