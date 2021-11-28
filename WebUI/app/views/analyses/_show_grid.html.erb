@@ -1,13 +1,14 @@
 <div class="panel panel-primary">
   <div class="panel-heading">
-    <h3 class="panel-title">Selection Grid</h3>
+    <h3 class="panel-title">Selected Areas of Interest</h3>
   </div>
-  <center><div id="grid" class="panel-body"><h4>Please select areas of interest</h4></div></center>
+  <center><div id="grid" class="panel-body"></div></center>
 </div>
 
 <script>
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
+    console.log(unit_sizes);
     var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
     var PIXEL_CONVERSION_FACTOR = 3779.5275590551;
 
@@ -84,30 +85,4 @@
     }
     svg.appendChild(g);
     document.getElementById("grid").appendChild(svg);
-
-    $('rect').click(function() {
-        var svgElement = document.getElementById($(this).attr('id'));
-
-        if(svgElement.getAttribute('fill') == 'black')
-        {
-            svgElement.setAttribute('fill', 'transparent');
-            var target = svgElement.getAttribute('id');
-            delete areasOfInterest[target];
-            //console.log(areasOfInterest);
-        }
-        else
-        {
-            svgElement.setAttribute('fill-opacity', '0.4');
-            svgElement.setAttribute('fill', 'black');
-            var x = svgElement.getAttribute('rectXCenter_Actual');
-            var y = svgElement.getAttribute('rectYCenter_Actual');
-            areasOfInterest[svgElement.getAttribute('id')] = {x,y};
-            console.log(areasOfInterest);
-        }
-    });
-
-    $("input[name*='commit']").click(function() {
-        const json = JSON.parse(areasOfInterest);
-        $('#analysis_areas_of_interest').value(json);
-    });
 </script>
