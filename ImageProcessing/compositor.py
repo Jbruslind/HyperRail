@@ -1,9 +1,8 @@
-# Imports:
-# Image: Image class, contains basic attribute functions
-# DrawableCompositeImage: Method for creating a composite
+"""This program can be used to composite all images stored as part of a program_run"""
 import argparse
 import sys
 import os.path
+import math
 from db_queries import DatabaseReader
 
 from pathlib import PosixPath
@@ -11,75 +10,21 @@ from pathlib import PosixPath
 from pgmagick.api import Image
 from pgmagick import DrawableCompositeImage, DrawableGravity, GravityType
 from pgmagick import CompositeOperator as co
+from pgmagick import Geometry
 
 QUERIES_PATH = PosixPath("~/HyperRailsrc/hyper_rail/src/").expanduser()
 sys.path.append(str(QUERIES_PATH))
 
-# print(sys.path)
+class Compositor:
 
-# class Compositor:
-
-#     def __init__(self, px_per_mm):
-#         self.px_per_mm = px_per_mm
-#         self.images = []
-#         self.xmin = float("inf")
-#         self.ymin = float("inf")
-#         self.xmax = 0
-#         self.ymax = 0
-#         self.xmax_width = 0
-#         self.ymax_height = 0
-#         return
-
-#     def load_images(self, images):
-#         for image in images:
-#             print(image)
-#             self.images.append({"image": Image(image['path']), "xabs": image['xabs'], "yabs": image['yabs']})
-#         return
-        
-#     def get_images(self):
-#         return self.images
-
-#     def calculate_dimensions(self):
-#         # Find the minimum and maximum x-y coordinates for the reference points in each image
-#         for i in self.images:
-#             print(i['xabs'])
-#             if int(i['xabs']) > self.xmax :
-#                 self.xmax = i['xabs']
-#                 self.xmax_width = i['image'].width
-#             if int(i['yabs']) > self.ymax :
-#                 self.ymax = i['yabs']
-#                 self.ymax_height = i['image'].height
-
-#             self.xmin = int(i['xabs']) if int(i['xabs']) < self.xmin else self.xmin
-#             self.ymin = int(i['yabs']) if int(i['yabs']) < self.ymin else self.ymin
-
-#         # Calculate the relative positions of each image
-#         for i in self.images:        
-#             i['xrel_mm'] = i['xabs'] - self.xmin
-#             i['yrel_mm'] = i['yabs'] - self.ymin
-#             i['xrel_px'] = i['xrel_mm'] * self.px_per_mm
-#             i['yrel_px'] = i['yrel_mm'] * self.px_per_mm
-
-#     def draw_composite(self):
-#         outWidth = (self.xmax - self.xmin) * self.px_per_mm + self.xmax_width
-#         outHeight = (self.ymax - self.ymin) * self.px_per_mm + self.ymax_height
-#         testOut = Image((outWidth, outHeight), 'black')
-#         print(testOut.width, testOut.height)
-
-#         for i in self.images:
-#             testOut.draw(DrawableCompositeImage(i['xrel_px'], i['yrel_px'], i['image'].width, i['image'].height, i['image'].img))
-#         testOut.write("test.png")
-
-#     def create_composite(self):
-#         self.calculate_dimensions()
-#         self.draw_composite()
-    
-class NewCompositor:
-
-    def __init__(self, px_per_m):
+    def __init__(self):
         self.db = DatabaseReader()
         self.image_path = self.db.get_image_dir()
-        self.px_per_m = px_per_m
+        self.camera_crop = self.db.get_camera_crop()
+        self.camera_height = float(self.db.get_camera_height())
+        self.camera_fov = float(self.db.get_camera_fov())
+        self.program_run_id = ""
+        self.px_per_m = 0
         self.images = []
         self.x_min = float("inf")
         self.y_min = float("inf")
@@ -87,69 +32,88 @@ class NewCompositor:
         self.y_max = 0.0
         self.x_max_width = 0
         self.y_max_height = 0
+
         return
     
     def __str__(self):
         return "x_min: {0}, y_min: {1}, x_max: {2}, y_max: {3}, x_max_width: {4}, y_max_height: {5} z: {2}".format(self.x_min, self.y_min, self.x_max, self.y_max, self.x_max_width, self.y_max_height)
 
-    def load_images(self, program_run_id):
-        self.images = self.db.get_images_for_composite(program_run_id)
-        # for i in self.images:
-        #     print(tuple(i))
-        #     if i['x'] > self.x_max:
-        #         self.x_max = i['x']
-        #     if i['y'] > self.y_max:
-        #         self.y_max = i['y']
-        # print(f"x_max = {self.x_max} y_max = {self.y_max}")
-        return
-        
     def get_images(self):
         return self.images
+
+    def load_images(self, program_run_id):
+        self.program_run_id = program_run_id
+        print("Getting images from database")
+        self.images = self.db.get_images_for_composite(program_run_id)
+        return
 
     def calculate_dimensions(self):
         # Find the minimum and maximum x-y coordinates for the reference points in each image
         for i in self.images:
-            path = os.path.join(self.image_path, str(i['program_run_id']), i['image_type'], i['uri'])
-            print(path)
-            print(i['x'])
-            print(self.x_max)
-            if float(i['x']) > self.x_max :
-                self.x_max = i['x']
-                self.x_max_width = Image(path).width
-            if float(i['y']) > self.y_max :
-                self.y_max = i['y']
-                self.y_max_height = Image(path).height 
-
-            self.x_min = int(i['x']) if int(i['x']) < self.x_min else self.x_min
-            self.y_min = int(i['y']) if int(i['y']) < self.y_min else self.y_min
-
-
-
+            self.x_max = (i['x']) if (i['x']) > self.x_max else self.x_max
+            self.y_max = (i['y']) if (i['y']) > self.y_max else self.y_max
+            self.x_min = (i['x']) if (i['x']) < self.x_min else self.x_min
+            self.y_min = (i['y']) if (i['y']) < self.y_min else self.y_min
+            print("x_min, {}y_min {}".format(self.x_min, self.y_min))
+    
+    def crop_image(self, image):
+        crop_percent = 1 - (int(self.camera_crop) / 100)
+        h = round(image.height * crop_percent)
+        w = round(image.width * crop_percent) 
+        x_offset = round((image.width - w)/2)
+        y_offset = round((image.height - h)/2)
+        print(w, h, x_offset, y_offset)
+        image.crop(Geometry(w, h, x_offset, y_offset))
+        return image
+        
     def draw_composite(self):
-        outWidth = (self.x_max - self.x_min) * self.px_per_m + (self.x_max_width / 2)
-        outHeight = (self.y_max - self.y_min) * self.px_per_m + (self.y_max_height / 2)
-        testOut = Image((outWidth, outHeight), 'black')
-        print(testOut.width, testOut.height)
+        # Get an image width to calculate px_per_m
+        # Using first image collected for program run. This assumes all images are the same dimensions
+        i = self.images[0]
+        imagepath = os.path.join(self.image_path, str(i['program_run_id']), i['image_type'], i['uri'])
+        setup_image = Image(imagepath)
 
-        # Calculate the relative positions of each image
-        # for i in self.images:        
-        #     i['xrel_mm'] = i['x'] - self.x_min
-        #     i['yrel_mm'] = i['y'] - self.y_min
-        #     i['xrel_px'] = i['xrel_mm'] * self.px_per_m
-        #     i['yrel_px'] = i['yrel_mm'] * self.px_per_m
+        # Calculate pixels per meter using camera height, fov, and image dimensions
+        w_px = setup_image.width
+        t= math.tan(math.radians(self.camera_fov / 2.0))
+        w_meters = 2 * ( self.camera_height * t)
+        self.px_per_m = w_px / w_meters
 
-        for i in self.images:
-            in_path = os.path.join(self.image_path, str(i['program_run_id']), i['image_type'], i['uri'])
-            out_path = os.path.join(self.image_path, str(i['program_run_id']), i['image_type'], f"{i['image_type']}_composite.png")
-            image = Image(in_path)
-            width = image.width
-            height = image.height
-            xrel_m = i['x'] - self.x_min
-            yrel_m = i['y'] - self.y_min
-            x = xrel_m * self.px_per_m  - (width / 2)
-            y = yrel_m * self.px_per_m  - (height / 2)
-            testOut.draw(DrawableCompositeImage(x, y, width, height, image.img))
-        testOut.write(out_path)
+        setup_image = self.crop_image(setup_image)
+
+        # Calculate size of final image and create a black base image
+        # TODO: Need to resolve issue with deriving the origin from image widths
+        # Calculating the origin results in 0.97% error which translates to 13 pixel per image shift
+        # x-min needs to be adjacent to the edge of the work area
+        x_coord_conversion = (setup_image.width / 2) / (self.x_min)
+        y_coord_conversion = (setup_image.height / 2) / (self.y_min)
+        outWidth = x_coord_conversion * self.x_max + (setup_image.width / 2)
+        outHeight = y_coord_conversion * self.y_max + (setup_image.height / 2)
+        output_image= Image((outWidth, outHeight), 'black')
+        print("Composited image will be {} x {} px".format(output_image.width, output_image.height))
+
+        # get each type of image in program run and create a composite for each
+        image_types = self.db.get_image_types_for_program_run(self.program_run_id)
+        for t in image_types:
+            output_name = f"{t['image_type']}_composite9.tif"
+            out_path = os.path.join(self.image_path, str(program_run_id), output_name)
+
+            # TODO: optimize this by querying for each image type rather than iterating over entire set multiple times
+            for i in self.images:
+                if i['image_type'] == t['image_type']:
+                    in_path = os.path.join(self.image_path, str(i['program_run_id']), i['image_type'], i['uri'])
+                    print(f"adding {i['uri']} to composite")
+                    image = self.crop_image(Image(in_path))
+
+                    # Calculate location to add image to composite
+                    width = image.width
+                    height = image.height
+                    x = x_coord_conversion * i['x'] - (width/2)
+                    y = y_coord_conversion * i['y'] - (height/2)
+                    output_image.draw(DrawableCompositeImage(x, y, image.img))
+                    output_image.write(out_path)
+            print(f"Composite image written to {out_path}")
+
 
     def create_composite(self):
         self.calculate_dimensions()
@@ -157,23 +121,13 @@ class NewCompositor:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("-p", "--programrun", type=str, required=True, nargs='+',
-    	help="path to input directory of images to stitch")
+    ap.add_argument("-p", "--program_run", type=int, required=True, nargs=1,
+    	help="program run id generated when program was executed")
     args = vars(ap.parse_args())
     
-    # print((args["programrun"]))
-    # exit()
-    program_run_id = int(args["programrun"][0])
+    program_run_id = int(args["program_run"][0])
 
-
-
-    px_per_m = 700
-    comp = NewCompositor(px_per_m)
+    comp = Compositor()
     comp.load_images(program_run_id)
-    comp.calculate_dimensions()
-    comp.draw_composite()
+    comp.create_composite()
     print(comp)
-
-    # Create blank space for compositing
-
-    # Loop over images, adding to composite using the top right corner
