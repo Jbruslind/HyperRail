@@ -22,15 +22,27 @@
     </tr>
     <tr>
       <th class="text-right">Temperature</th>
-      <td>&lt;fetch from db?&gt;</td>
+      <td><%= if sensor_reading = SensorReading.latest_for('temperature')
+                "#{sensor_reading.value.round(2)}&deg;<br/>".html_safe + time_tag(sensor_reading.created_at)
+              else
+                "&lt;none yet&gt;".html_safe
+              end %></td>
     </tr>
     <tr>
       <th class="text-right">Humidity</th>
-      <td>&lt;fetch from db?&gt;</td>
+      <td><%= if sensor_reading = SensorReading.latest_for('humidity')
+                "#{sensor_reading.value.round(1)}%<br/>".html_safe + time_tag(sensor_reading.created_at)
+              else
+                "&lt;none yet&gt;".html_safe
+              end %></td>
     </tr>
     <tr>
       <th class="text-right">Luminosity</th>
-      <td>&lt;fetch from db?&gt;</td>
+      <td><%= if sensor_reading = SensorReading.latest_for('lux')
+                "#{number_with_delimiter(sensor_reading.value.to_i.round)} lux<br/>".html_safe + time_tag(sensor_reading.created_at)
+              else
+                "&lt;none yet&gt;".html_safe
+              end %></td>
     </tr>
   </table>
 </div>
