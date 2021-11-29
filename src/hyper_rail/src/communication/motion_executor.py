@@ -45,6 +45,9 @@ class MotionWatcher:
     def update_position(self, Position: MachinePosition):
         self.location = Position.machinePosition
     
+    # TODO: Need to improve the way the motion and program nodes communicate their statuses. Currently this method
+    # is unused to prevent a circular dependency. This causes the program node to not unblock to accepting single gcodes after a program executes
+    # It does allows subsequent program run requests.
     def update_program_status(self, Status: ProgramStatus):
         self.motion_status = Status.status
 
@@ -88,7 +91,11 @@ class MotionWatcher:
         if not math.isclose(x, x_dest, abs_tol=0.001) or not math.isclose(y, y_dest, abs_tol=0.001):
             x = x_dest
             y = y_dest
-            codes.append("{} {} {} 0".format(code, round(x, 5), round(y, 5)))
+            if len(GCode) == 5:
+                next_code = "{} {} {} 0 {}".format(code, round(x, 5), round(y, 5), GCode[4])
+            else:
+                next_code = "{} {} {} 0".format(code, round(x, 5), round(y, 5))
+            codes.append(next_code)
 
         for code in codes:
             self.publisher.publish(code)

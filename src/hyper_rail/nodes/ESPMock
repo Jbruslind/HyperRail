@@ -25,9 +25,16 @@ runningState = "ok"
 def gcode_handler(data: GCodeFeed):
     print("GCodeFeed Received: ", data.code)
     dest = data.code.split(" ")
-    if dest[0] != "G00" or dest[0] != "G01":
+    print(dest[0])
+    if not (dest[0] == "G00" or dest[0] == "G01"):
         print(f"Received: {data.code}, ESP Mock is for demo, only accepts G00 and G01")
+        return
     dest.pop(0)
+    print(dest)
+    if len(dest) == 4:
+        dest.pop(3)
+    print(dest)
+
     dest = list(map(float, dest))
     while machinePos != dest:
 
