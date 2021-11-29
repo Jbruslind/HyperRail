@@ -17,39 +17,37 @@
 <script src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
 
 <script>
-  window.onload = () => {
-    $(document).ready(function() {
-      ros.on('close', function() {
-        $('#send_gcode_btn').prop('disabled', true);
-      });
-      $('#send_gcode_btn').click(function(event) {
-        // Stop this event from propagating
-        event.preventDefault();
-  
-        // Fetch the text value, if there is one
-        var gcode = $('#gcode_command').val();
-  
-        // Return if there is no gcode to send
-        if (gcode == '') { return }
-        
-        // Send this gcode value to roslib instead of alert
-        var manualGcodeClient = new ROSLIB.Service({
-          ros : ros,
-          name : '/manual_service',
-          serviceType : 'hyper_rail/ManualService'
-        });
-        
-        var request = new ROSLIB.ServiceRequest({
-          GCode : gcode
-        });
-        
-        manualGcodeClient.callService(request, function(result) {
-          console.log('Response to service call on '
-            + manualGcodeClient.name
-            + ': '
-            + result.status);
-        });
-      })
+  $(document).ready(function() {
+    ros.on('close', function() {
+      $('#send_gcode_btn').prop('disabled', true);
     });
-  }
+    $('#send_gcode_btn').click(function(event) {
+      // Stop this event from propagating
+      event.preventDefault();
+
+      // Fetch the text value, if there is one
+      var gcode = $('#gcode_command').val();
+
+      // Return if there is no gcode to send
+      if (gcode == '') { return }
+      
+      // Send this gcode value to roslib instead of alert
+      var manualGcodeClient = new ROSLIB.Service({
+        ros : ros,
+        name : '/manual_service',
+        serviceType : 'hyper_rail/ManualService'
+      });
+      
+      var request = new ROSLIB.ServiceRequest({
+        GCode : gcode
+      });
+      
+      manualGcodeClient.callService(request, function(result) {
+        console.log('Response to service call on '
+          + manualGcodeClient.name
+          + ': '
+          + result.status);
+      });
+    })
+  });
 </script>
