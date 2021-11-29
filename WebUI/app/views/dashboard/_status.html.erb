@@ -53,62 +53,60 @@
 </div>
 <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
 <script src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
 <script>
-// Connecting to ROS
-// -----------------
-var ros = new ROSLIB.Ros();
+  // Set up ROS connection
+  var ros = new ROSLIB.Ros()
+  // Create a connection to the rosbridge WebSocket server.
+//  ros.connect('ws://localhost:9090');
+  ros.connect('ws://192.168.0.51:9090');
+  // Monitor connection status
+  // If there is an error on the backend, an 'error' emit will be emitted.
+  ros.on('error', function(error) {
+    document.getElementById('connecting').style.display = 'none';
+    document.getElementById('connected').style.display = 'none';
+    document.getElementById('closed').style.display = 'none';
+    document.getElementById('error').style.display = 'inline';
+    console.log(error);
+  });
 
-// If there is an error on the backend, an 'error' emit will be emitted.
-ros.on('error', function(error) {
-  document.getElementById('connecting').style.display = 'none';
-  document.getElementById('connected').style.display = 'none';
-  document.getElementById('closed').style.display = 'none';
-  document.getElementById('error').style.display = 'inline';
-  console.log(error);
-});
+  // Find out exactly when we made a connection.
+  ros.on('connection', function() {
+    console.log('Connection made!');
+    document.getElementById('connecting').style.display = 'none';
+    document.getElementById('error').style.display = 'none';
+    document.getElementById('closed').style.display = 'none';
+    document.getElementById('connected').style.display = 'inline';
+  });
 
-// Find out exactly when we made a connection.
-ros.on('connection', function() {
-  console.log('Connection made!');
-  document.getElementById('connecting').style.display = 'none';
-  document.getElementById('error').style.display = 'none';
-  document.getElementById('closed').style.display = 'none';
-  document.getElementById('connected').style.display = 'inline';
-});
+  ros.on('close', function() {
+    console.log('Connection closed.');
+    document.getElementById('connecting').style.display = 'none';
+    document.getElementById('connected').style.display = 'none';
+    document.getElementById('closed').style.display = 'inline';
+  });
 
-ros.on('close', function() {
-  console.log('Connection closed.');
-  document.getElementById('connecting').style.display = 'none';
-  document.getElementById('connected').style.display = 'none';
-  document.getElementById('closed').style.display = 'inline';
-});
+  var position = new ROSLIB.Topic({
+    ros : ros,
+    name : '/current_position',
+    messageType : 'hyper_rail/MachinePosition'
+  })
 
-// Create a connection to the rosbridge WebSocket server.
-// ros.connect('ws://localhost:9090');
-ros.connect('ws://192.168.0.51:9090');
+  position.subscribe(function(message) {
+    var x = message.machinePosition.x;
+    var y = message.machinePosition.y;
+    document.getElementById('position_x').innerHTML = x;
+    document.getElementById('position_y').innerHTML = y;
+  })
 
-var position = new ROSLIB.Topic({
-  ros : ros,
-  name : '/current_position',
-  messageType : 'hyper_rail/MachinePosition'
-})
+  var motion_status = new ROSLIB.Topic({
+    ros : ros,
+    name : '/motion_status',
+    messageType : 'hyper_rail/MotionStatus'
+  })
 
-position.subscribe(function(message) {
-  var x = message.machinePosition.x;
-  var y = message.machinePosition.y;
-  var z = message.machinePosition.z;
-  document.getElementById('position_x').innerHTML = x;
-  document.getElementById('position_y').innerHTML = y;
-  document.getElementById('position_z').innerHTML = z;
-})
+  motion_status.subscribe(function(message) {
+    document.getElementById('motion_status').innerHTML = message.status;
+  })
 
-var motion_status = new ROSLIB.Topic({
-  ros : ros,
-  name : '/motion_status',
-  messageType : 'hyper_rail/MotionStatus'
-})
-
-motion_status.subscribe(function(message) {
-  document.getElementById('motion_status').innerHTML = message.status;
-})
 </script>

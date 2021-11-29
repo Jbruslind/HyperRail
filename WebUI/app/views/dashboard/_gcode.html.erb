@@ -15,40 +15,41 @@
 </div>
 <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
 <script src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
 <script>
-  // Set up ROS connection
-  var ros = new ROSLIB.Ros()
-  // Create a connection to the rosbridge WebSocket server.
-  // ros.connect('ws://localhost:9090');
-  ros.connect('ws://192.168.0.51:9090');
-  $(document).ready(function() {
-    $('#send_gcode_btn').click(function(event) {
-      // Stop this event from propagating
-      event.preventDefault();
-
-      // Fetch the text value, if there is one
-      var gcode = $('#gcode_command').val();
-
-      // Return if there is no gcode to send
-      if (gcode == '') { return }
-
-      // Send this gcode value to roslib instead of alert
-      var manualGcodeClient = new ROSLIB.Service({
-        ros : ros,
-        name : '/manual_service',
-        serviceType : 'hyper_rail/ManualService'
+  window.onload = () => {
+    $(document).ready(function() {
+      ros.on('close', function() {
+        $('#send_gcode_btn').prop('disabled', true);
       });
-    
-      var request = new ROSLIB.ServiceRequest({
-        GCode : gcode
-      });
-    
-      manualGcodeClient.callService(request, function(result) {
-        console.log('Response to service call on '
-          + manualGcodeClient.name
-          + ': '
-          + result.status);
-      });
-    })
-  });
+      $('#send_gcode_btn').click(function(event) {
+        // Stop this event from propagating
+        event.preventDefault();
+  
+        // Fetch the text value, if there is one
+        var gcode = $('#gcode_command').val();
+  
+        // Return if there is no gcode to send
+        if (gcode == '') { return }
+        
+        // Send this gcode value to roslib instead of alert
+        var manualGcodeClient = new ROSLIB.Service({
+          ros : ros,
+          name : '/manual_service',
+          serviceType : 'hyper_rail/ManualService'
+        });
+        
+        var request = new ROSLIB.ServiceRequest({
+          GCode : gcode
+        });
+        
+        manualGcodeClient.callService(request, function(result) {
+          console.log('Response to service call on '
+            + manualGcodeClient.name
+            + ': '
+            + result.status);
+        });
+      })
+    });
+  }
 </script>
