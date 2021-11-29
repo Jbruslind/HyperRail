@@ -14,7 +14,7 @@ from hyper_rail.msg import ProgramStatus
 
 from hyper_rail.srv import PathService, PathServiceRequest
 from hyper_rail.srv import MotionService, MotionServiceRequest, MotionServiceResponse       # For incoming waypoints
-from hyper_rail.srv import ManualService, ManualServiceRequest, ManualServiceResponse      # For individual Gcodes received from UI
+from hyper_rail.srv import ManualService, ManualServiceRequest, ManualServiceResponse       # For individual Gcodes received from UI
 
 class MotionWatcher:
     def __init__(self, publisher):
@@ -34,27 +34,27 @@ class MotionWatcher:
                 self.motion_status = f"Executing {cur}"
                 code = cur.split(" ")
                 print("manual code:",code)
+                # If code is a distance, have the distance split up
                 if code[0] == "G00" or code[0] == "G01":
                     self.calculate_intermediates(code)
-                # Parse Code
-                # Calc intermediate waypoints
-                # Publish
-                # Return Response
+                # Otherwise send code directly to GRBL
+                else:
+                    self.publisher.publish(cur)
                 self.motion_status = 'idle'
-
 
     def update_position(self, Position: MachinePosition):
         self.location = Position.machinePosition
-        # status = Position.status
     
     def update_program_status(self, Status: ProgramStatus):
         self.motion_status = Status.status
 
+    # Used when an individual code is received
     def calculate_intermediates(self, GCode):
         code = GCode[0]
         x_dest = float(GCode[1])
         y_dest = float(GCode[2])
         z_dest = float(GCode[3])
+
         codes = []
         x = float(self.location.x)
         y = float(self.location.y)
@@ -77,7 +77,10 @@ class MotionWatcher:
                 y += y_inc 
             elif y_dest - (y ) < 0:
                 y -= y_inc 
-            next_code = "{} {} {} 0".format(code, round(x, 5), round(y, 5))
+            if len(GCode) == 5:
+                next_code = "{} {} {} 0 {}".format(code, round(x, 5), round(y, 5), GCode[4])
+            else:
+                next_code = "{} {} {} 0".format(code, round(x, 5), round(y, 5))
             print(next_code)
             codes.append(next_code)
             time.sleep(0.1)
@@ -132,7 +135,6 @@ class MotionWatcher:
             next_code = "G00 {} {} 0".format(round(x, 5), round(y, 5))
             print(next_code)
             codes.append(next_code)
-            time.sleep(0.1)
 
         if not math.isclose(x, x_dest, abs_tol=0.001) or not math.isclose(y, y_dest, abs_tol=0.001):
             x = x_dest
@@ -144,16 +146,14 @@ class MotionWatcher:
             self.publish_rate.sleep()
 
         # Monitor location until destination reached, then send response to ProgramNode
-        # TODO: add in error handling
         while not (math.isclose(self.location.x, x_dest, abs_tol=0.01) and math.isclose(self.location.y, y_dest, abs_tol=0.01)):
             print("current location: {} {} destination: {} {}                          MotionNode".format(self.location.x, self.location.y, x_dest, y_dest))
             time.sleep(1)
         
         print("current location: {} {}                           MotionNode".format(self.location.x, self.location.y))
-        print("motion status at end, ", self.motion_status)
         if req.program == None:
             print("program in None", req.program)
-            self.motion_status = 'idle'
+        self.motion_status = 'idle'
         return MotionServiceResponse("ok")
 
     def receive_manual_operation(self, req: ManualService):

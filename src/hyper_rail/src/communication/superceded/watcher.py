@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# FIXME: change the name of this file and move to a better spot
+# NOTE: This class is no longer in use, was used during research. Left for reference, but may be removed.
 
 import time
 from queue import Queue

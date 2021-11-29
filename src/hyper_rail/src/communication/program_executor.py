@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 # This class watches for programs to be added to the queue and executes them as the come in.
-# FIXME: change the name of this file and move to a better spot
 
 import rospy
 import time
@@ -21,11 +20,9 @@ class Watcher:
         self.program_status = "idle"
         self.w = ""
         self.publisher = publisher
-        self.test_program = [{'x': 10, 'y': 15}, {'x': 16, 'y': 21}, {'x': 2, 'y': 13}]
-        self.test_program2 = [{'x': 3, 'y': 7, 'action': 1}, {'x': 2, 'y': 4, 'action': 2}, {'x': 8, 'y':9, 'action': 3}]
-        self.home_program = [{'x': 0, 'y': 0}]
         self.db = ""
 
+    # Runs continuously while ProgramNode is up. Monitors for programs added to the execution queue
     def watch(self):
         while True:
             if not self.q.empty():
@@ -35,7 +32,8 @@ class Watcher:
                     self.program_status = f"executing: program {program}"
                     status = self.execute(program)
                     print(status)
-                    # self.execute(self.home_program)
+                    if self.q.empty():
+                        self.program_status = "idle"
                     del self.db
 
     def update_motion_status(self, Status: MotionStatus):
@@ -52,6 +50,7 @@ class Watcher:
             print("Service call failed: %s"%e)
     
     # sends the action to the sensor node
+    # TODO: Build additional sensor nodes as needed
     def sensorAction(self, program_run_id, run_waypoint_id, action):
         print("action: ", action)
         if action == "temperature":
@@ -86,31 +85,16 @@ class Watcher:
             run_waypoint_id = self.db.create_run_waypoint_id(w['id'], run_id, w['x'], w['y'], w['z'])
             print(f"\nExecuting waypoint {w['id']}, actions: {w['actions']}\n")
             actions = ast.literal_eval(w['actions'])
-            # for action in actions:
-            #     print(action)
 
             if w_count < len(waypoints):
                 status = self.goTo(w['x'], w['y'], program)
             else:
                 status = self.goTo(w['x'], w['y'], None)
-            #TODO: Need to create run waypoints to send to camera node
 
+            # Generate threads for service calls to allow for concurrent requests
             threads = []
             for action in actions:
                 threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, action,)))
-                # if action == "temperature":
-                #     threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, 1,)))
-                #     threads[-1].daemon = True
-                # elif action == "image":
-                #     threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, 2,)))
-                #     threads[-1].daemon = True
-                # elif action == "humidity":
-                #     threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, 3,)))
-                #     threads[-1].daemon = True
-                # elif action == "lux":
-                #     threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, 4,)))
-                #     threads[-1].daemon = True
-
             
             for t in threads:
                 t.start()
@@ -122,13 +106,17 @@ class Watcher:
             w_count += 1
         
         # 3. Create stitched image
+        # NOTE: This currently uses OpenCV image stitcher which may drop images due to not enough features
+        # If stitch is missing images, run the compositor program with program_id to generate images with pgmagick compositor
+        # TODO: replace stitcher with compositor here
+
+        # NOTE: manually setting run ID here for demonstration, remove this assignment in implementation
         run_id = 10
+
         image_types = self.db.get_image_types_for_program_run(run_id)
         print(image_types)
         for t in image_types:
 
-            #TODO: Need to handle each type of image - get image types for program run. for each type, stitch
-            # TODO: run_id is being set here for testing with mock data. Remove this line for implementation
             paths = self.db.get_image_paths(run_id, t['image_type'])
             relative_paths = []
             for path in paths:
@@ -141,6 +129,4 @@ class Watcher:
             stitcher.stitch()
 
         self.db.update_program_run_finished(run_id)
-        # TODO: Add update to include the finished_at time for program_run
-        # TODO: add error handling
         return 'ok'

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# NOTE: This node was created for research, not used for ROS program
+
 import rospy
 
 from queue import Queue                                                             # Queue is threadsafe, use for keeping keeping track of Programs
