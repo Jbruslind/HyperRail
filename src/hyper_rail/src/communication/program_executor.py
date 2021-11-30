@@ -86,30 +86,30 @@ class Watcher:
         run_id = self.db.create_program_run(program)
 
         # 2. Execute each waypoint/action
-        # w_count = 0
-        # for w in waypoints:
-        #     run_waypoint_id = self.db.create_run_waypoint_id(w['id'], run_id, w['x'], w['y'], w['z'])
-        #     print(f"\nExecuting waypoint {w['id']}, actions: {w['actions']}\n")
-        #     actions = ast.literal_eval(w['actions'])
+        w_count = 0
+        for w in waypoints:
+            run_waypoint_id = self.db.create_run_waypoint_id(w['id'], run_id, w['x'], w['y'], w['z'])
+            print(f"\nExecuting waypoint {w['id']}, actions: {w['actions']}\n")
+            actions = ast.literal_eval(w['actions'])
 
-        #     if w_count < len(waypoints):
-        #         status = self.goTo(w['x'], w['y'], program)
-        #     else:
-        #         status = self.goTo(w['x'], w['y'], None)
+            if w_count < len(waypoints):
+                status = self.goTo(w['x'], w['y'], program)
+            else:
+                status = self.goTo(w['x'], w['y'], None)
 
-        #     # Generate threads for service calls to allow for concurrent requests
-        #     threads = []
-        #     for action in actions:
-        #         threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, action,)))
+            # Generate threads for service calls to allow for concurrent requests
+            threads = []
+            for action in actions:
+                threads.append(Thread(target = self.sensorAction, args=(run_id, run_waypoint_id, action,)))
             
-        #     for t in threads:
-        #         t.start()
+            for t in threads:
+                t.start()
             
-        #     for t in threads:
-        #         t.join()
+            for t in threads:
+                t.join()
 
-        #     self.db.update_run_waypoint_id_finished(run_waypoint_id)
-        #     w_count += 1
+            self.db.update_run_waypoint_id_finished(run_waypoint_id)
+            w_count += 1
         
         # 3. Create stitched image
         # NOTE: This currently uses OpenCV image stitcher which may drop images due to not enough features
@@ -121,21 +121,6 @@ class Watcher:
         comp = Compositor()
         comp.load_images(run_id)
         comp.create_composite()
-
-        # image_types = self.db.get_image_types_for_program_run(run_id)
-        # print(image_types)
-        # for t in image_types:
-
-        #     paths = self.db.get_image_paths(run_id, t['image_type'])
-        #     relative_paths = []
-        #     for path in paths:
-        #         relative_paths.append(f"{run_id}/{t['image_type']}/{path}")
-        #     print(relative_paths)
-        #     dir = f"{run_id}/{t['image_type']}"
-
-        #     outfile = f"{t['image_type']}_stitch.tiff"
-        #     stitcher = HRStitcher(paths, outfile, dir)
-        #     stitcher.stitch()
 
         self.db.update_program_run_finished(run_id)
         return 'ok'

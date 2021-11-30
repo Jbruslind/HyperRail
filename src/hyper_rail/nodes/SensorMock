@@ -7,6 +7,7 @@ import rospy
 import time
 
 # Figure out the deal with SensorServiceRequest
+from hyper_rail.msg import GreenhouseSensorReadings
 from hyper_rail.srv import SensorService, SensorServiceRequest, SensorServiceResponse
 
 #Called when service receives new request
@@ -24,6 +25,7 @@ def init_node():
 
     # Sleep once per second. This may not actually be necessary
     publish_rate = rospy.Rate(1)
+    publisher = rospy.Publisher("sensor_readings", GreenhouseSensorReadings, handler=publish_readings)
 
     # Service to receive camera commands
     service = rospy.Service("sensor_service", SensorService, handler=receive_command)
@@ -32,6 +34,7 @@ def init_node():
     rospy.loginfo(f"{rospy.get_name()}: serial connection established...") 
 
     while not rospy.is_shutdown():
+        # publisher.publish(random.uniform(5, 10))
         publish_rate.sleep()
 
 if __name__ == "__main__":
