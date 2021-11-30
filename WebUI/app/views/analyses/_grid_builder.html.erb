@@ -106,10 +106,7 @@
             var height = svgElement.getAttribute('rectHeight_Actual');
             areasOfInterest[svgElement.getAttribute('id')] = {x,y,width,height};
         }
-    });
 
-    $("input[name*='commit']").click(function() {
-        const json = JSON.stringify(areasOfInterest);
-        $('#analysis_areas_of_interest').value(json);
+        $('#analysis_areas_of_interest').val(JSON.stringify(areasOfInterest));
     });
 </script>

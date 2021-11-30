@@ -21,13 +21,32 @@ class AnalysesController < ApplicationController
 
   # POST /analyses or /analyses.json
   def create
-    @analysis = Analysis.new(analysis_params)
-
     respond_to do |format|
-      if @analysis.save
+      begin
+        @analysis = Analysis.new(analysis_params)
+
+        Analysis.transaction do
+          # Save our analysis, raising an exception if it can't be saved
+          @analysis.save!
+
+          # Turn out serialized areas of interest into a ruby hash
+          areas_of_interest = JSON.parse(params['analysis']['areas_of_interest'])
+
+          # $stderr.puts areas_of_interest.inspect
+          # Go through each area of interest and save it
+          areas_of_interest.each do |rect_id, dimensions|
+            @analysis.areas_of_interest.create(
+              x: dimensions['x'].to_f,
+              y: dimensions['y'].to_f,
+              width: dimensions['width'].to_f,
+              height: dimensions['height'].to_f
+            )
+          end
+        end
+
         format.html { redirect_to @analysis, notice: "Analysis was successfully created." }
         format.json { render :show, status: :created, location: @analysis }
-      else
+      rescue
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @analysis.errors, status: :unprocessable_entity }
       end
