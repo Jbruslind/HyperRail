@@ -53,6 +53,7 @@ add_message_files(
   InstructionFeed.msg
   ProgramFeed.msg
   MotionStatus.msg
+  ProgramStatus.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -172,11 +173,11 @@ include_directories(
 catkin_install_python(PROGRAMS
    nodes/services/ESP32Controller
    nodes/GreenhouseSensorParser
-   nodes/PathPlanner
-   nodes/PathInputTester
-   nodes/LocationTester
-   nodes/LocationTracker
-   nodes/PositionTester
+#   nodes/PathPlanner
+#   nodes/PathInputTester
+#   nodes/LocationTester
+#   nodes/LocationTracker
+#   nodes/PositionTester
    nodes/CameraMock
    nodes/SensorMock
    nodes/ESPMock

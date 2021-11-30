@@ -21,6 +21,7 @@ class MotionWatcher:
         self.location = None
         self.motion_status = "idle" 
         self.response_status = ""
+        self.program_status = ""
         self.single_codes = Queue()
         self.w = ""
         self.publisher = publisher
@@ -28,6 +29,8 @@ class MotionWatcher:
 
     def watch_for_single_codes(self):
         while True:
+            if self.program_status == 'idle' and self.motion_status == 'idle':
+                self.motion_status = 'idle'
             if not self.single_codes.empty():
                 cur = self.single_codes.get()
                 print(cur)
@@ -49,7 +52,7 @@ class MotionWatcher:
     # is unused to prevent a circular dependency. This causes the program node to not unblock to accepting single gcodes after a program executes
     # It does allows subsequent program run requests.
     def update_program_status(self, Status: ProgramStatus):
-        self.motion_status = Status.status
+        self.program_status = Status.status
 
     # Used when an individual code is received
     def calculate_intermediates(self, GCode):

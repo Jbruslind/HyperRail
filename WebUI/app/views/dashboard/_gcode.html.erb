@@ -43,10 +43,7 @@
       });
       
       manualGcodeClient.callService(request, function(result) {
-        console.log('Response to service call on '
-          + manualGcodeClient.name
-          + ': '
-          + result.status);
+        alert(manualGcodeClient.name + ': ' + result.status)
       });
     })
   });

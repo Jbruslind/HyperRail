@@ -21,6 +21,7 @@ from hyper_rail.srv import ManualService
 from hyper_rail.msg import GCodeFeed                                                # Message formate for Gcode messages
 from hyper_rail.msg import MachinePosition                                          # Message format for current position polling
 from hyper_rail.msg import MotionStatus                                             # Message format for monitoring whether to wait on additional motions
+from hyper_rail.msg import ProgramStatus
 # need ESP32Controller for polling
 
 # Track motion, send response when location = destination
@@ -43,6 +44,8 @@ def init_node():
 
     # Service to receive manual input from UI
     manualService = rospy.Service("manual_service", ManualService, handler = motionExecutor.receive_manual_operation)
+
+    status_sub = rospy.Subscriber("program_status", ProgramStatus, callback = motionExecutor.update_program_status, queue_size=100)
 
     motion_status_pub = rospy.Publisher("motion_status", MotionStatus, queue_size=10)
 
