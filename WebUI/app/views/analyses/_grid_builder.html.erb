@@ -101,11 +101,12 @@
         {
             svgElement.setAttribute('fill-opacity', '0.4');
             svgElement.setAttribute('fill', 'black');
+            var rectID = svgElement.getAttribute('id');
             var x = svgElement.getAttribute('rectXCenter');
             var y = svgElement.getAttribute('rectYCenter');
             var width = svgElement.getAttribute('rectWidthActual');
             var height = svgElement.getAttribute('rectHeightActual');
-            areasOfInterest[svgElement.getAttribute('id')] = {x,y,width,height};
+            areasOfInterest[rectID] = {rectID,x,y,width,height};
         }
 
         $('#analysis_areas_of_interest').val(JSON.stringify(areasOfInterest));
