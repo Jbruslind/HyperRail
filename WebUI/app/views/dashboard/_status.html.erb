@@ -6,7 +6,6 @@
   <div class="panel-body">
     <p>Paragraph about the machine status and summary goes here</p>
   </div>
-
   <table class="table">
     <tr>
       <th class="text-right">ROS Connection Status</th>
@@ -39,18 +38,34 @@
     </tr>
     <tr>
       <th class="text-right">Temperature</th>
-      <td>&lt;fetch from db?&gt;</td>
+      <td><%= if sensor_reading = SensorReading.latest_for('temperature')
+                "#{sensor_reading.value.round(2)}&deg;<br/>".html_safe + time_tag(sensor_reading.created_at)
+              else
+                "&lt;none yet&gt;".html_safe
+              end %></td>
     </tr>
     <tr>
       <th class="text-right">Humidity</th>
-      <td>&lt;fetch from db?&gt;</td>
+      <td><%= if sensor_reading = SensorReading.latest_for('humidity')
+                "#{sensor_reading.value.round(1)}%<br/>".html_safe + time_tag(sensor_reading.created_at)
+              else
+                "&lt;none yet&gt;".html_safe
+              end %></td>
     </tr>
     <tr>
       <th class="text-right">Luminosity</th>
-      <td>&lt;fetch from db?&gt;</td>
+      <td><%= if sensor_reading = SensorReading.latest_for('lux')
+                "#{number_with_delimiter(sensor_reading.value.to_i.round)} lux<br/>".html_safe + time_tag(sensor_reading.created_at)
+              else
+                "&lt;none yet&gt;".html_safe
+              end %></td>
     </tr>
   </table>
 </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> web-ui
 <script src="https://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
 <script src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
 

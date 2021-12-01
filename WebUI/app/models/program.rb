@@ -29,7 +29,7 @@ class Program < ApplicationRecord
         # For each row of centroids, go through each centroid
         row.each do |x, y|
           # Create a waypoint at the X/Y coordinate with the 'image' action
-          program.waypoints.create!(x: x, y: y, z: camera.height_m, position: waypoint_count, actions: ['image', 'temperature'])
+          program.waypoints.create!(x: x, y: y, z: camera.height_m, position: waypoint_count, actions: ['image', 'temperature', 'humidity', 'lux'])
           waypoint_count += 1
         end
       end

@@ -1,4 +1,6 @@
 <%= form_with(model: analysis) do |form| %>
+  <%= form.hidden_field :areas_of_interest, value: '' %>
+
   <% if analysis.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(analysis.errors.count, "error") %> prohibited this analysis from being saved:</h2>
@@ -16,8 +18,9 @@
     <%= form.text_field :name %>
   </div>
 
-  <h3>This is where we'd put your SVG magic thingie</h3>
   <div class="actions">
     <%= form.submit class: 'btn btn-success btn-sm'  %> <%= link_to 'Cancel', analyses_path, method: :get, class: 'btn btn-default btn-sm'  %>
   </div>
+
+  
 <% end %>

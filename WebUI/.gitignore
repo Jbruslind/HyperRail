@@ -26,6 +26,10 @@
 /storage/*
 !/storage/.keep
 
+# Ignore uploaded files in development.
+/camera_images/*
+!/camera_images/.keep
+
 /public/assets
 .byebug_history
 

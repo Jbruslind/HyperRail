@@ -12,7 +12,7 @@ Setting.destroy_all
   'camera_height' => '1.75',
   'camera_fov' => '47',
   'camera_crop' => '25',
-  'image_path' => Rails.root.join('public/images').to_s
+  'image_path' => Rails.root.join('camera_images').to_s
 }.each do |name, value|
   Setting.create name: name, value: value
 end
@@ -76,7 +76,7 @@ sizes = camera.unit_sizes
     # Create a random number of areas of interest
     rand(5..15).times do |j|
       sample = centroids.sample
-      analysis.areas_of_interest.create(x: sample[0], y: sample[1], width: sizes[:x_unit_size], height: sizes[:y_unit_size])
+      analysis.areas_of_interest.create(rectangle_id: "rect#{centroids.index(sample)+1}", x: sample[0], y: sample[1], width: sizes[:x_unit_size], height: sizes[:y_unit_size])
     end
   end
 end
