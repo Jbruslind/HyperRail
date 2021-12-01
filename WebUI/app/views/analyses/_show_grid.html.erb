@@ -1,45 +1,48 @@
 <div class="panel panel-primary">
   <div class="panel-heading">
-    <h3 class="panel-title">Selected Areas of Interest</h3>
+    <h3 class="panel-title">Selection Grid</h3>
   </div>
-  <center><div id="grid" class="panel-body"></div></center>
+  <center><div id="grid" class="panel-body"><h4>Please select areas of interest</h4></div></center>
 </div>
 
-<script>
+<script>    
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
+    var areas_of_interest = <%= @analysis.areas_of_interest.to_json.html_safe %>;
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
     var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
-    var PIXEL_CONVERSION_FACTOR = 3779.5275590551;
+    var PIXEL_CONVERSION_FACTOR = 841.1;
+    var SCALE_FACTOR = .06;
+    console.log(areas_of_interest);
 
-    var gridWith_Actual = unit_sizes.x_unit_size * unit_sizes.x_units;
-    var gridHeight_Actual = unit_sizes.y_unit_size * unit_sizes.y_units;
-    var rectWidth_Actual = unit_sizes.x_unit_size;
-    var rectHeight_Actual = unit_sizes.y_unit_size;
-    var rectXOrigin_Actual = 0;
-    var rectYOrigin_Actual = 0;
-    var rectXCenter_Actual = 0;
-    var rectYCenter_Actual = 0;
-    
-    gridWidth_Display = 1000;
-    numPerRow_Display = 10;
-    rectWidth_Display = gridWidth_Display/numPerRow_Display;
-    gridHeight_Display = 560.9375
-    //gridHeight_Display = (gridHeight_Actual*gridWidth_Display)/gridWidth_Actual; Use this when we have an image
-    rectHeight_Display = gridHeight_Display/10;
-    numOfRects_Display = 100;
+    //Parameters for displaying the grid
+    var rectWidthDisplay = (unit_sizes.x_unit_size*SCALE_FACTOR) * PIXEL_CONVERSION_FACTOR;
+    var rectHeightDisplay = (unit_sizes.y_unit_size*SCALE_FACTOR) * PIXEL_CONVERSION_FACTOR;
+    var gridWidthDisplay = rectWidthDisplay * unit_sizes.x_units;
+    var gridHeightDisplay = rectHeightDisplay * unit_sizes.y_units;
+    var numOfRects = unit_sizes.x_units * unit_sizes.y_units;
+    var numOfCols = unit_sizes.x_units;
+    var rectXOriginDisplay = 0;
+    var rectYOriginDisplay = 0;
     var rectID = "rect";
-    var rectXOrigin_Display = 0;
-    var rectYOrigin_Display = 0;
+
+    //Parameters for calculating actual location in meters
+    var rectWidthActual = unit_sizes.x_unit_size;
+    var rectHeightActual = unit_sizes.y_unit_size;
+    var rectXOriginActual = 0;
+    var rectYOriginActual = 0;
+    var rectXCenter = 0;
+    var rectYCenter = 0;
+    
     
     var SVG_NS = "http://www.w3.org/2000/svg";
     var XLINK_NS = "http://www.w3.org/1999/xlink";
     var svg = document.createElementNS(SVG_NS, 'svg');
-    svg.setAttribute("width", gridWidth_Display);
-    svg.setAttribute("height", gridHeight_Display);
+    svg.setAttribute("width", gridWidthDisplay);
+    svg.setAttribute("height", gridHeightDisplay);
 
     var image = document.createElementNS(SVG_NS, "image");
-    image.setAttributeNS(null, "width", gridWidth_Display);
-    image.setAttributeNS(null, "height", gridHeight_Display);
+    image.setAttributeNS(null, "width", gridWidthDisplay);
+    image.setAttributeNS(null, "height", gridHeightDisplay);
     image.setAttributeNS(null, "x", 0);
     image.setAttributeNS(null, "y", 0);
     image.setAttributeNS(XLINK_NS, 'xlink:href', image_path);
@@ -49,42 +52,43 @@
     g.setAttribute("style", "cursor: pointer; cursor: hand");
 
     let areasOfInterest = {};
-    for (var i = 1; i <= numOfRects_Display; i++)
+    for (var i = 1; i <= numOfRects; i++)
     {
         var rectangle = document.createElementNS(SVG_NS, 'rect');
         rectID += (i);
-        rectXCenter_Actual = rectXOrigin_Actual + (rectWidth_Actual/2);
-        rectYCenter_Actual = rectYOrigin_Actual + (rectHeight_Actual/2);
+        rectXCenter = rectXOriginActual + (rectWidthActual/2);
+        rectYCenter = rectYOriginActual + (rectHeightActual/2);
         rectangle.setAttribute("id", rectID);
-        rectangle.setAttribute("x", rectXOrigin_Display);
-        rectangle.setAttribute("y", rectYOrigin_Display);
-        rectangle.setAttribute("width", rectWidth_Display);
-        rectangle.setAttribute("height", rectHeight_Display);
-        rectangle.setAttribute("rectXCenter_Actual", rectXCenter_Actual);
-        rectangle.setAttribute("rectYCenter_Actual", rectYCenter_Actual);
+        rectangle.setAttribute("x", rectXOriginDisplay);
+        rectangle.setAttribute("y", rectYOriginDisplay);
+        rectangle.setAttribute("width", rectWidthDisplay);
+        rectangle.setAttribute("height", rectHeightDisplay);
+        rectangle.setAttribute("rectXCenter", rectXCenter);
+        rectangle.setAttribute("rectYCenter", rectYCenter);
+        rectangle.setAttribute("rectWidthActual", rectWidthActual);
+        rectangle.setAttribute("rectHeightActual", rectHeightActual);
         rectangle.setAttribute("stroke", "black");
         rectangle.setAttribute("fill", "transparent");
         rectangle.setAttribute("stroke-width", 1);
-
-        if (i > 40 && i < 90)
-        {
-            rectangle.setAttribute('fill-opacity', '0.4');
-            rectangle.setAttribute('fill', 'black');
-        }
-        
         g.appendChild(rectangle);
         
-        if (i%numPerRow_Display == 0)
+        if (areas_of_interest.areas_of_interest[rectID])
         {
-            rectXOrigin_Display = 0;
-            rectYOrigin_Display += rectHeight_Display;
-            rectXOrigin_Actual = 0;
-            rectYOrigin_Actual += rectHeight_Actual;
+            svgElement.setAttribute('fill-opacity', '0.4');
+            svgElement.setAttribute('fill', 'black');
+        }
+
+        if (i%numOfCols == 0)
+        {
+            rectXOriginDisplay = 0;
+            rectYOriginDisplay += rectHeightDisplay;
+            rectXOriginActual = 0;
+            rectYOriginActual += rectHeightActual;
         }
         else
         {
-            rectXOrigin_Display += rectWidth_Display;
-            rectXOrigin_Actual += rectWidth_Actual;
+            rectXOriginDisplay += rectWidthDisplay;
+            rectXOriginActual += rectWidthActual;
         }
         
         rectID = "rect";
