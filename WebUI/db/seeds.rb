@@ -75,7 +75,7 @@ sizes = camera.unit_sizes
     # Create a random number of areas of interest
     rand(5..15).times do |j|
       sample = centroids.sample
-      analysis.areas_of_interest.create(x: sample[0], y: sample[1], width: sizes[:x_unit_size], height: sizes[:y_unit_size])
+      analysis.areas_of_interest.create(rectangle_id: "rect#{centroids.index(sample)+1}", x: sample[0], y: sample[1], width: sizes[:x_unit_size], height: sizes[:y_unit_size])
     end
   end
 end
