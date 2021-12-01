@@ -6,6 +6,8 @@
 </div>
 
 <script>
+    var areasOfInterest = <%= areas_of_interest_for(@analysis).html_safe %>;
+
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
     var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
@@ -48,7 +50,6 @@
     var g = document.createElementNS(SVG_NS, 'g');
     g.setAttribute("style", "cursor: pointer; cursor: hand");
 
-    let areasOfInterest = {};
     for (var i = 1; i <= numOfRects_Display; i++)
     {
         var rectangle = document.createElementNS(SVG_NS, 'rect');

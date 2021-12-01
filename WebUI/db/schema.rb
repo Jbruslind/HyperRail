@@ -20,10 +20,11 @@ ActiveRecord::Schema.define(version: 2021_11_19_030801) do
 
   create_table "area_of_interests", force: :cascade do |t|
     t.integer "analysis_id", null: false
-    t.integer "x", null: false
-    t.integer "y", null: false
-    t.integer "width", null: false
-    t.integer "height", null: false
+    t.string "rectangle_id", null: false
+    t.decimal "x", null: false
+    t.decimal "y", null: false
+    t.decimal "width", null: false
+    t.decimal "height", null: false
     t.index ["analysis_id"], name: "index_area_of_interests_on_analysis_id"
   end
 
