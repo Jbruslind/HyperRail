@@ -16,6 +16,7 @@
           <li class="<%= nav_active_for('analyses') %>"><%= link_to 'Analyses', analyses_path %></li>
           <li class="<%= nav_active_for('settings') %>"><%= link_to 'Settings', settings_path %></li>
           <li class="<%= nav_active_for('programs') %>"><%= link_to 'Programs', programs_path %></li>
+          <li><%= link_to 'Logout', session_path, method: :delete %></li>
         <% else %>
           <li><%= link_to 'Login', new_session_path %></li>
         <% end %>
