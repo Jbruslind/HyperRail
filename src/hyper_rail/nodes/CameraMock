@@ -3,10 +3,6 @@
 # This can be used for the basis of the camera node. Currently just hosts the
 # camera service.
 
-# The camera service currently takes in these service parametes
-# uint32 program_run_id
-# uint32 waypoint_id
-# string action           # type of action to be sent this is kind of unnecessary, maybe switch with datapoint id?
 
 from communication.camera_executor import *
 import rospy
@@ -18,7 +14,7 @@ from hyper_rail.srv import SensorService, SensorServiceRequest, SensorServiceRes
 # capture and store image files
 def process_camera(req: SensorServiceRequest):
     # last parameter defines the bands (image type) the user would use when capturing an image
-    Cam = Micasense(IMAGE_PATH, req.program_run_id, req.program_run_id, [1, 1, 1, 1, 1])
+    Cam = Micasense(IMAGE_PATH, req.program_run_id, req.run_waypoint_id, [1, 1, 1, 1, 1])
     captured = Cam.capture_image()
     if captured:
         Cam.transfer_to_local_storage()
