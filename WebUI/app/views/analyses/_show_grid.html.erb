@@ -5,7 +5,9 @@
   <center><div id="grid" class="panel-body"><h4>Please select areas of interest</h4></div></center>
 </div>
 
-<script>    
+<script>
+    var areasOfInterest = <%= areas_of_interest_for(@analysis).html_safe %>;
+
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
     var areas_of_interest = <%= @analysis.areas_of_interest.to_json.html_safe %>;
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
