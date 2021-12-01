@@ -16,11 +16,47 @@
           <li class="<%= nav_active_for('analyses') %>"><%= link_to 'Analyses', analyses_path %></li>
           <li class="<%= nav_active_for('settings') %>"><%= link_to 'Settings', settings_path %></li>
           <li class="<%= nav_active_for('programs') %>"><%= link_to 'Programs', programs_path %></li>
-          <li><%= link_to 'Logout', session_path, method: :delete %></li>
         <% else %>
           <li><%= link_to 'Login', new_session_path %></li>
         <% end %>
       </ul>
+      // icon to check if camera is connected
+      <div class="topnav-right">
+        <div style="display: flex">
+          <li>
+            // href is hardcoded for now, link signifies Micasense default address
+            <a target="https://192.168.1.83:80/" href="https://192.168.1.83:80/">
+              <i class="fas fa-camera fa-2x .topnav-right" href="https://192.168.1.83:80/">
+              </i>
+            </a>
+          </li>
+          <div id="connectTitle" title="No Camera Ethernet Connection">
+            <i id="camConnect" class="fas fa-circle"></i>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
+
+<script>
+window.onload = function() {
+  var micasenseConnection = document.getElementById("camConnect");
+  var ethernetConnection = document.getElementById("connectTitle");
+  const checkCamConnection = () => {
+    // host is hardcoded for now
+    axios.get('https://192.168.1.83:80/status', {timeout: 1000})
+        .then(response => {
+          micasenseConnection.setAttribute("style", "color: green;");
+          ethernetConnection.setAttribute("title", "Camera Ethernet Connected")
+        })
+        .catch(error => {
+          micasenseConnection.setAttribute("style", "color: red;");
+          console.error(error)
+        });
+};
+
+//check if camera connected
+checkCamConnection();
+}
+</script>
