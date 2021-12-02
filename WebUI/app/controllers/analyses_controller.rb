@@ -131,6 +131,9 @@ class AnalysesController < ApplicationController
         format.html { redirect_to @analysis, notice: "Analysis was successfully updated." }
         format.json { render :show, status: :ok, location: @analysis }
       rescue
+        Rails.logger.warn $!.class
+        Rails.logger.warn $!.message
+        Rails.logger.warn $!.backtrace.join("\n")
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @analysis.errors, status: :unprocessable_entity }
       end

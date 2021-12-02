@@ -12,6 +12,7 @@
     var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
     var PIXEL_CONVERSION_FACTOR = 841.1;
     var SCALE_FACTOR = .06;
+    console.log(areasOfInterest);
 
     //Parameters for displaying the grid
     var rectWidthDisplay = (unit_sizes.x_unit_size*SCALE_FACTOR) * PIXEL_CONVERSION_FACTOR;
@@ -49,8 +50,8 @@
 
     var g = document.createElementNS(SVG_NS, 'g');
     g.setAttribute("style", "cursor: pointer; cursor: hand");
-    var newAreasOfInterest = {};
 
+    var newAreasOfInterest = {};
     for (var i = 1; i <= numOfRects; i++)
     {
         var rectangle = document.createElementNS(SVG_NS, 'rect');
@@ -75,7 +76,11 @@
             {
                 rectangle.setAttribute('fill-opacity', '0.4');
                 rectangle.setAttribute('fill', 'black');
-                newAreasOfInterest[rectID] = {rectID,rectXCenter,rectYCenter,rectWidthActual,rectHeightActual};
+                newAreasOfInterest[rectID] = {rectID: rectID, 
+                                            x: rectXCenter,
+                                            y: rectYCenter,
+                                            width: rectWidthActual,
+                                            height: rectHeightActual};
                 return;
             }
         });
@@ -96,7 +101,7 @@
         
         rectID = "rect";
     }
-    console.log(areasOfInterest);
+    console.log(newAreasOfInterest);
     svg.appendChild(g);
     document.getElementById("grid").appendChild(svg);
 
@@ -109,6 +114,7 @@
             svgElement.setAttribute('fill', 'transparent');
             var target = svgElement.getAttribute('id');
             delete newAreasOfInterest[target];
+            console.log(newAreasOfInterest);
         }
         else
         {
@@ -120,6 +126,7 @@
             var width = svgElement.getAttribute('rectWidthActual');
             var height = svgElement.getAttribute('rectHeightActual');
             newAreasOfInterest[rectID] = {rectID,x,y,width,height};
+            console.log(newAreasOfInterest);
         }
 
         $('#analysis_areas_of_interest').val(JSON.stringify(newAreasOfInterest));
