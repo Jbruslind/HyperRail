@@ -22,6 +22,7 @@ class Watcher:
         self.q = q
         self.response_status = ""
         self.program_status = "idle"
+        self.motion_status = "idle"
         self.w = ""
         self.publisher = publisher
         self.status_pub = status_pub
@@ -69,6 +70,9 @@ class Watcher:
         elif action == "lux":
             print("Lux not available")
             return
+
+        else:
+            print("Error, action type {} not recognized.".format(action))
 
         rospy.wait_for_service(srv)
         try:

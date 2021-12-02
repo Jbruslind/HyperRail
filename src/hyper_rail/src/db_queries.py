@@ -210,8 +210,13 @@ class DatabaseReader:
         # id = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         path = ["1.tif", "2.tif", "3.tif", "4.tif", "5.tif", "6.tif", "7.tif", "8.tif", "9.tif", "10.tif", "11.tif"]
         c = "camera_mock"
-        it = "image_mock"
-        for i, p in zip(id, path):
+        # for i, p in zip(id, path):
+        for i in range(1, 91):
+            it = "test_band_1"
+            p = "{}.png".format(i)
+            t = datetime.fromtimestamp(time.time()) 
+            cur.execute ("INSERT into camera_images(run_waypoint_id, camera_name, image_type, uri, created_at) VALUES(?,?,?,?,?)", (i, c, it, p, t,))
+            it = "test_band_2"
             t = datetime.fromtimestamp(time.time()) 
             cur.execute ("INSERT into camera_images(run_waypoint_id, camera_name, image_type, uri, created_at) VALUES(?,?,?,?,?)", (i, c, it, p, t,))
             self.conn.commit()
