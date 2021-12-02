@@ -91,7 +91,7 @@ class AnalysesController < ApplicationController
               height: dimensions['height'].to_f
             )
           end
-  
+
           format.html { redirect_to @analysis, notice: "Analysis was successfully created." }
           format.json { render :show, status: :created, location: @analysis }
         rescue
@@ -135,24 +135,26 @@ class AnalysesController < ApplicationController
         format.json { render json: @analysis.errors, status: :unprocessable_entity }
       end
     end
-  
-    # DELETE /analyses/1 or /analyses/1.json
-    def destroy
-      @analysis.destroy
-      respond_to do |format|
-        format.html { redirect_to analyses_url, notice: "Analysis was successfully destroyed." }
-        format.json { head :no_content }
-      end
-    end
-  
-    private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_analysis
-        @analysis = Analysis.find(params[:id])
-      end
-  
-      # Only allow a list of trusted parameters through.
-      def analysis_params
-        params.fetch(:analysis).permit(:name)
-      end
   end
+
+  # DELETE /analyses/1 or /analyses/1.json
+  def destroy
+    @analysis.destroy
+    respond_to do |format|
+      format.html { redirect_to analyses_url, notice: "Analysis was successfully destroyed." }
+      format.json { head :no_content }
+    end
+  end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_analysis
+    @analysis = Analysis.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def analysis_params
+    params.fetch(:analysis).permit(:name)
+  end
+end
