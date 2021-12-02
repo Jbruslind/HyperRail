@@ -19,6 +19,7 @@ from hyper_rail.msg import ProgramFeed                                          
 from hyper_rail.msg import GCodeFeed, InstructionFeed                               # Message format for Gcode messages FIXME: Verify that these arent being used anymore
 from hyper_rail.msg import MachinePosition                                          # Message format for current position polling
 from hyper_rail.msg import MotionStatus                                            
+from hyper_rail.msg import ProgramStatus
 from communication.program_executor import Watcher                                  # Class for keeping track of in progress waypoints
 
 InstructionQueue = Queue()
@@ -39,8 +40,9 @@ def init_node():
     rospy.init_node("ProgramNode")
 
     # Publisher object to notify the location tracking node of the next destination and action
-    publisher = rospy.Publisher("instructions", InstructionFeed, queue_size=10)
-    watcher = Watcher(InstructionQueue, publisher)
+    publisher = rospy.Publisher("instructions", InstructionFeed, queue_size=100)
+    status_pub = rospy.Publisher("program_status", ProgramStatus, queue_size = 100)
+    watcher = Watcher(InstructionQueue, publisher, status_pub)
 
     # Start the service for receiving commands from the UI
     service = rospy.Service("interface_service", InterfaceService, handler=add_to_queue)

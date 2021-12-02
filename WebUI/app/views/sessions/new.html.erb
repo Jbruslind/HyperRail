@@ -1,7 +1,15 @@
 <!-- app/sessions/new.html.erb -->
-<%= form_tag(session_path) do |form| %>
-  Password: <%= password_field_tag :password %>
-  <div class="actions">
-    <%= submit_tag 'Log in' %>
+<h1 class="text-center">Log in</h1>
+
+<div class="row">
+  <div class="col-lg-4 col-lg-offset-4">
+    <%= form_tag(session_path) do |form| %>
+      <div class="input-group">
+        <%= password_field_tag :password, '', class: 'form-control', placeholder: 'enter password' %>
+        <span class="input-group-btn">
+          <%= submit_tag 'Log in', class: 'btn btn-primary' %>
+        </span>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>

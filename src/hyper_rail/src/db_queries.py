@@ -165,11 +165,17 @@ class DatabaseReader:
         cur.close()
         return rows
 
-
-
-    def get_image_dir(self):
+    def get_images_for_composite(self, program_run_id):
         cur = self.conn.cursor()
-        
+        query = "SELECT * FROM run_waypoints JOIN camera_images on run_waypoints.id = camera_images.run_waypoint_id WHERE program_run_id = ?"
+        # query = "SELECT * FROM run_waypoints JOIN program_runs on run_waypoints.program_run_id = program_runs.id WHERE program_run_id = 1"
+        cur.execute(query, (program_run_id,))
+        rows = cur.fetchall()
+        # for row in rows:
+        #     print(tuple(row))
+        cur.close()
+        return rows
+
     def image_path(self, run_waypoint_id, image_type):
         cur = self.conn.cursor()
         cur.execute("SELECT uri FROM camera_images WHERE run_waypoint_id=? and image_type=?", (run_waypoint_id, image_type,))
@@ -197,11 +203,12 @@ class DatabaseReader:
         return paths
 
     # Make fake records for testing
-    def create_test_images(self):
+    def create_test_images(self, program_run_id = None):
         cur = self.conn.cursor()
         cur.execute("DELETE from camera_images")
-        id = [97, 98, 99, 100]
-        path = ["4.png", "5.png", "6.png", "7.png", "8.png"]
+        id = [6, 10, 11, 20, 21, 30, 35, 40, 41, 50, 51]
+        # id = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        path = ["1.tif", "2.tif", "3.tif", "4.tif", "5.tif", "6.tif", "7.tif", "8.tif", "9.tif", "10.tif", "11.tif"]
         c = "camera_mock"
         it = "image_mock"
         for i, p in zip(id, path):
@@ -246,16 +253,42 @@ class DatabaseReader:
         cur = self.conn.cursor()
         cur.execute("SELECT value FROM settings WHERE name = 'image_path'")
         path = cur.fetchone()
+        cur.close
         return path['value']
 
-    
+    def get_camera_crop(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT value FROM settings WHERE name = 'camera_crop'")
+        crop = cur.fetchone()
+        print(crop['value'])
+        cur.close
+        return crop['value']
+
+    def get_camera_height(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT value FROM settings WHERE name = 'camera_height'")
+        height = cur.fetchone()
+        print(height['value'])
+        cur.close
+        return height['value'] 
+
+    def get_camera_fov(self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT value FROM settings WHERE name = 'camera_fov'")
+        height = cur.fetchone()
+        print(height['value'])
+        cur.close
+        return height['value'] 
+
     def __del__(self):
         self.conn.close()
 
 
 if __name__ == "__main__":
+    # Function calls for testing and individual db queries
     db = DatabaseReader()
-    print(db.get_image_dir())
+    # db.test()
+    # print(db.get_image_dir())
     # db.get_program_headings()
     # db.get_all_programs()
     # db.get_waypoints_for_program(5)
@@ -267,7 +300,10 @@ if __name__ == "__main__":
     # db.get_program_runs(5)
     # db.get_all_run_waypoints(10)
     # db.get_image_types_for_program_run(10)
-    # db.create_test_images()
+    db.create_test_images()
+    # print(db.get_camera_crop())
+    # print(db.get_camera_height())
+    # print(db.get_camera_fov())
     # db.get_images()
     # db.get_image_paths(10)
     id = db.create_run_waypoint_id(19, 17, 400, 100, None)

@@ -6,6 +6,13 @@ class ProgramsController < ApplicationController
     @programs = Program.select('programs.*', '(SELECT COUNT(*) FROM program_runs WHERE program_runs.program_id=programs.id) AS run_count').order(last_run: :desc)
   end
 
+  # POST /progams/default
+  def default
+    program = Program.create_from_settings
+    flash[:success] = "Successfully created a new default program"
+    redirect_to programs_path
+  end
+
   # GET /programs/1 or /programs/1.json
   def show
   end
@@ -38,7 +45,7 @@ class ProgramsController < ApplicationController
   def update
     respond_to do |format|
       if @program.update(program_params)
-        format.html { redirect_to @program, notice: "Program was successfully updated." }
+        format.html { redirect_to programs_path, notice: "Program was successfully updated." }
         format.json { render :show, status: :ok, location: @program }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -65,6 +72,6 @@ class ProgramsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def program_params
-    params.fetch(:program, {})
+    params.fetch(:program, {}).permit!
   end
 end

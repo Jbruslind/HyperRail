@@ -2,6 +2,7 @@
 
 """
 This is a quick mock to test the MachinePosition and GCodeFeed topics.
+Swap this usage with ESPController
 """
 
 import rospy
@@ -24,7 +25,16 @@ runningState = "ok"
 def gcode_handler(data: GCodeFeed):
     print("GCodeFeed Received: ", data.code)
     dest = data.code.split(" ")
+    print(dest[0])
+    if not (dest[0] == "G00" or dest[0] == "G01"):
+        print(f"Received: {data.code}, ESP Mock is for demo, only accepts G00 and G01")
+        return
     dest.pop(0)
+    print(dest)
+    if len(dest) == 4:
+        dest.pop(3)
+    print(dest)
+
     dest = list(map(float, dest))
     while machinePos != dest:
 
@@ -40,19 +50,6 @@ def gcode_handler(data: GCodeFeed):
         workPos[1] = machinePos[1]
         machinePos[2] = dest[2]
         workPos[2] = machinePos[2]
-
-        # Increment each coordinate by 1 until destination is reached
-        # if not math.isclose(machinePos[0], dest[0], abs_tol=.01):
-        #     machinePos[0] += float(xdiff/abs(xdiff))*(xdiff/2)
-        #     workPos[0] = machinePos[0]
-
-        # if not math.isclose(machinePos[1], dest[1], abs_tol=.01):
-        #     machinePos[1] += float(ydiff/abs(ydiff))*(ydiff/2)
-        #     workPos[1] = machinePos[1]
-
-        # if not math.isclose(machinePos[2], dest[2], abs_tol=0.01):
-        #     machinePos[2] += float(zdiff/abs(zdiff))*(zdiff/2)
-        #     workPos[2] = machinePos[2]
 
         print("position updated to: {}                           ESP32 Mock\n".format(machinePos))
         time.sleep(0.2)

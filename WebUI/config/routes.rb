@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   resources :analyses
   resource :session, only: [:new, :create, :destroy]
-  resources :programs
+  resources :programs do
+    collection do
+      post 'default'
+    end
+  end
   resources :analyses
 
   get '/settings', to: 'settings#index', as: :settings
