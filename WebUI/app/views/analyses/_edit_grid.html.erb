@@ -7,6 +7,7 @@
 
 <script>
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
+    var areasOfInterest = <%= @analysis.areas_of_interest.to_json.html_safe %>;
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
     var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
     var PIXEL_CONVERSION_FACTOR = 841.1;
@@ -48,8 +49,8 @@
 
     var g = document.createElementNS(SVG_NS, 'g');
     g.setAttribute("style", "cursor: pointer; cursor: hand");
+    var newAreasOfInterest = {};
 
-    let areasOfInterest = {};
     for (var i = 1; i <= numOfRects; i++)
     {
         var rectangle = document.createElementNS(SVG_NS, 'rect');
@@ -68,13 +69,17 @@
         rectangle.setAttribute("stroke", "black");
         rectangle.setAttribute("fill", "transparent");
         rectangle.setAttribute("stroke-width", 1);
+        
+        areasOfInterest.forEach(element => {
+            if (element.rectangle_id === rectID)
+            {
+                rectangle.setAttribute('fill-opacity', '0.4');
+                rectangle.setAttribute('fill', 'black');
+                newAreasOfInterest[rectID] = {rectID,rectXCenter,rectYCenter,rectWidthActual,rectHeightActual};
+                return;
+            }
+        });
         g.appendChild(rectangle);
-
-        if (i > 40 && i < 90)
-        {
-            rectangle.setAttribute('fill-opacity', '0.4');
-            rectangle.setAttribute('fill', 'black');
-        }
         
         if (i%numOfCols == 0)
         {
@@ -91,17 +96,19 @@
         
         rectID = "rect";
     }
+    console.log(areasOfInterest);
     svg.appendChild(g);
     document.getElementById("grid").appendChild(svg);
 
     $('rect').click(function() {
         var svgElement = document.getElementById($(this).attr('id'));
+        areasOfInterest = <%= @analysis.areas_of_interest.to_json.html_safe %>;
 
         if(svgElement.getAttribute('fill') == 'black')
         {
             svgElement.setAttribute('fill', 'transparent');
             var target = svgElement.getAttribute('id');
-            delete areasOfInterest[target];
+            delete newAreasOfInterest[target];
         }
         else
         {
@@ -112,10 +119,10 @@
             var y = svgElement.getAttribute('rectYCenter');
             var width = svgElement.getAttribute('rectWidthActual');
             var height = svgElement.getAttribute('rectHeightActual');
-            areasOfInterest[rectID] = {rectID,x,y,width,height};
+            newAreasOfInterest[rectID] = {rectID,x,y,width,height};
         }
 
-        $('#analysis_areas_of_interest').val(JSON.stringify(areasOfInterest));
+        $('#analysis_areas_of_interest').val(JSON.stringify(newAreasOfInterest));
     });
 </script>
 

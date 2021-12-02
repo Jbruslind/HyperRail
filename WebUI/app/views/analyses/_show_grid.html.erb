@@ -1,20 +1,18 @@
 <div class="panel panel-primary">
   <div class="panel-heading">
-    <h3 class="panel-title">Selection Grid</h3>
+    <h3 class="panel-title">Areas Selected</h3>
   </div>
-  <center><div id="grid" class="panel-body"><h4>Please select areas of interest</h4></div></center>
+  <center><div id="grid" class="panel-body"></div></center>
 </div>
 
 <script>
-    var areasOfInterest = <%= areas_of_interest_for(@analysis).html_safe %>;
-
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
-    var areas_of_interest = <%= @analysis.areas_of_interest.to_json.html_safe %>;
+    var areasOfInterest = <%= @analysis.areas_of_interest.to_json.html_safe %>;
     var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
     var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
     var PIXEL_CONVERSION_FACTOR = 841.1;
     var SCALE_FACTOR = .06;
-    console.log(areas_of_interest);
+    console.log(areasOfInterest);
 
     //Parameters for displaying the grid
     var rectWidthDisplay = (unit_sizes.x_unit_size*SCALE_FACTOR) * PIXEL_CONVERSION_FACTOR;
@@ -35,7 +33,6 @@
     var rectXCenter = 0;
     var rectYCenter = 0;
     
-    
     var SVG_NS = "http://www.w3.org/2000/svg";
     var XLINK_NS = "http://www.w3.org/1999/xlink";
     var svg = document.createElementNS(SVG_NS, 'svg');
@@ -53,7 +50,6 @@
     var g = document.createElementNS(SVG_NS, 'g');
     g.setAttribute("style", "cursor: pointer; cursor: hand");
 
-    let areasOfInterest = {};
     for (var i = 1; i <= numOfRects; i++)
     {
         var rectangle = document.createElementNS(SVG_NS, 'rect');
@@ -72,13 +68,18 @@
         rectangle.setAttribute("stroke", "black");
         rectangle.setAttribute("fill", "transparent");
         rectangle.setAttribute("stroke-width", 1);
-        g.appendChild(rectangle);
         
-        if (areas_of_interest.areas_of_interest[rectID])
-        {
-            svgElement.setAttribute('fill-opacity', '0.4');
-            svgElement.setAttribute('fill', 'black');
-        }
+        areasOfInterest.every(element => {
+            if (element.rectangle_id === rectID)
+            {
+                rectangle.setAttribute('fill-opacity', '0.4');
+                rectangle.setAttribute('fill', 'black');
+                return false;
+            }
+            return true;
+        });
+
+        g.appendChild(rectangle);
 
         if (i%numOfCols == 0)
         {
