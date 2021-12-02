@@ -35,7 +35,8 @@ class AnalysesController < ApplicationController
           # $stderr.puts areas_of_interest.inspect
           # Go through each area of interest and save it
           areas_of_interest.each do |rect_id, dimensions|
-            @analysis.areas_of_interest.create(
+            @analysis.areas_of_interest.create!(
+              rectangle_id: rect_id,
               x: dimensions['x'].to_f,
               y: dimensions['y'].to_f,
               width: dimensions['width'].to_f,
@@ -56,10 +57,32 @@ class AnalysesController < ApplicationController
   # PATCH/PUT /analyses/1 or /analyses/1.json
   def update
     respond_to do |format|
-      if @analysis.update(analysis_params)
+      begin
+        Analysis.transaction do
+          # Delete all of the old areas of interest
+          @analysis.areas_of_interest.destroy_all
+
+          # Update our analysis, raising an exception if it can't be saved
+          @analysis.update!(analysis_params)
+
+          # Turn out serialized areas of interest into a ruby hash
+          areas_of_interest = JSON.parse(params['analysis']['areas_of_interest'])
+
+          # Go through each area of interest and save it
+          areas_of_interest.each do |rect_id, dimensions|
+            @analysis.areas_of_interest.create!(
+              rectangle_id: rect_id,
+              x: dimensions['x'].to_f,
+              y: dimensions['y'].to_f,
+              width: dimensions['width'].to_f,
+              height: dimensions['height'].to_f
+            )
+          end
+        end
+
         format.html { redirect_to @analysis, notice: "Analysis was successfully updated." }
         format.json { render :show, status: :ok, location: @analysis }
-      else
+      rescue
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @analysis.errors, status: :unprocessable_entity }
       end
