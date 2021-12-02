@@ -22,6 +22,7 @@
         <td><%= link_to analysis.name, analysis %></td>
         <td><%= analysis.created_at.strftime('%Y-%m-%d') %></td>
         <td>
+          <%= link_to 'Export', '#exportModal', data: { name: analysis.name, analysis_id: analysis.id, toggle: 'modal', target: '#exportModal'}, class: 'export-link' %>
           <%= link_to 'Edit', edit_analysis_path(analysis) %>
           <%= link_to 'Destroy', analysis, method: :delete, data: { confirm: 'Are you sure you wish to delete this analysis? It will not delete any of the underlying data.' } %>
         </td>
@@ -33,3 +34,48 @@
 <hr/>
 
 <%= button_to 'New analysis', new_analysis_path, method: :get, class: 'btn btn-sm btn-primary' %>
+
+<!-- Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="exportModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exportModalLabel">Export Analysis</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Currently there are two ways to export sensor data, either averaged or for each individual waypoint (x/y coordinate).
+          <ol>
+            <li>Aggregate sensor readings for per program run (one averaged sensor reading per sensor per program run)</li>
+            <li>Individual sensor readings for each waypoint for a program run (hundreds of largely identical sensor readings per program run)</li>
+          </ol>
+        </p>
+        <div class="row">
+          <div class="col-md-6 text-right">
+            <%= link_to 'Download Aggregate Readings', '', id: 'aggregate_readings', class: 'btn btn-sm btn-primary' %>
+          </div>
+          <div class="col-md-6 text-left">
+            <%= link_to 'Download Individual Readings', '', id: 'individual_readings', class: 'btn btn-sm btn-primary' %>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('.export-link').click(function(event) {
+    // Set the modal title
+    $('#exportModalLabel').html($(this).data('name'));
+
+    // Set the download links
+    $('#aggregate_readings').attr('href', '/analyses/' + $(this).data('analysis-id') + '/aggregate.csv');
+    $('#individual_readings').attr('href', '/analyses/' + $(this).data('analysis-id') + '/individual.csv');
+  });
+</script>

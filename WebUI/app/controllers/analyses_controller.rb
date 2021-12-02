@@ -1,5 +1,7 @@
+require 'csv'
+
 class AnalysesController < ApplicationController
-  before_action :set_analysis, only: %i[ show edit update destroy ]
+  before_action :set_analysis, only: %i[ show aggregate individual edit update destroy ]
 
   # GET /analyses or /analyses.json
   def index
@@ -8,6 +10,52 @@ class AnalysesController < ApplicationController
 
   # GET /analyses/1 or /analyses/1.json
   def show
+  end
+
+  def aggregate
+    # Generate a CSV string with headers
+    csv_string = CSV.generate(headers: true) do |csv|
+      csv << ['Timestamp', 'Temperature', 'Humidity', 'Luminosity']
+
+      # Find the first program (should only be one) and return all averaged data
+      # TODO: Do this in one query instead of many
+      # TODO: Exclude pieces that are not in our area of interest from the aggregates
+      Program.first.runs.where('finished_at IS NOT NULL').each do |run|
+        csv << [
+          run.finished_at,
+          run.aggregate_for('temperature'),
+          run.aggregate_for('humidity'),
+          run.aggregate_for('lux')
+        ]
+      end
+    end
+
+    send_data csv_string, type: Mime[:csv], disposition: "attachment; filename=aggregate-#{@analysis.id}.csv"
+  end
+
+  def individual
+    # Generate a CSV string with headers
+    csv_string = CSV.generate(headers: true) do |csv|
+      csv << ['Timestamp', 'X', 'Y', 'Temperature', 'Humidity', 'Luminosity']
+
+      # Find the first program (should only be one) and return all averaged data
+      # TODO: Do this in one query instead of many
+      # TODO: Exclude pieces that are not in our area of interest from the aggregates
+      Program.first.runs.where('finished_at IS NOT NULL').each do |run|
+        run.run_waypoints.includes(:sensor_readings).each do |run_waypoint|
+          csv << [
+            run_waypoint.finished_at,
+            run_waypoint.x,
+            run_waypoint.y,
+            run_waypoint.sensor_readings.detect { |r| r.sensor_name == 'temperature' }.value,
+            run_waypoint.sensor_readings.detect { |r| r.sensor_name == 'humidity' }.value,
+            run_waypoint.sensor_readings.detect { |r| r.sensor_name == 'lux' }.value,
+          ]
+        end
+      end
+    end
+
+    send_data csv_string, type: Mime[:csv], disposition: "attachment; filename=individual-#{@analysis.id}.csv"
   end
 
   # GET /analyses/new
