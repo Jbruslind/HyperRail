@@ -1,7 +1,7 @@
 # HyperRail
 
 ### temporary message- Please view these branches for latest work on HyperRail from Fall 2021 cs467 course.
-Currently branches are working with mock data or demo nodes.
+Currently branches are working with mock data or demo nodes and will be merged to main when it is ideal.
 
 -web_ui (web app development)
 
