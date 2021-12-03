@@ -7,8 +7,6 @@ Currently branches are working with mock data or demo nodes and will be merged t
 
 -ros_sensor_interpretation (self explanatory)
 
--grid_development (development of grid within web app)
-
 -ros_pathplanning (self explanatory)
 
 -ros_camera_latest (Micasense camera)
