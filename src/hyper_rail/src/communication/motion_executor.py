@@ -8,7 +8,7 @@ import math
 import re
 
 from queue import Queue
-from communication.constants import GCODE_SCALE
+from communication.constants import GCODE_SCALE                                             # Scaling factor for converting X-Y coordinates from meters to units specified for ESP
 
 from hyper_rail.msg import MachinePosition                                                  # Message format for current position polling
 from hyper_rail.msg import ProgramStatus

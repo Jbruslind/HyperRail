@@ -206,9 +206,6 @@ class DatabaseReader:
     def create_test_images(self, program_run_id = None):
         cur = self.conn.cursor()
         cur.execute("DELETE from camera_images")
-        id = [6, 10, 11, 20, 21, 30, 35, 40, 41, 50, 51]
-        # id = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-        path = ["1.tif", "2.tif", "3.tif", "4.tif", "5.tif", "6.tif", "7.tif", "8.tif", "9.tif", "10.tif", "11.tif"]
         c = "camera_mock"
         # for i, p in zip(id, path):
         for i in range(1, 91):

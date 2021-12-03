@@ -15,7 +15,6 @@ from hyper_rail.msg import MotionStatus
 
 from image_processing.compositor import Compositor
 from db_queries import DatabaseReader
-from stitcher import HRStitcher
 
 class Watcher:
     def __init__(self, q, publisher, status_pub):
@@ -116,11 +115,7 @@ class Watcher:
             w_count += 1
         
         # 3. Create stitched image
-        # NOTE: This currently uses OpenCV image stitcher which may drop images due to not enough features
-        # If stitch is missing images, run the compositor program with program_id to generate images with pgmagick compositor
-        # TODO: replace stitcher with compositor here
-
-        # NOTE: manually setting run ID here for demonstration, remove this assignment in implementation
+        # TODO: manually setting run ID here for demonstration, remove this assignment in implementation
         run_id = 1
         comp = Compositor()
         comp.load_images(run_id)
