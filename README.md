@@ -7,10 +7,15 @@ Objective:
 - delete files from SD card of MicaSense camera once transfered to external storage drive
 
 Camera details:
+
 [Micasense RedEdge-MX](https://micasense.com/rededge-mx/) 
+
 [HTTP Micasense API](https://micasense.github.io/rededge-api/api/http.html)
+
 Note: Camera API makes request to 192.168.1.83:80 by default
+
 By default, the ethernet IP address is 192.168.1.83 
+
 Please follow [guide](https://support.micasense.com/hc/en-us/articles/215173477-How-do-I-connect-to-MicaSense-sensors-) to connect to camera via ethernet
 
 ### Setting up enviromental paths
@@ -28,7 +33,9 @@ source <Absolute Path>/HyperRail/devel/setup.bash
 ### Setup Database
 
 In order to test the Micasense Camera, a database is required
-Please follow readme [here](https://github.com/Jbruslind/HyperRail/tree/ros_camera_latest/WebUI).
+
+Please follow README [here](https://github.com/Jbruslind/HyperRail/tree/ros_camera_latest/WebUI).
+
 Note: make sure schema for database is migrated over
 
 ### Test MicaSense Camera without ROS nodes.
@@ -40,7 +47,9 @@ Note: the explanation for testing the Micasense Camera will be located at bottom
 ### Test the Micasense Camera with ROS nodes.
 
 Please follow README located [here](https://github.com/Jbruslind/HyperRail/tree/ros_camera_latest/src/hyper_rail/nodes).
+
 Note: CameraMock node is a ros node that controls the camera and it is called via a ros-service named 'camera_service'.
+
 CameraMock is located [here](https://github.com/Jbruslind/HyperRail/blob/ros_camera_latest/src/hyper_rail/nodes/CameraMock). 
 
 ### Basic File Structure Information
@@ -49,4 +58,6 @@ CameraMock is located [here](https://github.com/Jbruslind/HyperRail/blob/ros_cam
     - stable version and firmware of GRBL to control the appropriate driving hardware
 
 ### Future Plans
-Needs to be tested with MicaSense camera connected via ethernet. Currently tested with fake data not utilizing Micasense API. 
+Needs to be tested with MicaSense camera connected via ethernet. 
+
+Currently tested with fake data not utilizing Micasense API. 
