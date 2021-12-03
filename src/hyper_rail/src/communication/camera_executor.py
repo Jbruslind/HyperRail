@@ -242,9 +242,10 @@ class Micasense(Camera):
 
 '''Please test these lines of code to test on the micasense. Files should be populated in 
 ~/HyperRail/images/$run_program_id/$image_type/$run_waypoint_id.tiff. If not, it is
-likley that MicaSense is not being reached (might be due to incorrect api requests, connection issues, or
+likley that MicaSense is not being reached (might be do to incorrect api requests, connection issues, or
 pictures are already taken) If testing Micasense, please follow directions above 
-transfer_to_local_storage function '''
+transfer_to_local_storage function 
+to run: python camera_executor.py'''
 
 # Cam = Micasense(IMAGE_PATH, 4, 3, [1, 1, 1, 1, 1])
 # captured = Cam.capture_image()
