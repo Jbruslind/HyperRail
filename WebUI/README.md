@@ -40,6 +40,8 @@ Currently generally unimplemented, but tests can be run using `bundle exec rake`
 Below are some helpful links to consider when modifying the interactive grid.
 
 SVG Basics - https://developer.mozilla.org/en-US/docs/Web/SVG
+
 How to properly scale svg elements - https://stackoverflow.com/questions/19484707/how-can-i-make-an-svg-scale-with-its-parent-container
+
 SVG viewport and viewbox concepts - https://webdesign.tutsplus.com/tutorials/svg-viewport-and-viewbox-for-beginners--cms-30844
 
