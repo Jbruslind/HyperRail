@@ -3,7 +3,7 @@ import time
 from datetime import datetime
 from pathlib import Path, PosixPath
 from communication.constants import DB_PATH
-
+import json
 dir = PosixPath(DB_PATH)
 db = dir/"development.sqlite3"
 
@@ -222,8 +222,7 @@ class DatabaseReader:
         print(camera_image)
         cur = self.conn.cursor()
         t = datetime.fromtimestamp(time.time()) 
-        cur.execute ("INSERT into camera_images(\
-            run_waypoint_id,\
+        cur.execute ("INSERT into camera_images( run_waypoint_id,\
             camera_name,\
             image_type,\
             uri,\

@@ -2,14 +2,12 @@
 # Theses classes allow for the user to setup a camera to take pictures and store them
 # to an external drive. 
 # This class is a Camera class that inherits the Micasense class. This class can allow
-# for the user to be switch out classes .
-# TODO: finish transfer function, look over functions and practicality/make comments
-# and clean up unused things
+# for the user to be switch out classes.
 
 # additional features could be:
 # adding how many bands the user would like
 from db_queries import DatabaseReader
-from communication.constants import DEFAULT_CAMERA_HOST
+from communication.constants import DEFAULT_CAMERA_HOST, IMAGE_PATH
 import requests
 from requests.exceptions import HTTPError
 import time
@@ -18,6 +16,8 @@ from pathlib import Path, PosixPath
 import json
 import os
 import errno
+from pathlib import Path
+import re
 
 DB_QUERIES = DatabaseReader()
 
@@ -53,6 +53,14 @@ TEST_FILE_RESPONSE =  {
             "4" : "/files/0021SET/000/IMG_0000_4.tif"
         }
     }
+
+def dir_concatination(delim, file_path):    
+    abs_pathname = os.getcwd()
+    string = abs_pathname
+    index = string.find (delim)
+    file_abs_path = string[:index] + file_path[2:]
+    return file_abs_path
+
 
 class Camera:
     def __init__(self, root=None, program_id=None, waypoint_id=None):
@@ -113,7 +121,7 @@ class Micasense(Camera):
             print("Error: " + str(e))
             return False 
  
-    #when connected to micasense, uncomment [1]
+    #when connected to micasense, uncomment [1], comment out the Test line
     def transfer_to_local_storage(self):
 
         #storage_path_files = self.get_capture(self.capture_id) [1]
@@ -133,16 +141,27 @@ class Micasense(Camera):
             try:
                 # request specific image file data
                 r = requests.get(self.host + image_paths[str(count)], stream=True,  timeout=(1, 3)) 
-                file_path = self.set_file_path(band_type, self.get_waypoint_id())
-                self.create_path(file_path)
-                # write file path
-                with open(file_path, 'wb') as f:
+                
+                # provides the string path for database file path
+                file_path = self.get_file_path(band_type, self.get_waypoint_id())
+                
+                # provides string for directory
+                dir_path =  self.get_dir_path(band_type)
+                
+                # creates directory path and return absolute directory path
+                abs_path = self.create_path(dir_path)
+                
+                # add file to path
+                file_name = os.path.join(abs_path, "%s.tiff" % (self.get_waypoint_id()))
+
+                # write out bytes into file from image response 
+                with open(file_name, 'wb') as f:
                     for chunk in r.iter_content(10240):
                         f.write(chunk)
-                        
+
                 # not sure what to put in camera_name or uri
                 camera_dict = {
-                    'run_waypoint_id': self.get_waypoint_id, 
+                    'run_waypoint_id': self.get_waypoint_id(), 
                     'camera_name': "Example Camera", 
                     'image_type': band_type,
                     'uri': file_path,
@@ -150,10 +169,13 @@ class Micasense(Camera):
                     }
 
                 DB_QUERIES.add_image(camera_dict)
-                r = requests.get(self.host + "deletefile%s" % image_paths[str(count)], timeout=(1, 3) )
+                
+                # delete file off sd
+                r = requests.get(self.host + "deletefile%s" % image_paths[str(count)], timeout=(1, 3))
+
                 count = count + 1        
             except requests.exceptions.RequestException as e:
-                print("Error: " + str(e))
+                print("Error: not able to request camera" + str(e))
     
 
     #gets a json object with picture info based on id from micasense
@@ -179,9 +201,12 @@ class Micasense(Camera):
         r = requests.post(url = self.host + '/config/', data = payload, timeout=(1, 3))
         r.raise_for_status()
 
-    # sets file path to ~/HyperRail/images/image_type/run_waypoint_id.tiff
-    def set_file_path(self, band, waypoint):
+    # sets file path to ~/HyperRail/images/run_program_id/image_type/run_waypoint_id.tiff
+    def get_file_path(self, band, waypoint):
         return self.image_path + '/' + str(band) + '/' + str(waypoint) + ".tiff"
+
+    def get_dir_path(self, band):
+        return self.image_path + '/' + str(band) + '/'
 
     def config_payload(self):
         payload = {
@@ -204,13 +229,26 @@ class Micasense(Camera):
         return self.band_spectrum
 
     def create_path(self, file_path):
+        new_path = dir_concatination('HyperRail', file_path)
         # define the name of the directory to be created
-        if not os.path.exists(os.path.dirname(file_path)):
+        if not os.path.exists(os.path.dirname(new_path)):
             try:
-                os.makedirs(os.path.dirname(file_path))
+                print("creating: %s" % new_path)
+                os.makedirs(new_path)
             except OSError as exc: # Guard against race condition
                 if exc.errno != errno.EEXIST:
                     raise
+        return new_path
 
-# cam = Micasense(1,1,1)
-# cam.capture_image()
+'''Please test these lines of code to test on the micasense. Files should be populated in 
+~/HyperRail/images/$run_program_id/$image_type/$run_waypoint_id.tiff. If not, it is
+likley that MicaSense is not being reached (might be due to incorrect api requests, connection issues, or
+pictures are already taken) If testing Micasense, please follow directions above 
+transfer_to_local_storage function '''
+
+# Cam = Micasense(IMAGE_PATH, 4, 3, [1, 1, 1, 1, 1])
+# captured = Cam.capture_image()
+# if captured:
+#     Cam.transfer_to_local_storage()
+# else:
+#     print("Error: Image not capture")
