@@ -9,8 +9,8 @@ https://github.com/Jbruslind/HyperRail/tree/web-ui/WebUI
 -ros_sensor_interpretation (self explanatory)
 https://github.com/Jbruslind/HyperRail/blob/ros_sensor_interpretation/src/hyper_rail/nodes/README.md
 
--ros_pathplanning (self explanatory)
+-ros_pathplanning (self explanatory) - https://github.com/Jbruslind/HyperRail/tree/ros_pathplanning
 
--ros_camera_latest (Micasense camera)
+-ros_camera_latest (Micasense camera) - https://github.com/Jbruslind/HyperRail/tree/ros_camera_latest
 
 
