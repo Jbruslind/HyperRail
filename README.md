@@ -5,7 +5,7 @@ Currently branches are working with mock data or demo nodes and will be merged t
 
 -web_ui (web app development)
 
--ros_sensor_interpretation (self explanatory)
+-ros_sensor_interpretation (self explanatory) - https://github.com/Jbruslind/HyperRail/blob/ros_sensor_interpretation/src/hyper_rail/nodes/README.md
 
 -ros_pathplanning (self explanatory)
 
