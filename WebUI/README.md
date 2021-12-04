@@ -55,6 +55,17 @@ The `bundle exec rake db:seed` command executed above will fill in some fake sen
 A good way to get started with a new installation is to configure the default settings in `db/seeds.rb` to match the physical greenhouse and camera, and have that backfill some mock data.
 
 
+## To Do
+
+* Integrate [`rosbridge`](http://wiki.ros.org/rosbridge_suite) into a startup script so that it starts with the Rails application
+* Export images once they are taken and stitched with camera ros nodes
+* Add default program generation to the UI to remove a console interaction
+* Map an analysis to a specific program in case the dimensions change to prevent loss of historical data
+* Integrate GCode sending from relevant rosnode branch on dashboard
+* Add ability to launch program manually from `Program` tab
+* Dynamically scale SVG element to container panel
+* Account for non-square camera images during program generation
+
 ## Development Notes:
 
 Below are some helpful links to consider when modifying the interactive grid.
