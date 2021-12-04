@@ -14,6 +14,12 @@ If there is a better way to do this please tell me cause this is really annoying
 
 ### Basic File Structure Information
 ---
+- src
+    - ROS programs, contains all nodes, message types, scripts, and source files. Some ROS functionality is dependent on having the database set up and seeded.
+- WebUI
+    - Web interface, database, image storage
+- ImageProcessing
+    - Code created during image stitching research, includes script for generating test images that can be used with the compositor. Compositor depends on having database setup
 - stable_firmware
     - stable version and firmware of GRBL to control the appropriate driving hardware
 
@@ -47,7 +53,7 @@ Related topics and services used by the nodes are located in `../srv` and `../ms
 
 Class definitions used in ProgramNode and MotionNode are located in `../src/communication`
 
-To run the provided nodes and mocks, run `catkin_make` in the root directory then run the following
+To run the provided nodes and mocks, run `catkin_make` in the root directory then run the following in separate terminals:
 * `roscore`
 * `rosrun hyper_rail ProgramNode`
 * `rosrun hyper_rail MotionNode`
@@ -63,7 +69,7 @@ Then send the test program id with `rostopic pub /programs hyper_rail/ProgramFee
 # Image Processing
 ### File paths
 Currently it is assumed that images are stored in the public directory of the web-ui `~/HyperRail/WebUI/public/images`.
-Images are stored in using the file structure: `/images/{program_run_id}/{image_type}/{each image file}`
+Images are stored in using the file structure: `/images/{program_run_id}/{image_type}/{image file}`
 
 Composite images are stored using the file structure: `/images/{program_run_id}/{image_type}_composite{program_run_id}.tif` 
 
@@ -81,9 +87,14 @@ The image path is set in the settings page of the web-ui and stored in the setti
 ### Testing with temporary data
  - Note: the database must be migrated and seeded according to the database setup instrutions for database queries to work.
 
-A test image generation script is included as `/HyperRail/ImageProcessing/drawing.py` This script generates test images which can be used for verifying the compositor crop and layout. To test with this data, generate at least one set of test images in the `~/HyperRail/WebUI/public/images` and run the `create_test_images()` database query. This will assign the set of test images to the waypoint runs for program run 1. 
+A test image generation script is included as `/HyperRail/ImageProcessing/drawing.py` This script generates test images which can be used for verifying the compositor crop and layout. To test with this data, generate at least one set of test images in the `~/HyperRail/WebUI/public/images` and run the `create_test_images()` database query, located in `~/HyperRail/src/hyper_rail/src/db_queries.py`. This will assign the set of test images to the waypoint runs for program run 1. 
 
 ### Execution
 Then the compositor itself can be run on its own using `python compositor.py -p {program_run_id}` or through the program node. In both cases, ensure that `program_run_id` is set to 1 if using these demo instructions.
 
 Until the camera is incorporated into the system, the `ProgramNode` calls compositor.py with a test `program_run_id` which has image paths associated to it. This is assigned at line 119 in program_executor.py and should be removed when the camera is added.
+
+## ToDo:
+- Create `roslaunch` file for streamlining program startup
+- Create robust error handling for lost connection with hardware components
+- Test with hardware
