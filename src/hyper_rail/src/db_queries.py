@@ -138,9 +138,7 @@ class DatabaseReader:
         return
 
     def create_run_waypoint_id(self, waypoint_id, program_run_id, x, y, z=None):
-        # TODO:
         cur = self.conn.cursor()
-        timestamp = datetime.fromtimestamp(time.time())
         cur.execute("INSERT into run_waypoints(waypoint_id, program_run_id, x, y, z) VALUES(?,?,?,?,?)", (waypoint_id, program_run_id, x, y, z))
         self.conn.commit()
         return cur.lastrowid
@@ -152,6 +150,14 @@ class DatabaseReader:
         cur.execute("UPDATE run_waypoints SET finished_at = ? WHERE id = ?", (timestamp, run_waypoint_id))
         self.conn.commit()
         return 
+
+# Sensor Functions
+    def create_sensor_reading(self, run_waypoint_id, sensor_name, value, recorded_time):
+        cur = self.conn.cursor()
+        cur.execute ("INSERT into sensor_readings(run_waypoint_id, sensor_name, value, created_at) VALUES(?,?,?,?)", (run_waypoint_id, sensor_name, value, recorded_time,))
+        self.conn.commit()
+        cur.close
+        return
 
 # Image Functions
     # Returns the distinct image types for a program run.
@@ -280,7 +286,7 @@ if __name__ == "__main__":
     # db.get_program_runs(5)
     # db.get_all_run_waypoints(10)
     # db.get_image_types_for_program_run(10)
-    db.create_test_images()
+    # db.create_test_images()
     # print(db.get_camera_crop())
     # print(db.get_camera_height())
     # print(db.get_camera_fov())
@@ -291,6 +297,7 @@ if __name__ == "__main__":
     # db.update_run_waypoint_id_finished(id)
     # images = db.get_images_for_composite(1)
     # print(db.get_image_dir())
+    db.create_sensor_reading(90, 'temperature', 10.0)
 
 
 

@@ -183,6 +183,7 @@ catkin_install_python(PROGRAMS
    nodes/ESPMock
    nodes/MotionNode
    nodes/ProgramNode
+   nodes/GreenhouseMock
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

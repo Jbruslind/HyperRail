@@ -25,9 +25,6 @@ from hyper_rail.msg import ProgramStatus
 # need ESP32Controller for polling
 
 # Track motion, send response when location = destination
-# FIXME: Assume remove this, was going to be used in former design
-# def watch_location(Action: InstructionFeed):
-    # pass
 
 def init_node():
     """Create the ros node an add basic topic functionality (Technical functions are stored in an src file)"""
@@ -52,9 +49,6 @@ def init_node():
     # Subscribe to the GCode feeder topic with a large queue as to not lose any g-code segments
     location_sub = rospy.Subscriber('current_position', MachinePosition, callback=motionExecutor.update_position, queue_size=5000)
 
-    # Subscribe to waypoint feed
-    # waypoint_sub = rospy.Subscriber("instructions", InstructionFeed, callback=manage_action, queue_size=10)
-
     # Pull data from sensor end effector at 100ms intervals
     publish_rate = rospy.Rate(10)
 
@@ -67,10 +61,7 @@ def init_node():
     watcherThread.start()
 
     while not rospy.is_shutdown():
-        # Publish the sensor readings to the topic
-        # publisher.publish(greenHouseController.poll_data())
-        
-        # Maintain the correct interval for pulling data
+        # Publish whether or not the motion node is busy
         motion_status_pub.publish(motionExecutor.motion_status)
         publish_rate.sleep()
 

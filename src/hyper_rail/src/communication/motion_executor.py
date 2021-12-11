@@ -105,6 +105,8 @@ class MotionWatcher:
         print("x-increment {} y-increment{}".format(round(x_inc, 5), round(y_inc, 5)))
 
 
+        # In the following format strings creating codes, the Z coordinate is always set to 0. If in the future
+        # 3D movement is incorporated, will need to change that here
         while abs(x_dest - x) > x_inc or abs(y_dest - y) > y_inc:
             if x_dest - (x) > 0:
                 x += x_inc

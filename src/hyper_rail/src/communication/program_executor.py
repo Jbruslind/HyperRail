@@ -6,15 +6,17 @@ import ast
 import os
 import rospy
 import time
+from datetime import datetime
 
 from threading import Thread
 from queue import Queue
 
 from hyper_rail.srv import PathService, PathServiceRequest, MotionService, SensorService
-from hyper_rail.msg import MotionStatus
+from hyper_rail.msg import MotionStatus, GreenhouseSensorReadings
 
 from image_processing.compositor import Compositor
 from db_queries import DatabaseReader
+from rospy.exceptions import ROSException
 
 class Watcher:
     def __init__(self, q, publisher, status_pub):
@@ -60,12 +62,36 @@ class Watcher:
     def sensorAction(self, program_run_id, run_waypoint_id, action):
         print("action: ", action)
         if action == "temperature":
-            srv = 'sensor_service'
+            # Attempt to get a sensor reading message.
+            # TODO: Not sure what the format the GreenhouseSensorParse uses for time. read_time will probably need to be changed to work with actual data format
+            try:
+                reading = rospy.wait_for_message('greenhouse_sensor_readings', GreenhouseSensorReadings, timeout=2)
+                temp = reading.temperature
+                read_time = datetime.fromtimestamp(reading.end_read_time)
+            except ROSException as e:
+                print(e)
+                temp = None
+                read_time = time.time()
+            db = DatabaseReader()
+            print("recording temperature: ", temp)
+            db.create_sensor_reading(run_waypoint_id, action, temp, read_time) 
+            del db
+            return
+
         elif action == "image":
             srv = 'camera_service'
+            try:
+                message = rospy.ServiceProxy(srv, SensorService)
+                resp1 = message(program_run_id, run_waypoint_id, str(action))
+                print("%s returned: %s"%(srv, resp1.status))
+                return resp1.status
+            except rospy.ServiceException as e:
+                print("Service call failed: %s"%e)
+
         elif action == "humidity":
             print("Humidity not available")
             return 
+
         elif action == "lux":
             print("Lux not available")
             return
@@ -74,13 +100,7 @@ class Watcher:
             print("Error, action type {} not recognized.".format(action))
 
         rospy.wait_for_service(srv)
-        try:
-            message = rospy.ServiceProxy(srv, SensorService)
-            resp1 = message(program_run_id, run_waypoint_id, str(action))
-            print("%s returned: %s"%(srv, resp1.status))
-            return resp1.status
-        except rospy.ServiceException as e:
-            print("Service call failed: %s"%e)
+
 
     def execute(self, program):
         # 1. get waypoints for the specified program

@@ -53,18 +53,24 @@ Related topics and services used by the nodes are located in `../srv` and `../ms
 
 Class definitions used in ProgramNode and MotionNode are located in `../src/communication`
 
-To run the provided nodes and mocks, run `catkin_make` in the root directory then run the following in separate terminals:
+To run the provided nodes, frist run `catkin_make` in the root directory.
+
+The included nodes can be run with the given launch file using one of the following commands:
+* `roslaunch hyper_rail hyper_rail_test.launch` - uses mocks for testing message passing.
+* `roslaunch hyper_rail hyper_rail_launch.launch` - uses controller nodes to interact with hardware.
+
+Including the argument `--screen` after the launch file name will print the node output to the terminal.
+
+To run the provided nodes and mocks individually for development, run the following in separate terminals:
 * `roscore`
 * `rosrun hyper_rail ProgramNode`
 * `rosrun hyper_rail MotionNode`
 * `rosrun hyper_rail ESPMock`
 * `rosrun hyper_rail CameraMock`
 * `rosrun hyper_rail SensorMock`
+* `roslaunch rosbridge_server rosbridge_websocket.launch`
 
-Run rosbridge to serve websockets connections to the front end
-`roslaunch rosbridge_server rosbridge_websocket.launch`
-
-Then send the test program id with `rostopic pub /programs hyper_rail/ProgramFeed "program_id: '1'"`
+Then send the test program id with `rostopic pub /programs hyper_rail/ProgramFeed "program_id: 1"`
 
 # Image Processing
 ### File paths
@@ -95,6 +101,6 @@ Then the compositor itself can be run on its own using `python compositor.py -p 
 Until the camera is incorporated into the system, the `ProgramNode` calls compositor.py with a test `program_run_id` which has image paths associated to it. This is assigned at line 119 in program_executor.py and should be removed when the camera is added.
 
 ## ToDo:
-- Create `roslaunch` file for streamlining program startup
 - Create robust error handling for lost connection with hardware components
 - Test with hardware
+- Finish sensorAction() function to work with other sensor types.
