@@ -138,9 +138,7 @@ class DatabaseReader:
         return
 
     def create_run_waypoint_id(self, waypoint_id, program_run_id, x, y, z=None):
-        # TODO:
         cur = self.conn.cursor()
-        timestamp = datetime.fromtimestamp(time.time())
         cur.execute("INSERT into run_waypoints(waypoint_id, program_run_id, x, y, z) VALUES(?,?,?,?,?)", (waypoint_id, program_run_id, x, y, z))
         self.conn.commit()
         return cur.lastrowid
@@ -152,6 +150,14 @@ class DatabaseReader:
         cur.execute("UPDATE run_waypoints SET finished_at = ? WHERE id = ?", (timestamp, run_waypoint_id))
         self.conn.commit()
         return 
+
+# Sensor Functions
+    def create_sensor_reading(self, run_waypoint_id, sensor_name, value, recorded_time):
+        cur = self.conn.cursor()
+        cur.execute ("INSERT into sensor_readings(run_waypoint_id, sensor_name, value, created_at) VALUES(?,?,?,?)", (run_waypoint_id, sensor_name, value, recorded_time,))
+        self.conn.commit()
+        cur.close
+        return
 
 # Image Functions
     # Returns the distinct image types for a program run.
@@ -206,12 +212,14 @@ class DatabaseReader:
     def create_test_images(self, program_run_id = None):
         cur = self.conn.cursor()
         cur.execute("DELETE from camera_images")
-        id = [6, 10, 11, 20, 21, 30, 35, 40, 41, 50, 51]
-        # id = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-        path = ["1.tif", "2.tif", "3.tif", "4.tif", "5.tif", "6.tif", "7.tif", "8.tif", "9.tif", "10.tif", "11.tif"]
         c = "camera_mock"
-        it = "image_mock"
-        for i, p in zip(id, path):
+        # for i, p in zip(id, path):
+        for i in range(1, 91):
+            it = "test_band_1"
+            p = "{}.png".format(i)
+            t = datetime.fromtimestamp(time.time()) 
+            cur.execute ("INSERT into camera_images(run_waypoint_id, camera_name, image_type, uri, created_at) VALUES(?,?,?,?,?)", (i, c, it, p, t,))
+            it = "test_band_2"
             t = datetime.fromtimestamp(time.time()) 
             cur.execute ("INSERT into camera_images(run_waypoint_id, camera_name, image_type, uri, created_at) VALUES(?,?,?,?,?)", (i, c, it, p, t,))
             self.conn.commit()
@@ -299,12 +307,18 @@ if __name__ == "__main__":
     # db.get_program_runs(5)
     # db.get_all_run_waypoints(10)
     # db.get_image_types_for_program_run(10)
-    db.create_test_images()
+    # db.create_test_images()
     # print(db.get_camera_crop())
     # print(db.get_camera_height())
     # print(db.get_camera_fov())
     # db.get_images()
     # db.get_image_paths(10)
-    id = db.create_run_waypoint_id(19, 17, 400, 100, None)
-    print(id)
-    db.update_run_waypoint_id_finished(id)
+    # id = db.create_run_waypoint_id(19, 17, 400, 100, None)
+    # print(id)
+    # db.update_run_waypoint_id_finished(id)
+    # images = db.get_images_for_composite(1)
+    # print(db.get_image_dir())
+    db.create_sensor_reading(90, 'temperature', 10.0)
+
+
+

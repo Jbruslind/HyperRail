@@ -54,6 +54,12 @@ CameraMock is located [here](https://github.com/Jbruslind/HyperRail/blob/ros_cam
 
 ### Basic File Structure Information
 ---
+- src
+    - ROS programs, contains all nodes, message types, scripts, and source files. Some ROS functionality is dependent on having the database set up and seeded.
+- WebUI
+    - Web interface, database, image storage
+- ImageProcessing
+    - Code created during image stitching research, includes script for generating test images that can be used with the compositor. Compositor depends on having database setup
 - stable_firmware
     - stable version and firmware of GRBL to control the appropriate driving hardware
 

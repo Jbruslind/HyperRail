@@ -71,6 +71,7 @@ class Compositor:
     def draw_composite(self):
         # Get an image width to calculate px_per_m
         # Using first image collected for program run. This assumes all images are the same dimensions
+        print(self.images[0])
         i = self.images[0]
         imagepath = os.path.join(self.image_path, str(i['program_run_id']), i['image_type'], i['uri'])
         setup_image = Image(imagepath)
@@ -102,7 +103,7 @@ class Compositor:
         # get each type of image in program run and create a composite for each
         image_types = self.db.get_image_types_for_program_run(self.program_run_id)
         for t in image_types:
-            output_name = f"{t['image_type']}_composite9.tif"
+            output_name = f"{t['image_type']}_composite{self.program_run_id}.tif"
             out_path = os.path.join(self.image_path, str(self.program_run_id), output_name)
 
             # TODO: optimize this by querying for each image type rather than iterating over entire set multiple times

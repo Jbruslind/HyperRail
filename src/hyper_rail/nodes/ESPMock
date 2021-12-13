@@ -6,6 +6,7 @@ Swap this usage with ESPController
 """
 
 import rospy
+import re
 
 from queue import Queue                                                             # Queue is threadsafe, use for keeping keeping track of Programs
 from threading import Thread                                                        # Each service spins off a request
@@ -22,37 +23,67 @@ machinePos = [0, 0, 0]
 workPos = [0, 0, 0]
 runningState = "ok"
 
+def parse_code(cur):
+    code_dict = {}
+    g = re.search("([Gg]0?[01])", cur)
+    if g:
+        print(g.groups())
+        code_dict['G'] = g[1]
+
+    x = re.search("(([Xx]) *(-?\d+.?\d*))", cur)
+    if x:
+        print(x)
+        code_dict['X'] = float(x[3])
+
+    y = re.search("(([Yy]) *(-?\d+.?\d*))", cur)
+    if y:
+        print(y)
+        code_dict['Y'] = float(y[3])
+
+    z = re.search("(([Zz]) *(-?\d+.?\d*))", cur)
+    if z:
+        print(z)
+        code_dict['Z'] = float(z[3])
+        
+    f = re.search("(([Ff]) *(-?\d+.?\d*))", cur)
+    if f:
+        print(f)
+        code_dict['F'] = float(f[3])
+
+    print(code_dict)
+    return(code_dict) 
+
 def gcode_handler(data: GCodeFeed):
     print("GCodeFeed Received: ", data.code)
-    dest = data.code.split(" ")
-    print(dest[0])
-    if not (dest[0] == "G00" or dest[0] == "G01"):
+    dest = parse_code(data.code)
+    print(dest['G'])
+    if not (dest['G'] == "G00" or dest['G'] == "G01"):
         print(f"Received: {data.code}, ESP Mock is for demo, only accepts G00 and G01")
         return
-    dest.pop(0)
-    print(dest)
-    if len(dest) == 4:
-        dest.pop(3)
-    print(dest)
+    # dest.pop(0)
+    # print(dest)
+    # if len(dest) == 4:
+    #     dest.pop(3)
+    # print(dest)
 
-    dest = list(map(float, dest))
-    while machinePos != dest:
+    # dest = list(map(float, dest))
+    # while machinePos['X'] != dest:
 
-        xdiff = dest[0] - machinePos[0]
-        ydiff = dest[1] - machinePos[1]
-        zdiff = dest[2] - machinePos[2]
+    xdiff = dest['X'] - machinePos[0]
+    ydiff = dest['Y'] - machinePos[1]
+    zdiff = dest['Z'] - machinePos[2]
 
-        # Fake movements - set the machine position to the destination.
-        # This will be replaced by actual movements with the ESPController
-        machinePos[0] = dest[0]
-        workPos[0] = machinePos[0]
-        machinePos[1] = dest[1]
-        workPos[1] = machinePos[1]
-        machinePos[2] = dest[2]
-        workPos[2] = machinePos[2]
+    # Fake movements - set the machine position to the destination.
+    # This will be replaced by actual movements with the ESPController
+    machinePos[0] = dest['X']
+    workPos[0] = machinePos[0]
+    machinePos[1] = dest['Y']
+    workPos[1] = machinePos[1]
+    machinePos[2] = dest['Z']
+    workPos[2] = machinePos[2]
 
-        print("position updated to: {}                           ESP32 Mock\n".format(machinePos))
-        time.sleep(0.2)
+    print("position updated to: {}                           ESP32 Mock\n".format(machinePos))
+    time.sleep(0.2)
 
 
 def init_node():

@@ -18,9 +18,11 @@
 
 <script>
   $(document).ready(function() {
+
     ros.on('close', function() {
       $('#send_gcode_btn').prop('disabled', true);
     });
+
     $('#send_gcode_btn').click(function(event) {
       // Stop this event from propagating
       event.preventDefault();

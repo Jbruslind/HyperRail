@@ -1,0 +1,122 @@
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Selection Grid</h3>
+  </div>
+  <center><div id="grid" class="panel-body"><h4>Please select areas of interest</h4></div></center>
+</div>
+
+<script>
+    // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
+    var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
+    var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    var PIXEL_CONVERSION_FACTOR = 841.1;
+    var SCALE_FACTOR = .06;
+
+    //Parameters for displaying the grid
+    var rectWidthDisplay = (unit_sizes.x_unit_size*SCALE_FACTOR) * PIXEL_CONVERSION_FACTOR;
+    var rectHeightDisplay = (unit_sizes.y_unit_size*SCALE_FACTOR) * PIXEL_CONVERSION_FACTOR;
+    var gridWidthDisplay = rectWidthDisplay * unit_sizes.x_units;
+    var gridHeightDisplay = rectHeightDisplay * unit_sizes.y_units;
+    var numOfRects = unit_sizes.x_units * unit_sizes.y_units;
+    var numOfCols = unit_sizes.x_units;
+    var rectXOriginDisplay = 0;
+    var rectYOriginDisplay = 0;
+    var rectID = "rect";
+
+    //Parameters for calculating actual location in meters
+    var rectWidthActual = unit_sizes.x_unit_size;
+    var rectHeightActual = unit_sizes.y_unit_size;
+    var rectXOriginActual = 0;
+    var rectYOriginActual = 0;
+    var rectXCenter = 0;
+    var rectYCenter = 0;
+    
+    
+    var SVG_NS = "http://www.w3.org/2000/svg";
+    var XLINK_NS = "http://www.w3.org/1999/xlink";
+    var svg = document.createElementNS(SVG_NS, 'svg');
+    svg.setAttribute("width", gridWidthDisplay);
+    svg.setAttribute("height", gridHeightDisplay);
+
+    var image = document.createElementNS(SVG_NS, "image");
+    image.setAttributeNS(null, "width", gridWidthDisplay);
+    image.setAttributeNS(null, "height", gridHeightDisplay);
+    image.setAttributeNS(null, "x", 0);
+    image.setAttributeNS(null, "y", 0);
+    image.setAttributeNS(XLINK_NS, 'xlink:href', image_path);
+    svg.appendChild(image);
+
+    var g = document.createElementNS(SVG_NS, 'g');
+    g.setAttribute("style", "cursor: pointer; cursor: hand");
+
+    let areasOfInterest = {};
+    for (var i = 1; i <= numOfRects; i++)
+    {
+        var rectangle = document.createElementNS(SVG_NS, 'rect');
+        rectID += (i);
+        rectXCenter = rectXOriginActual + (rectWidthActual/2);
+        rectYCenter = rectYOriginActual + (rectHeightActual/2);
+        rectangle.setAttribute("id", rectID);
+        rectangle.setAttribute("x", rectXOriginDisplay);
+        rectangle.setAttribute("y", rectYOriginDisplay);
+        rectangle.setAttribute("width", rectWidthDisplay);
+        rectangle.setAttribute("height", rectHeightDisplay);
+        rectangle.setAttribute("rectXCenter", rectXCenter);
+        rectangle.setAttribute("rectYCenter", rectYCenter);
+        rectangle.setAttribute("rectWidthActual", rectWidthActual);
+        rectangle.setAttribute("rectHeightActual", rectHeightActual);
+        rectangle.setAttribute("stroke", "black");
+        rectangle.setAttribute("fill", "transparent");
+        rectangle.setAttribute("stroke-width", 1);
+        g.appendChild(rectangle);
+
+        if (i > 40 && i < 90)
+        {
+            rectangle.setAttribute('fill-opacity', '0.4');
+            rectangle.setAttribute('fill', 'black');
+        }
+        
+        if (i%numOfCols == 0)
+        {
+            rectXOriginDisplay = 0;
+            rectYOriginDisplay += rectHeightDisplay;
+            rectXOriginActual = 0;
+            rectYOriginActual += rectHeightActual;
+        }
+        else
+        {
+            rectXOriginDisplay += rectWidthDisplay;
+            rectXOriginActual += rectWidthActual;
+        }
+        
+        rectID = "rect";
+    }
+    svg.appendChild(g);
+    document.getElementById("grid").appendChild(svg);
+
+    $('rect').click(function() {
+        var svgElement = document.getElementById($(this).attr('id'));
+
+        if(svgElement.getAttribute('fill') == 'black')
+        {
+            svgElement.setAttribute('fill', 'transparent');
+            var target = svgElement.getAttribute('id');
+            delete areasOfInterest[target];
+        }
+        else
+        {
+            svgElement.setAttribute('fill-opacity', '0.4');
+            svgElement.setAttribute('fill', 'black');
+            var rectID = svgElement.getAttribute('id');
+            var x = svgElement.getAttribute('rectXCenter');
+            var y = svgElement.getAttribute('rectYCenter');
+            var width = svgElement.getAttribute('rectWidthActual');
+            var height = svgElement.getAttribute('rectHeightActual');
+            areasOfInterest[rectID] = {rectID,x,y,width,height};
+        }
+
+        $('#analysis_areas_of_interest').val(JSON.stringify(areasOfInterest));
+    });
+</script>
+
+ 

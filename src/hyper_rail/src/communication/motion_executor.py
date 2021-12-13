@@ -5,9 +5,10 @@
 import rospy
 import time
 import math
+import re
 
 from queue import Queue
-from communication.constants import GCODE_SCALE
+from communication.constants import GCODE_SCALE                                             # Scaling factor for converting X-Y coordinates from meters to units specified for ESP
 
 from hyper_rail.msg import MachinePosition                                                  # Message format for current position polling
 from hyper_rail.msg import ProgramStatus
@@ -27,18 +28,48 @@ class MotionWatcher:
         self.publisher = publisher
         self.publish_rate = rospy.Rate(10)
 
+    # Converts passed gcode to a dictionary of the components
+    def parse_gcode(self, cur):
+        code_dict = {}
+        g = re.search("([Gg]0?[01])", cur)
+        if g:
+            print(g.groups())
+            code_dict['G'] = g[1]
+
+        x = re.search("(([Xx]) *(-?\d+.?\d*))", cur)
+        if x:
+            print(x)
+            code_dict['X'] = x[3]
+
+        y = re.search("(([Yy]) *(-?\d+.?\d*))", cur)
+        if y:
+            print(y)
+            code_dict['Y'] = y[3]
+
+        z = re.search("(([Zz]) *(-?\d+.?\d*))", cur)
+        if z:
+            print(z)
+            code_dict['Z'] = z[3]
+        
+        f = re.search("(([Ff]) *(-?\d+.?\d*))", cur)
+        if f:
+            print(f)
+            code_dict['F'] = f[3]
+
+        print(code_dict)
+        return(code_dict)  
+
     def watch_for_single_codes(self):
         while True:
             if self.program_status == 'idle' and self.motion_status == 'idle':
                 self.motion_status = 'idle'
             if not self.single_codes.empty():
                 cur = self.single_codes.get()
-                print(cur)
+                code = self.parse_gcode(cur)
                 self.motion_status = f"Executing {cur}"
-                code = cur.split(" ")
                 print("manual code:",code)
                 # If code is a distance, have the distance split up
-                if code[0] == "G00" or code[0] == "G01":
+                if code['G'] == "G00" or code['G'] == "G01":
                     self.calculate_intermediates(code)
                 # Otherwise send code directly to GRBL
                 else:
@@ -56,10 +87,10 @@ class MotionWatcher:
 
     # Used when an individual code is received
     def calculate_intermediates(self, GCode):
-        code = GCode[0]
-        x_dest = float(GCode[1])
-        y_dest = float(GCode[2])
-        z_dest = float(GCode[3])
+        code = GCode['G']
+        x_dest = float(GCode['X'])
+        y_dest = float(GCode['Y'])
+        z_dest = float(GCode['Z'])
 
         codes = []
         x = float(self.location.x)
@@ -74,6 +105,8 @@ class MotionWatcher:
         print("x-increment {} y-increment{}".format(round(x_inc, 5), round(y_inc, 5)))
 
 
+        # In the following format strings creating codes, the Z coordinate is always set to 0. If in the future
+        # 3D movement is incorporated, will need to change that here
         while abs(x_dest - x) > x_inc or abs(y_dest - y) > y_inc:
             if x_dest - (x) > 0:
                 x += x_inc
@@ -84,9 +117,9 @@ class MotionWatcher:
             elif y_dest - (y ) < 0:
                 y -= y_inc 
             if len(GCode) == 5:
-                next_code = "{} {} {} 0 {}".format(code, round(x, 5), round(y, 5), GCode[4])
+                next_code = "{} X{} Y{} Z0 F{}".format(code, round(x, 5), round(y, 5), GCode['F'])
             else:
-                next_code = "{} {} {} 0".format(code, round(x, 5), round(y, 5))
+                next_code = "{} X{} Y{} Z0".format(code, round(x, 5), round(y, 5))
             print(next_code)
             codes.append(next_code)
             time.sleep(0.1)
@@ -95,9 +128,9 @@ class MotionWatcher:
             x = x_dest
             y = y_dest
             if len(GCode) == 5:
-                next_code = "{} {} {} 0 {}".format(code, round(x, 5), round(y, 5), GCode[4])
+                next_code = "{} X{} Y{} Z0 F{}".format(code, round(x, 5), round(y, 5), GCode['F'])
             else:
-                next_code = "{} {} {} 0".format(code, round(x, 5), round(y, 5))
+                next_code = "{} X{} Y{} Z0".format(code, round(x, 5), round(y, 5))
             codes.append(next_code)
 
         for code in codes:
@@ -142,14 +175,14 @@ class MotionWatcher:
                 y += y_inc 
             elif y_dest - (y ) < 0:
                 y -= y_inc 
-            next_code = "G00 {} {} 0".format(round(x, 5), round(y, 5))
+            next_code = "G00 X{} Y{} Z0".format(round(x, 5), round(y, 5))
             print(next_code)
             codes.append(next_code)
 
         if not math.isclose(x, x_dest, abs_tol=0.001) or not math.isclose(y, y_dest, abs_tol=0.001):
             x = x_dest
             y = y_dest
-            codes.append("G00 {} {} 0".format(round(x, 5), round(y, 5)))
+            codes.append("G00 X{} Y{} Z0".format(round(x, 5), round(y, 5)))
 
         for code in codes:
             self.publisher.publish(code)

@@ -17,3 +17,23 @@
 body {
     padding-top: 50px;
 }
+
+
+.fas.fa-camera {
+    color: white;
+}
+
+.topnav-right {
+    position: relative;
+    display: flex;
+    float: right;
+    padding-top: 12px;
+    padding-bottom: 10px;
+}
+
+.fas.fa-circle{
+    margin-top: 1px;
+    color: red;
+    margin-right: 5px;
+    margin-left: 5px;
+}
