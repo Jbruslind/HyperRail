@@ -30,19 +30,15 @@ source <Absolute Path>/HyperRail/devel/setup.bash
 
 ## Branch Highlights and Setup
 
-### Setup Database
+### Setup Database and requirements.txt
+
+Install [requirements.txt](https://github.com/Jbruslind/HyperRail/blob/ros_camera_latest/src/requirements.txt) in python enviroment or globally.
 
 In order to test the Micasense Camera, a database is required
 
 Please follow README [here](https://github.com/Jbruslind/HyperRail/tree/ros_camera_latest/WebUI).
 
 Note: make sure schema for database is migrated over
-
-### Test MicaSense Camera without ROS nodes.
-
-File location [here](https://github.com/Jbruslind/HyperRail/blob/ros_camera_latest/src/hyper_rail/src/communication/camera_executor.py).
-
-Note: the explanation for testing the Micasense Camera will be located at bottom of file below classes.
 
 ### Test the Micasense Camera with ROS nodes.
 
@@ -51,6 +47,13 @@ Please follow README located [here](https://github.com/Jbruslind/HyperRail/tree/
 Note: CameraMock node is a ros node that controls the camera and it is called via a ros-service named 'camera_service'.
 
 CameraMock is located [here](https://github.com/Jbruslind/HyperRail/blob/ros_camera_latest/src/hyper_rail/nodes/CameraMock). 
+
+### Test MicaSense Camera without ROS nodes.
+
+camera_executor.py can be run [here](https://github.com/Jbruslind/HyperRail/blob/ros_camera_latest/src/hyper_rail/src/communication/camera_executor.py).
+
+Note: the explanation for testing the Micasense Camera will be located at bottom of file below classes.
+
 
 ### Basic File Structure Information
 ---
