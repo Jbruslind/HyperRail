@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
-  resources :analyses
+  resources :analyses do
+    member do
+      get :aggregate
+      get :individual
+    end
+  end
+
   resource :session, only: [:new, :create, :destroy]
   resources :programs do
     collection do
