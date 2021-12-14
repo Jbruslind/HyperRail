@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+"""Forwards commands along to the ESP32 GRBL to be interpreted"""
+"""TODO: If serial communication is getting screwed up add a queue to the serial driver to mitigate conflicts"""
+
+import rospy
+
+from hyper_rail.srv import GRBLService, GRBLServiceResponse, GRBLServiceRequest
+from hyper_rail.msg import MachinePosition, GCodeFeed
+
+from geometry_msgs.msg import Vector3
+
+from serial_comms.ESP32_Driver import SerialDriver
+from communication.constants import RequestType, Axis, GRBL_DRIVER_SERIAL
+
+
+SERIAL_DRIVER = None
+
+def on_service_contact(request: GRBLServiceRequest):
+    global SERIAL_DRIVER
+    packet_type = request.command_id
+
+    # If there is data set it if not then there is no data
+    data = request.command_data if (len(request.command_data) > 0) else None
+
+    # Send generic GCODE (Should really only be used for one-liners as the topic should be handling all others)
+    if packet_type == 0:
+        return GRBLServiceResponse(SERIAL_DRIVER.send_gcode(data))
+
+    # Home all axis of the machine
+    elif packet_type == 1:
+        return GRBLServiceResponse(SERIAL_DRIVER.home_machine(Axis.ALL))
+
+    # Home X axis of the machine
+    elif packet_type == 2:
+        return GRBLServiceResponse(SERIAL_DRIVER.home_machine(Axis.X))
+
+    # Home Y axis of the machine
+    elif packet_type == 3:
+        return GRBLServiceResponse(SERIAL_DRIVER.home_machine(Axis.Y))
+
+    # Home Z axis of the machine
+    elif packet_type == 4:
+        return GRBLServiceResponse(SERIAL_DRIVER.home_machine(Axis.Z))
+
+    # Set the ESP32 into a sleep mode
+    elif packet_type == 5:
+        return GRBLServiceResponse(SERIAL_DRIVER.sleep())
+    
+    # Send a jog command to the driver to move to a set position
+    elif packet_type == 6:
+        values = []
+
+        # Create the required list of data to feed to the driver: X, Y and Feed rate
+        # Formated as such: X<value> Y<value> F<value>
+        values.append(float(data.split(" ")[0].replace("X", "").strip()))
+        values.append(float(data.split(" ")[1].replace("Y", "").strip()))
+        values.append(float(data.split(" ")[2].replace("F", "").strip()))
+        
+        # Drive the ESP32 to that position at the specified rate
+        return GRBLServiceResponse(SERIAL_DRIVER.jog_machine(values[0], values[1], values[2]))
+
+    # Get the current machine position
+    elif packet_type == 7:
+        return GRBLServiceResponse(SERIAL_DRIVER.get_position())
+    
+    # Wake-up the machine from sleep
+    elif packet_type == 8:
+        SERIAL_DRIVER.send_wakeup()
+        return GRBLServiceResponse("Attempting Wake-up...")
+    
+    # Controlled Stop
+    elif packet_type == 9:
+        return GRBLServiceResponse(SERIAL_DRIVER.hold_feed())
+    
+    # Start/Resume
+    elif packet_type == 10:
+        return GRBLServiceResponse(SERIAL_DRIVER.resume_cycle())
+
+def gcode_handler(data: GCodeFeed):
+    """Recieves and forwards G-code to the driver"""
+
+    # Send the current line of g-code along the device
+    SERIAL_DRIVER.send_gcode(data.code.strip())
+
+
+def init_node():
+    """Initialize a ROS node to run the service from and then start the service"""
+    global SERIAL_DRIVER
+
+    # Create a new serial driver, pulling the location and baud rate from the constants file
+    SERIAL_DRIVER = SerialDriver(GRBL_DRIVER_SERIAL[0], GRBL_DRIVER_SERIAL[1])
+
+    # Start the node to run the service from
+    rospy.init_node("GRBL_Controller")
+
+    # Publish the current position of the machine to a topic
+    publisher = rospy.Publisher("current_position", MachinePosition, queue_size=10)
+
+    # Subscribe to the GCode feeder topic with a large queue as to not lose any g-code segments
+    gcode_sub = rospy.Subscriber('gcode_feeder', GCodeFeed, callback=gcode_handler, queue_size=5000)
+
+    # Start the service grbl_controller to handle communication with the ESP 32
+    service = rospy.Service("grbl_controller", GRBLService, handler=on_service_contact)
+
+    # Rate at which to publish the position of the "spindle"
+    pub_rate = rospy.Rate(50)
+
+    # Inform the user that the node and service have been started successfully
+    rospy.loginfo(f"{rospy.get_name()}: awaiting requests...")
+
+    while not rospy.is_shutdown():
+        
+        # Get the current status report
+        status = SERIAL_DRIVER.get_status_report()
+
+        # Parse the current position of the machine
+        machinePos = SERIAL_DRIVER.get_machine_position(status)
+        workPos = SERIAL_DRIVER.get_work_position(status)
+        runningState = SERIAL_DRIVER.get_machine_state(status)
+
+
+        # Publish the current position
+        publisher.publish(
+            machinePosition=Vector3(machinePos[0],machinePos[1],machinePos[2]), 
+            workPosition=Vector3(workPos[0], workPos[1], workPos[2]),
+            runningState=runningState
+            )
+
+        # Repeat 30 times a second
+        pub_rate.sleep()
+
+
+if __name__ == "__main__":
+    init_node()
+
+

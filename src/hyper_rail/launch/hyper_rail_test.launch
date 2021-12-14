@@ -1,0 +1,11 @@
+<!-- Start nodes and rosbridge server for hyper rail -->
+<launch>
+    <node pkg="hyper_rail" name="motion_node" type="MotionNode" />
+    <node pkg="hyper_rail" name="program_node" type="ProgramNode" />
+    <node pkg="hyper_rail" name="ESPMock" type="ESPMock" />
+    <node pkg="hyper_rail" name="camera_mock" type="CameraMock" />
+    <node pkg="hyper_rail" name="greenhouse_sensor_mock" type="GreenhouseMock" />
+      <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" > 
+     <arg name="port" value="9090"/>
+  </include>
+</launch>

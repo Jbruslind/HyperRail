@@ -1,0 +1,8 @@
+# Structure for packets contacted the GRBL driver service
+
+int8 command_id # "Packet ID" - To represent the type of command
+string command_data # Any other required data
+
+---
+
+string grbl_response # Response from the board if any
