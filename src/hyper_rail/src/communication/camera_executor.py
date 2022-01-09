@@ -137,7 +137,7 @@ class Micasense(Camera):
         # iterates through dictionary and write to running program path directories
         count = 1
         for band_type in image_paths:
-            print(self.image_path + "/" + str(band_type) + '/' + str(self.get_waypoint_id()) + ".tiff")
+            print(self.image_path + "/" + str(band_type) + '/' + str(self.get_waypoint_id()) + ".tif")
             # image_name_path = image_paths[str(count)].split('/')
             try:
                 # request specific image file data
@@ -153,7 +153,7 @@ class Micasense(Camera):
                 abs_path = self.create_path(dir_path)
                 
                 # add file to path
-                file_name = os.path.join(abs_path, "%s.tiff" % (self.get_waypoint_id()))
+                file_name = os.path.join(abs_path, "%s.tif" % (self.get_waypoint_id()))
 
                 # write out bytes into file from image response 
                 with open(file_name, 'wb') as f:
@@ -202,7 +202,7 @@ class Micasense(Camera):
         r = requests.post(url = self.host + '/config/', data = payload, timeout=(1, 3))
         r.raise_for_status()
 
-    # sets file path to ~/HyperRail/images/run_program_id/image_type/run_waypoint_id.tiff
+    # sets file path to ~/HyperRail/images/run_program_id/image_type/run_waypoint_id.tif
     def get_file_path(self, band, waypoint):
         return self.image_path + '/' + str(band) + '/' + str(waypoint) + ".tif"
 
