@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+
+# This can be used for the basis of the camera node. Currently just hosts the
+# camera service.
+
+<<<<<<< HEAD
+import rospy
+import time
+
+from hyper_rail.srv import SensorService, SensorServiceRequest, SensorServiceResponse
+
+#Called when service receives new request
+def receive_command(req: SensorServiceRequest):
+    print("* Camera Mock\n * received action:", req.action)
+=======
+
+from communication.camera_executor import *
+import rospy
+import time
+from communication.constants import IMAGE_PATH, DEFAULT_CAMERA_HOST
+
+from hyper_rail.srv import SensorService, SensorServiceRequest, SensorServiceResponse
+
+# capture and store image files
+def process_camera(req: SensorServiceRequest):
+    # last parameter defines the bands (image type) the user would use when capturing an image
+    Cam = Micasense(IMAGE_PATH, req.program_run_id, req.run_waypoint_id, [1, 1, 1, 1, 1])
+    captured = Cam.capture_image()
+    if captured:
+        Cam.transfer_to_local_storage()
+    else:
+        print("Error: Image not capture")
+    
+>>>>>>> ros_camera_latest
+    for i in range(3):
+        print("sleeping", i)
+        time.sleep(1)
+    return("camera success")
+
+
+def init_node():
+    """Create the ros node and basic functionality"""
+    rospy.init_node("CameraMock")
+
+    # Sleep once per second. Just keeping the node alive
+    publish_rate = rospy.Rate(1)
+
+    # Service to receive camera commands
+<<<<<<< HEAD
+    service = rospy.Service("camera_service", SensorService, handler=receive_command)
+=======
+    service = rospy.Service("camera_service", SensorService, handler=process_camera)
+>>>>>>> ros_camera_latest
+
+    # Inform the user that the node and service have been started successfully
+    rospy.loginfo(f"{rospy.get_name()}: serial connection established...") 
+
+    while not rospy.is_shutdown():
+        publish_rate.sleep()
+
+if __name__ == "__main__":
+    init_node()

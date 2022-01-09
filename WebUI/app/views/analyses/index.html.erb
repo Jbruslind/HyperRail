@@ -1,0 +1,48 @@
+<div class="h1">Analyses</div>
+
+<p class="text-justify ">
+  <strong>NOTE:</strong> An <code>Analysis</code> is a collection of saved <code>Areas of Interest</code>.
+  An <code>Area of Interest</code> is a selected region of the greenhouse for which you can quickly make successive data exports.
+  It can be called anything and is purely for your own reference.
+  This allows multiple different analyses to be run simultaneously in the same greenhouse when there are multiple distinct areas of interest in the same HyperRail gantry.
+</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Created</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @analyses.each do |analysis| %>
+      <tr>
+        <td><%= link_to analysis.name, analysis %></td>
+        <td><%= analysis.created_at.strftime('%Y-%m-%d') %></td>
+        <td>
+          <%= link_to 'Export', '#exportModal', data: { name: analysis.name, analysis_id: analysis.id, toggle: 'modal', target: '#exportModal'}, class: 'export-link' %>
+          <%= link_to 'Edit', edit_analysis_path(analysis) %>
+          <%= link_to 'Destroy', analysis, method: :delete, data: { confirm: 'Are you sure you wish to delete this analysis? It will not delete any of the underlying data.' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr/>
+
+<%= button_to 'New analysis', new_analysis_path, method: :get, class: 'btn btn-sm btn-primary' %>
+
+<%= render partial: 'export_modal' %>
+<script>
+  $('.export-link').click(function(event) {
+    // Set the modal title
+    $('#exportModalLabel').html($(this).data('name'));
+
+    // Set the download links
+    $('#aggregate_readings').attr('href', '/analyses/' + $(this).data('analysis-id') + '/aggregate.csv');
+    $('#individual_readings').attr('href', '/analyses/' + $(this).data('analysis-id') + '/individual.csv');
+  });
+</script>
