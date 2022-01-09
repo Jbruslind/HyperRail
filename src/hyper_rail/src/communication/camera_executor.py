@@ -23,7 +23,7 @@ DB_QUERIES = DatabaseReader()
 
 # side note: not sure if this go in constants since it is very particular to this class.
 #  (or if should even be a constant?)
-CAPTURE_PARAMS = "/capture?store_capture=true&cache_jpeg=31&cache_raw=31&block=true:"
+CAPTURE_PARAMS = "/capture?store_capture=true&cache_jpeg=31&cache_raw=31&block=true"
 
 # will take this away at some point, just using for testing. might just put in a another file.
 TEST_FILE_RESPONSE =  {
@@ -124,12 +124,13 @@ class Micasense(Camera):
     #when connected to micasense, uncomment [1], comment out the Test line
     def transfer_to_local_storage(self):
 
-        #storage_path_files = self.get_capture(self.capture_id) [1]
+        storage_path_files = self.get_capture(self.capture_id)
         
-        storage_path_files = TEST_FILE_RESPONSE
+        #storage_path_files = TEST_FILE_RESPONSE
         
         # get the directory path for run from param
-        self.add_micasense_images(storage_path_files['raw_storage_path'])
+        #print(storage_path_files["raw_storage_path"])
+        self.add_micasense_images(storage_path_files["raw_storage_path"])
 
 
     def add_micasense_images(self, image_paths):
@@ -171,7 +172,7 @@ class Micasense(Camera):
                 DB_QUERIES.add_image(camera_dict)
                 
                 # delete file off sd
-                r = requests.get(self.host + "deletefile%s" % image_paths[str(count)], timeout=(1, 3))
+                r = requests.get(self.host + "/deletefile%s" % image_paths[str(count)], timeout=(1, 3))
 
                 count = count + 1        
             except requests.exceptions.RequestException as e:
@@ -184,9 +185,9 @@ class Micasense(Camera):
         try:
             url = self.host + '/capture/' + id
             r = requests.get(url, timeout=1)
-            # return a json object
-            r = json.dumps(r)
-            return r
+            #print(r)
+            # return a json object as dict
+            return r.json()
         except requests.exceptions.RequestException:
             print('Waiting for camera response')
 
@@ -203,7 +204,7 @@ class Micasense(Camera):
 
     # sets file path to ~/HyperRail/images/run_program_id/image_type/run_waypoint_id.tiff
     def get_file_path(self, band, waypoint):
-        return self.image_path + '/' + str(band) + '/' + str(waypoint) + ".tiff"
+        return self.image_path + '/' + str(band) + '/' + str(waypoint) + ".tif"
 
     def get_dir_path(self, band):
         return self.image_path + '/' + str(band) + '/'
@@ -247,9 +248,10 @@ pictures are already taken) If testing Micasense, please follow directions above
 transfer_to_local_storage function 
 to run: python camera_executor.py'''
 
-# Cam = Micasense(IMAGE_PATH, 4, 3, [1, 1, 1, 1, 1])
-# captured = Cam.capture_image()
-# if captured:
-#     Cam.transfer_to_local_storage()
-# else:
-#     print("Error: Image not capture")
+Cam = Micasense(IMAGE_PATH, 4, 3, [1, 1, 1, 1, 1])
+captured = Cam.capture_image()
+if captured:
+    Cam.transfer_to_local_storage()
+    print("Images captured successfully")
+else:
+    print("Error: Image not capture")

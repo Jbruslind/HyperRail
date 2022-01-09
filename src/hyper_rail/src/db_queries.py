@@ -208,6 +208,10 @@ class DatabaseReader:
         cur.close()
         return paths
 
+    # TODO - Make function to add images into database #    
+    def add_image(self, camera_dict):
+        return
+
     # Make fake records for testing
     def create_test_images(self, program_run_id = None):
         cur = self.conn.cursor()
