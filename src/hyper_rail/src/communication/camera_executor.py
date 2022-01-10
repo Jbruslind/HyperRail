@@ -112,7 +112,7 @@ class Micasense(Camera):
             self.set_config()
             # capture picture and get request
             response = requests.get(self.host + CAPTURE_PARAMS, timeout=(1, 3))
-            capture_id = response.json()["id"]
+            self.capture_id = response.json()["id"]
 
             if response.status_code == 200:
                 print('Success!')
@@ -129,7 +129,7 @@ class Micasense(Camera):
         #storage_path_files = TEST_FILE_RESPONSE
         
         # get the directory path for run from param
-        #print(storage_path_files["raw_storage_path"])
+        #print(storage_path_files)
         self.add_micasense_images(storage_path_files["raw_storage_path"])
 
 
