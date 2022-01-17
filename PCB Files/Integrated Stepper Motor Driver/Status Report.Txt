@@ -1,0 +1,14 @@
+Project Outputs Generation Report
+---------------------------------
+Start Output Generation At 8:48:20 PM On 4/9/2021
+
+Output: ExportSTEP
+Type  : ExportSTEP
+From  : Variant [[No Variations]] of PCB Document [Main.CMPcbDoc]
+   Generated File[Main.step]
+
+
+Files Generated   : 1
+Documents Printed : 0
+
+Finished Output Generation At 8:48:24 PM On 4/9/2021

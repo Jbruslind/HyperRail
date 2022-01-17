@@ -1,0 +1,15 @@
+﻿Study Shape Generator:1 started: 10/10/2021, 5:58:00 PM
+Number of configurations: 1
+Default mesh: 19700 elements, 29955 nodes
+Reached the total number of h refinements 
+Study Shape Generator:1 finished: 10/10/2021, 5:58:29 PM
+Total time 0:00:29
+
+Study Static Analysis:1 started: 10/10/2021, 5:59:37 PM
+Number of configurations: 1
+Default mesh: 756 elements, 1443 nodes
+Convergence rate: 27.2%
+Reached the total number of h refinements 
+Study Static Analysis:1 finished: 10/10/2021, 5:59:39 PM
+Total time 0:00:02
+
