@@ -175,14 +175,14 @@ class MotionWatcher:
                 y += y_inc 
             elif y_dest - (y ) < 0:
                 y -= y_inc 
-            next_code = "G00 X{} Y{} Z0".format(round(x, 5), round(y, 5))
+            next_code = "G01 X{} Y{} Z0".format(round(x, 5), round(y, 5))
             print(next_code)
             codes.append(next_code)
 
         if not math.isclose(x, x_dest, abs_tol=0.001) or not math.isclose(y, y_dest, abs_tol=0.001):
             x = x_dest
             y = y_dest
-            codes.append("G00 X{} Y{} Z0".format(round(x, 5), round(y, 5)))
+            codes.append("G01 X{} Y{} Z0".format(round(x, 5), round(y, 5)))
 
         for code in codes:
             self.publisher.publish(code)
