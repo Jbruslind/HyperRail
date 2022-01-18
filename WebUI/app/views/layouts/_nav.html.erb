@@ -46,7 +46,7 @@ window.onload = function() {
   var ethernetConnection = document.getElementById("connectTitle");
   const checkCamConnection = () => {
     // host is hardcoded for now
-    axios.get('https://192.168.1.83:80/status', {timeout: 1000})
+    axios.get('https://192.168.1.83:80/status', {timeout: 2000})
         .then(response => {
           micasenseConnection.setAttribute("style", "color: green;");
           ethernetConnection.setAttribute("title", "Camera Ethernet Connected")
@@ -58,6 +58,6 @@ window.onload = function() {
 };
 
 //check if camera connected
-checkCamConnection();
+//checkCamConnection();
 }
 </script>

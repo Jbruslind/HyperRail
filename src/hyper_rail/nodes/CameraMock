@@ -11,9 +11,10 @@ from hyper_rail.srv import SensorService, SensorServiceRequest, SensorServiceRes
 #Called when service receives new request
 def receive_command(req: SensorServiceRequest):
     print("* Camera Mock\n * received action:", req.action)
-    for i in range(3):
-        print("sleeping", i)
-        time.sleep(1)
+    # req should be of class : SensorService Request and has types: 
+    # uint32 program_run_id | uint32 run_waypoint_id | string action 
+    print(req.run_waypoint_id)
+    print(req.program_run_id)
     return("camera success")
 
 

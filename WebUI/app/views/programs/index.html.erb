@@ -43,14 +43,39 @@
 
 <%= button_to 'Generate default program from settings', default_programs_path, class: 'btn btn-sm btn-primary', method: :post %>
 
+<script src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+
 <script>
   $(document).ready(function() {
     $('.run_link').click(function(event) {
       var program_id = $(this).data('program-id');
 
+      var ros= new ROSLIB.Ros({
+        url : 'ws://192.168.1.132:9090'
+      });
+      console.log('register ROS');
+      ros.on('connection', function() {
+        console.log('Connected to websocket server.');   
+      });
+
+      ros.on('error', function(error) {
+        console.log('Error connecting to websocket server: ', error);
+      });
+
+      var pubProgram = new ROSLIB.Topic({
+        ros : ros,
+        name : '/programs',
+        messageType : 'hyper_rail/ProgramFeed'
+      });
+
+      var programID = new ROSLIB.Message({
+        program_id : program_id
+      });
+      
       // TODO: Send program id to roslibjs
       alert('Sending ' + program_id + ' to roslibjs');
       event.preventDefault();
+      pubProgram.publish(programID);
     });
   })
 </script>

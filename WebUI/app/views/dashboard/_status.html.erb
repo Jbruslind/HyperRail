@@ -69,8 +69,8 @@
   // Set up ROS connection
   var ros = new ROSLIB.Ros()
   // Create a connection to the rosbridge WebSocket server.
-//  ros.connect('ws://localhost:9090');
-  ros.connect('ws://192.168.0.51:9090');
+  ros.connect('ws://192.168.1.132:9090');
+  //ros.connect('ws://192.168.0.51:9090');
   // Monitor connection status
   // If there is an error on the backend, an 'error' emit will be emitted.
   ros.on('error', function(error) {
