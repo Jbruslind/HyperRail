@@ -6,15 +6,23 @@
 import rospy
 import time
 
+from communication.camera_executor import Micasense
 from hyper_rail.srv import SensorService, SensorServiceRequest, SensorServiceResponse
+
+from communication.constants import DEFAULT_CAMERA_HOST, IMAGE_PATH
 
 #Called when service receives new request
 def receive_command(req: SensorServiceRequest):
     print("* Camera Mock\n * received action:", req.action)
+    Cam = Micasense(IMAGE_PATH, req.program_run_id, req.run_waypoint_id, [1, 1, 1, 1, 1])
+    captured = Cam.capture_image()
     # req should be of class : SensorService Request and has types: 
     # uint32 program_run_id | uint32 run_waypoint_id | string action 
-    print(req.run_waypoint_id)
-    print(req.program_run_id)
+    if captured:
+        Cam.transfer_to_local_storage()
+        print("Images captured successfully")
+    else:
+        print("Error: Image not capture")
     return("camera success")
 
 

@@ -55,10 +55,9 @@ TEST_FILE_RESPONSE =  {
     }
 
 def dir_concatination(delim, file_path):    
-    abs_pathname = os.getcwd()
-    string = abs_pathname
-    index = string.find (delim)
-    file_abs_path = string[:index] + file_path[2:]
+    abs_pathname = os.path.expanduser('~')
+    string = abs_pathname + '/'
+    file_abs_path = string + file_path[2:]
     return file_abs_path
 
 
@@ -93,6 +92,7 @@ class Camera:
         return self.image_path()
 
     def set_image_path(self, root, program_id):
+        #print('IMAGE PATH: ' + "%s/%s" % (str(root), str(program_id)))
         return "%s/%s" % (str(root), str(program_id))
         
 
@@ -144,7 +144,7 @@ class Micasense(Camera):
                 r = requests.get(self.host + image_paths[str(count)], stream=True,  timeout=(1, 3)) 
                 
                 # provides the string path for database file path
-                file_path = self.get_file_path(band_type, self.get_waypoint_id())
+                #file_path = self.get_file_path(band_type, self.get_waypoint_id())
                 
                 # provides string for directory
                 dir_path =  self.get_dir_path(band_type)
@@ -165,7 +165,7 @@ class Micasense(Camera):
                     'run_waypoint_id': self.get_waypoint_id(), 
                     'camera_name': "Example Camera", 
                     'image_type': band_type,
-                    'uri': file_path,
+                    'uri': abs_path + "%s.tif" % (self.get_waypoint_id()),
                     'metadata': ""
                     }
 
@@ -204,7 +204,9 @@ class Micasense(Camera):
 
     # sets file path to ~/HyperRail/images/run_program_id/image_type/run_waypoint_id.tif
     def get_file_path(self, band, waypoint):
-        return self.image_path + '/' + str(band) + '/' + str(waypoint) + ".tif"
+        #return self.image_path + '/' + str(band) + '/' + str(waypoint) + ".tif"
+        new_path = os.path.expanduser('~')
+        return  new_path + str(waypoint) + ".tif"
 
     def get_dir_path(self, band):
         return self.image_path + '/' + str(band) + '/'
@@ -248,10 +250,10 @@ pictures are already taken) If testing Micasense, please follow directions above
 transfer_to_local_storage function 
 to run: python camera_executor.py'''
 
-Cam = Micasense(IMAGE_PATH, 4, 3, [1, 1, 1, 1, 1])
-captured = Cam.capture_image()
-if captured:
-    Cam.transfer_to_local_storage()
-    print("Images captured successfully")
-else:
-    print("Error: Image not capture")
+# Cam = Micasense(IMAGE_PATH, 4, 3, [1, 1, 1, 1, 1])
+# captured = Cam.capture_image()
+# if captured:
+#     Cam.transfer_to_local_storage()
+#     print("Images captured successfully")
+# else:
+#     print("Error: Image not capture")

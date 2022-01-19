@@ -1,7 +1,8 @@
 """This program can be used to composite all images stored as part of a program_run"""
 import argparse
 import sys
-import os.path
+import errno
+import os
 import math
 from db_queries import DatabaseReader
 
@@ -73,7 +74,10 @@ class Compositor:
         # Using first image collected for program run. This assumes all images are the same dimensions
         print(self.images[0])
         i = self.images[0]
-        imagepath = os.path.join(self.image_path, str(i['program_run_id']), i['image_type'], i['uri'])
+        print(i)
+        imagepath = i['uri']
+        print(self.image_path)
+        print(imagepath)
         setup_image = Image(imagepath)
 
         # Calculate pixels per meter using camera height, fov, and image dimensions
@@ -104,6 +108,13 @@ class Compositor:
         image_types = self.db.get_image_types_for_program_run(self.program_run_id)
         for t in image_types:
             output_name = f"{t['image_type']}_composite{self.program_run_id}.tif"
+            out_dir = os.path.join(self.image_path, str(self.program_run_id))
+            try:
+                print("creating: %s" % out_dir)
+                os.makedirs(out_dir)
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
             out_path = os.path.join(self.image_path, str(self.program_run_id), output_name)
 
             # TODO: optimize this by querying for each image type rather than iterating over entire set multiple times

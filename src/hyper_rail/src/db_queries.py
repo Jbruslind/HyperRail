@@ -210,6 +210,16 @@ class DatabaseReader:
 
     # TODO - Make function to add images into database #    
     def add_image(self, camera_dict):
+        conn_ = sqlite3.connect(self.db_file.expanduser())
+        cur = conn_.cursor()
+        waypoint = camera_dict['run_waypoint_id']
+        name = camera_dict['camera_name']
+        image_band = camera_dict['image_type']
+        uri = camera_dict['uri']
+        t = datetime.fromtimestamp(time.time()) 
+        cur.execute ("INSERT into camera_images(run_waypoint_id, camera_name, image_type, uri, created_at) VALUES(?,?,?,?,?)", (waypoint, name, image_band, uri, t,))
+        conn_.commit()
+        conn_.close()
         return
 
     # Make fake records for testing
