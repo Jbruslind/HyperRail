@@ -6,6 +6,7 @@ import ast
 import os
 import rospy
 import time
+
 from datetime import datetime
 
 from threading import Thread
@@ -164,7 +165,7 @@ class Watcher:
         
         # 3. Create stitched image
         # TODO: manually setting run ID here for demonstration, remove this assignment in implementation
-        run_id = 1
+        #run_id = 1
         comp = Compositor()
         comp.load_images(run_id)
         comp.create_composite()
