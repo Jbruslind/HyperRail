@@ -7,6 +7,7 @@ Swap this usage with ESPController
 
 import rospy
 import re
+import serial
 
 from queue import Queue                                                             # Queue is threadsafe, use for keeping keeping track of Programs
 from threading import Thread                                                        # Each service spins off a request
@@ -22,6 +23,7 @@ from hyper_rail.msg import MachinePosition                                      
 machinePos = [0, 0, 0]
 workPos = [0, 0, 0]
 runningState = "ok"
+
 
 def parse_code(cur):
     code_dict = {}
@@ -85,6 +87,34 @@ def gcode_handler(data: GCodeFeed):
     print("position updated to: {}                           ESP32 Mock\n".format(machinePos))
     time.sleep(0.2)
 
+def send_Serial():
+    try:
+         ser = serial.Serial('/dev/grbl_controller', 15200, timeout=2)
+         ser.write("G90\r\n".encode())
+
+    except serial.SerialException as e:
+        return 0
+    except TypeError as e:
+        return 0
+
+def home():
+    try:
+        ser = serial.Serial('/dev/grbl_controller', 15200, timeout=2)
+        # Wake up grbl
+        ser.write("\r\n\r\n")
+        time.sleep(2)   # Wait for grbl to initialize 
+        ser.flushInput()  # Flush startup text in serial input
+        ser.write("$H\r\n".encode())
+        print('Sending: $H')
+        ser.write('$H\n') # Send g-code block to grbl
+        grbl_out = ser.readline() # Wait for grbl response with carriage return
+        print(' : ' + grbl_out.strip())
+        ser.close()
+        
+    except serial.SerialException as e:
+        return 0
+    except TypeError as e:
+        return 0
 
 def init_node():
     """Create the ros node an add basic topic functionality (Technical functions are stored in an src file)"""
@@ -102,8 +132,8 @@ def init_node():
 
     # Inform the user that the node and service have been started successfully
     rospy.loginfo(f"{rospy.get_name()}: awaiting requests...")
-
-
+    connected = 0
+    
     while not rospy.is_shutdown():
         # Publish the current position
         publisher.publish(
@@ -112,7 +142,7 @@ def init_node():
             runningState=runningState
             )
 
-        # Repeat 30 times a second
+        # Repeat 1 times a second
         pub_rate.sleep()
 
 if __name__ == "__main__":
