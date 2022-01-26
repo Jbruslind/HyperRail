@@ -7,7 +7,7 @@
 # additional features could be:
 # adding how many bands the user would like
 from db_queries import DatabaseReader
-from communication.constants import DEFAULT_CAMERA_HOST, IMAGE_PATH
+from communication.constants import DEFAULT_CAMERA_HOST, IMAGE_PATH, HOSTIP
 import requests
 from requests.exceptions import HTTPError
 import time
@@ -106,12 +106,30 @@ class Micasense(Camera):
         self.preview_band = 'band1'
         self.capture_id = ''
 
+    def session_for_src_addr(self, addr: str) -> requests.Session:
+        """
+        Create `Session` which will bind to the specified local address
+        rather than auto-selecting it.
+        """
+        session = requests.Session()
+        for prefix in ('http://', 'https://'):
+            session.get_adapter(prefix).init_poolmanager(
+                # those are default values from HTTPAdapter's constructor
+                connections=requests.adapters.DEFAULT_POOLSIZE,
+                maxsize=requests.adapters.DEFAULT_POOLSIZE,
+                # This should be a tuple of (address, port). Port 0 means auto-selection.
+                source_address=(addr, 0),
+            )
+
+        return session
+
     def capture_image(self):
         try:
             # set up camera
             self.set_config()
             # capture picture and get request
-            response = requests.get(self.host + CAPTURE_PARAMS, timeout=(1, 3))
+            s = self.session_for_src_addr(HOSTIP)
+            response = s.get(self.host + CAPTURE_PARAMS, timeout=(1, 3))
             self.capture_id = response.json()["id"]
 
             if response.status_code == 200:
@@ -120,7 +138,7 @@ class Micasense(Camera):
         except requests.exceptions.RequestException as e:
             print("Error: " + str(e))
             return False 
- 
+    
     #when connected to micasense, uncomment [1], comment out the Test line
     def transfer_to_local_storage(self):
 
@@ -141,7 +159,8 @@ class Micasense(Camera):
             # image_name_path = image_paths[str(count)].split('/')
             try:
                 # request specific image file data
-                r = requests.get(self.host + image_paths[str(count)], stream=True,  timeout=(1, 3)) 
+                s = self.session_for_src_addr(HOSTIP)
+                r = s.get(self.host + image_paths[str(count)], stream=True,  timeout=(1, 3)) 
                 
                 # provides the string path for database file path
                 #file_path = self.get_file_path(band_type, self.get_waypoint_id())
@@ -172,7 +191,8 @@ class Micasense(Camera):
                 DB_QUERIES.add_image(camera_dict)
                 
                 # delete file off sd
-                r = requests.get(self.host + "/deletefile%s" % image_paths[str(count)], timeout=(1, 3))
+                s = self.session_for_src_addr(HOSTIP)
+                r = s.get(self.host + "/deletefile%s" % image_paths[str(count)], timeout=(1, 3))
 
                 count = count + 1        
             except requests.exceptions.RequestException as e:
@@ -184,7 +204,8 @@ class Micasense(Camera):
         # get the /capture/:id
         try:
             url = self.host + '/capture/' + id
-            r = requests.get(url, timeout=1)
+            s = self.session_for_src_addr(HOSTIP)
+            r = s.get(url, timeout=1)
             #print(r)
             # return a json object as dict
             return r.json()
@@ -199,7 +220,8 @@ class Micasense(Camera):
     
     def set_config(self):
         payload = self.config_payload()
-        r = requests.post(url = self.host + '/config/', data = payload, timeout=(1, 3))
+        s = self.session_for_src_addr(HOSTIP)
+        r = s.post(url = self.host + '/config/', data = payload, timeout=(1, 3))
         r.raise_for_status()
 
     # sets file path to ~/HyperRail/images/run_program_id/image_type/run_waypoint_id.tif
