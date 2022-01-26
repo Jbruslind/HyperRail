@@ -45,7 +45,7 @@ def gcode_handler(data: GCodeFeed):
 def queueSerial(toSend):
     while True:
         command = toSend.get() #grab the latest serial command to send
-        print('QUEUE RECIEVED: %s' % command)
+        #print('QUEUE RECIEVED: %s' % command)
         try:
             ser = serial.Serial('/dev/grbl_controller', 115200, timeout=2)
             ser.write(('%s\r\n' % command).encode())
