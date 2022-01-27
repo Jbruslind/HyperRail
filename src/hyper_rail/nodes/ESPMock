@@ -5,8 +5,10 @@ This is a quick mock to test the MachinePosition and GCodeFeed topics.
 Swap this usage with ESPController
 """
 
+from platform import machine
 import rospy
 import re
+import serial
 
 from queue import Queue                                                             # Queue is threadsafe, use for keeping keeping track of Programs
 from threading import Thread                                                        # Each service spins off a request
@@ -22,69 +24,72 @@ from hyper_rail.msg import MachinePosition                                      
 machinePos = [0, 0, 0]
 workPos = [0, 0, 0]
 runningState = "ok"
-
-def parse_code(cur):
-    code_dict = {}
-    g = re.search("([Gg]0?[01])", cur)
-    if g:
-        print(g.groups())
-        code_dict['G'] = g[1]
-
-    x = re.search("(([Xx]) *(-?\d+.?\d*))", cur)
-    if x:
-        print(x)
-        code_dict['X'] = float(x[3])
-
-    y = re.search("(([Yy]) *(-?\d+.?\d*))", cur)
-    if y:
-        print(y)
-        code_dict['Y'] = float(y[3])
-
-    z = re.search("(([Zz]) *(-?\d+.?\d*))", cur)
-    if z:
-        print(z)
-        code_dict['Z'] = float(z[3])
-        
-    f = re.search("(([Ff]) *(-?\d+.?\d*))", cur)
-    if f:
-        print(f)
-        code_dict['F'] = float(f[3])
-
-    print(code_dict)
-    return(code_dict) 
+home_flag = 0
+serialQueue = Queue()
 
 def gcode_handler(data: GCodeFeed):
-    print("GCodeFeed Received: ", data.code)
-    dest = parse_code(data.code)
-    print(dest['G'])
-    if not (dest['G'] == "G00" or dest['G'] == "G01"):
-        print(f"Received: {data.code}, ESP Mock is for demo, only accepts G00 and G01")
-        return
+    #print("GCodeFeed Received: ", data.code)
     # dest.pop(0)
     # print(dest)
     # if len(dest) == 4:
     #     dest.pop(3)
     # print(dest)
-
+    move(data.code)
+    status()
     # dest = list(map(float, dest))
     # while machinePos['X'] != dest:
 
-    xdiff = dest['X'] - machinePos[0]
-    ydiff = dest['Y'] - machinePos[1]
-    zdiff = dest['Z'] - machinePos[2]
-
-    # Fake movements - set the machine position to the destination.
-    # This will be replaced by actual movements with the ESPController
-    machinePos[0] = dest['X']
-    workPos[0] = machinePos[0]
-    machinePos[1] = dest['Y']
-    workPos[1] = machinePos[1]
-    machinePos[2] = dest['Z']
-    workPos[2] = machinePos[2]
-
-    print("position updated to: {}                           ESP32 Mock\n".format(machinePos))
+    #print("position updated to: {}                           ESP32 Mock\n".format(machinePos))
     time.sleep(0.2)
 
+def queueSerial(toSend):
+    while True:
+        command = toSend.get() #grab the latest serial command to send
+        #print('QUEUE RECIEVED: %s' % command)
+        try:
+            ser = serial.Serial('/dev/grbl_controller', 115200, timeout=2)
+            ser.write(('%s\r\n' % command).encode())
+            ser.flushInput()  # Flush startup text in serial input
+            grbl_out = ser.readline().decode() # Wait for grbl response with carriage return
+            print('Reply: ' + grbl_out.strip())
+            if command == '?': #Special handling needs to happen for a status command
+                grbl_out = grbl_out.split('|')
+                runningState = grbl_out[0]
+                pos = grbl_out[1].split(':')[1] #output is MPos:x.xxx,y.yyyy,z.zzzz -> (Mpos, x.xxx,y.yyy,z.zzz)
+                machinePos[0] = float(pos.split(',')[0]) 
+                machinePos[1] = float(pos.split(',')[1]) 
+                machinePos[2] = float(pos.split(',')[2])
+                grbl_out = ser.readline().decode() # Grab the "ok" after status command
+            ser.close()
+        except serial.SerialException as e:
+            print("ERROR: %s" % e)
+            return 0
+        except TypeError as e:
+            print("ERROR: %s" % e)
+            return 0 
+        toSend.task_done() #Indicate that this item is done
+        time.sleep(0.5) #give a small window for the Gcode processor before next command
+
+
+def move(command):
+    global home_flag, serialQueue
+    if home_flag == 0:
+        home()
+    serialQueue.put('G90')
+    move_cmd = "%s F2000\r\n" % command
+    print("GCodeFeed Received: ", move_cmd)
+    serialQueue.put(move_cmd)
+    return 1 
+
+def status():
+    global serialQueue
+    serialQueue.put('?')
+    return 1
+def home():
+    global home_flag, serialQueue
+    serialQueue.put('$X')
+    home_flag = 1
+    return 1
 
 def init_node():
     """Create the ros node an add basic topic functionality (Technical functions are stored in an src file)"""
@@ -99,20 +104,23 @@ def init_node():
     # Rate at which to publish the position of the "spindle"
     pub_rate = rospy.Rate(1)
     # pub_rate = rospy.Rate(50)
-
+    worker = Thread(target=queueSerial, args=(serialQueue,))
+    worker.setDaemon(True)
+    worker.start()
     # Inform the user that the node and service have been started successfully
     rospy.loginfo(f"{rospy.get_name()}: awaiting requests...")
-
-
+    connected = 0
+    
     while not rospy.is_shutdown():
         # Publish the current position
+        status()
         publisher.publish(
             machinePosition=Vector3(machinePos[0],machinePos[1],machinePos[2]), 
             workPosition=Vector3(workPos[0], workPos[1], workPos[2]),
             runningState=runningState
             )
 
-        # Repeat 30 times a second
+        # Repeat 1 times a second
         pub_rate.sleep()
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ GRBL_DRIVER_SERIAL = ("/dev/tty.usbmodem1811", 115200)
 # Host IPS
 DEFAULT_CAMERA_HOST =  "http://192.168.1.83:80"
 DEFAULT_ROSBRIDGE_HOST = ''
+HOSTIP = "192.168.1.80"
 
 class RequestType(Enum):
     """"""
@@ -41,4 +42,4 @@ IMAGE_OUTPUT_PATH = "~/HyperRail/images/output"
 # Scaling factor for creating GCodes.
 # Waypoints are saved in meters, ESP32 reads in ??
 # Assuming cm for now, but change this to whatever is necessary
-GCODE_SCALE = 100
+GCODE_SCALE = 1000

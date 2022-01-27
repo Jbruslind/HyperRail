@@ -51,7 +51,8 @@
       var program_id = $(this).data('program-id');
 
       var ros= new ROSLIB.Ros({
-        url : 'ws://192.168.1.132:9090'
+        //url : 'ws://192.168.1.135:9090'
+        url : 'ws://hyperrail-jetson:9090'
       });
       console.log('register ROS');
       ros.on('connection', function() {
