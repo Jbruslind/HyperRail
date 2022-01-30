@@ -43,7 +43,7 @@ def gcode_handler(data: GCodeFeed):
     time.sleep(0.2)
 
 def queueSerial(toSend):
-    while True:
+    while not rospy.is_shutdown():
         command = toSend.get() #grab the latest serial command to send
         #print('QUEUE RECIEVED: %s' % command)
         try:
@@ -61,13 +61,11 @@ def queueSerial(toSend):
                 machinePos[2] = float(pos.split(',')[2])
                 grbl_out = ser.readline().decode() # Grab the "ok" after status command
             ser.close()
+            toSend.task_done() #Indicate that this item is done
         except serial.SerialException as e:
             print("ERROR: %s" % e)
-            return 0
         except TypeError as e:
             print("ERROR: %s" % e)
-            return 0 
-        toSend.task_done() #Indicate that this item is done
         time.sleep(0.5) #give a small window for the Gcode processor before next command
 
 
@@ -76,7 +74,7 @@ def move(command):
     if home_flag == 0:
         home()
     serialQueue.put('G90')
-    move_cmd = "%s F2000\r\n" % command
+    move_cmd = "%s F1000\r\n" % command
     print("GCodeFeed Received: ", move_cmd)
     serialQueue.put(move_cmd)
     return 1 
@@ -87,7 +85,7 @@ def status():
     return 1
 def home():
     global home_flag, serialQueue
-    serialQueue.put('$X')
+    serialQueue.put('$H')
     home_flag = 1
     return 1
 
