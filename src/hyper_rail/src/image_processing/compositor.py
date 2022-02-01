@@ -8,6 +8,7 @@ from db_queries import DatabaseReader
 
 from pathlib import PosixPath
 
+from PIL import Image as PIL_Image
 from pgmagick.api import Image
 from pgmagick import DrawableCompositeImage, DrawableGravity, GravityType
 from pgmagick import CompositeOperator as co
@@ -122,8 +123,15 @@ class Compositor:
                 if i['image_type'] == t['image_type']:
                     in_path = os.path.join(self.image_path, str(i['program_run_id']), i['image_type'], i['uri'])
                     print(f"adding {i['uri']} to composite")
+                    rotate_Img = PIL_Image.open(in_path)
+                    horz = rotate_Img.transpose(method=PIL_Image.FLIP_LEFT_RIGHT)
+                    rotate_Img.close()
+                    idx = in_path.index('.')
+                    new_pth = in_path[:idx] + "_rotated" + in_path[idx:]
+                    horz.save(new_pth)
+                    horz.close()
                     image = self.crop_image(Image(in_path))
-
+                    #print(x_coord_conversion)
                     # Calculate location to add image to composite
                     width = image.width
                     height = image.height
@@ -131,6 +139,13 @@ class Compositor:
                     y = y_coord_conversion * i['y'] - (height/2)
                     output_image.draw(DrawableCompositeImage(x, y, image.img))
                     output_image.write(out_path)
+            rotate_Img = PIL_Image.open(out_path)
+            horz = rotate_Img.transpose(method=PIL_Image.FLIP_LEFT_RIGHT)
+            rotate_Img.close()
+            idx = out_path.index('.')
+            new_pth = out_path[:idx] + "_rotated" + out_path[idx:]
+            horz.save(new_pth)
+            horz.close()
             print(f"Composite image written to {out_path}")
 
 

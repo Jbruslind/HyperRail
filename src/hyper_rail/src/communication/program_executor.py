@@ -34,6 +34,7 @@ class Watcher:
     def watch(self):
         while True:
             if not self.q.empty():
+                print("Motion: %s" % self.motion_status)
                 if self.motion_status == 'idle':
                     self.db = DatabaseReader()
                     program = self.q.get()

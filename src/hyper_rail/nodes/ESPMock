@@ -51,15 +51,20 @@ def queueSerial(toSend):
             ser.write(('%s\r\n' % command).encode())
             ser.flushInput()  # Flush startup text in serial input
             grbl_out = ser.readline().decode() # Wait for grbl response with carriage return
-            print('Reply: ' + grbl_out.strip())
-            if command == '?': #Special handling needs to happen for a status command
-                grbl_out = grbl_out.split('|')
-                runningState = grbl_out[0]
-                pos = grbl_out[1].split(':')[1] #output is MPos:x.xxx,y.yyyy,z.zzzz -> (Mpos, x.xxx,y.yyy,z.zzz)
-                machinePos[0] = float(pos.split(',')[0]) 
-                machinePos[1] = float(pos.split(',')[1]) 
-                machinePos[2] = float(pos.split(',')[2])
-                grbl_out = ser.readline().decode() # Grab the "ok" after status command
+            #print('Reply: ' + grbl_out.strip())
+            if command == '?': #Special handling needs to happen for a status 
+                try:
+                    grbl_out = grbl_out.split('|')
+                    runningState = grbl_out[0]
+                    pos = grbl_out[1].split(':')[1] #output is MPos:x.xxx,y.yyyy,z.zzzz -> (Mpos, x.xxx,y.yyy,z.zzz)
+                    machinePos[0] = float(pos.split(',')[0]) 
+                    machinePos[1] = float(pos.split(',')[1]) 
+                    machinePos[2] = float(pos.split(',')[2])
+                    grbl_out = ser.readline().decode() # Grab the "ok" after status command
+                except IndexError as e:
+                    print(e) 
+                except Exception as e:
+                    print(e)
             ser.close()
             toSend.task_done() #Indicate that this item is done
         except serial.SerialException as e:
@@ -74,7 +79,7 @@ def move(command):
     if home_flag == 0:
         home()
     serialQueue.put('G90')
-    move_cmd = "%s F1000\r\n" % command
+    move_cmd = "%s F2000\r\n" % command
     print("GCodeFeed Received: ", move_cmd)
     serialQueue.put(move_cmd)
     return 1 
@@ -85,7 +90,7 @@ def status():
     return 1
 def home():
     global home_flag, serialQueue
-    serialQueue.put('$X')
+    serialQueue.put('$H')
     home_flag = 1
     return 1
 
@@ -102,6 +107,8 @@ def init_node():
     # Rate at which to publish the position of the "spindle"
     pub_rate = rospy.Rate(1)
     # pub_rate = rospy.Rate(50)
+    with serialQueue.mutex:
+        serialQueue.queue.clear()
     worker = Thread(target=queueSerial, args=(serialQueue,))
     worker.setDaemon(True)
     worker.start()

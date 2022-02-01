@@ -30,7 +30,7 @@ def init_node():
 
     while not rospy.is_shutdown():
         temperature = random.uniform(-40.00, 125.00)
-        print(temperature)
+        #print(temperature)
         publisher.publish(
             start_read_time = time.time(),
             temperature=temperature,
