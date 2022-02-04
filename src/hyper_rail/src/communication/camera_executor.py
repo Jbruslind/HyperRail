@@ -19,6 +19,14 @@ import errno
 from pathlib import Path
 import re
 
+import sys
+sys.path.append("../python-common")
+
+import cv2
+import numpy as np
+from communication.python_common import TIS
+from collections import namedtuple
+
 DB_QUERIES = DatabaseReader()
 
 # side note: not sure if this go in constants since it is very particular to this class.
@@ -279,3 +287,173 @@ to run: python camera_executor.py'''
 #     print("Images captured successfully")
 # else:
 #     print("Error: Image not capture")
+
+
+class DK33GP006(Camera):
+    def __init__(self, root=None, program_id=None, waypoint_id=None, bands=[1,1,1,1,1]):
+        super().__init__(root, program_id, waypoint_id)
+        self.band_spectrum = self.set_band_spectrum(bands)
+        self.raw_format = 'TIFF' # raw format
+        self.enabled_bands_jpeg = '31'
+        self.host = DEFAULT_CAMERA_HOST
+        self.preview_band = 'band1'
+        self.capture_id = ''
+
+    def session_for_src_addr(self, addr: str) -> requests.Session:
+        """
+        Create `Session` which will bind to the specified local address
+        rather than auto-selecting it.
+        """
+        session = requests.Session()
+        for prefix in ('http://', 'https://'):
+            session.get_adapter(prefix).init_poolmanager(
+                # those are default values from HTTPAdapter's constructor
+                connections=requests.adapters.DEFAULT_POOLSIZE,
+                maxsize=requests.adapters.DEFAULT_POOLSIZE,
+                # This should be a tuple of (address, port). Port 0 means auto-selection.
+                source_address=(addr, 0),
+            )
+
+        return session
+
+    def capture_image(self):
+        try:
+            # set up camera
+            self.set_config()
+            # capture picture and get request
+            s = self.session_for_src_addr(HOSTIP)
+            response = s.get(self.host + CAPTURE_PARAMS, timeout=(1, 3))
+            self.capture_id = response.json()["id"]
+
+            if response.status_code == 200:
+                print('Success!')
+                return True
+        except requests.exceptions.RequestException as e:
+            print("Error: " + str(e))
+            return False 
+    
+    #when connected to micasense, uncomment [1], comment out the Test line
+    def transfer_to_local_storage(self):
+
+        storage_path_files = self.get_capture(self.capture_id)
+        
+        #storage_path_files = TEST_FILE_RESPONSE
+        
+        # get the directory path for run from param
+        #print(storage_path_files)
+        self.add_micasense_images(storage_path_files["raw_storage_path"])
+
+
+    def add_micasense_images(self, image_paths):
+        # iterates through dictionary and write to running program path directories
+        count = 1
+        for band_type in image_paths:
+            print(self.image_path + "/" + str(band_type) + '/' + str(self.get_waypoint_id()) + ".tif")
+            # image_name_path = image_paths[str(count)].split('/')
+            try:
+                # request specific image file data
+                s = self.session_for_src_addr(HOSTIP)
+                r = s.get(self.host + image_paths[str(count)], stream=True,  timeout=(1, 3)) 
+                
+                # provides the string path for database file path
+                #file_path = self.get_file_path(band_type, self.get_waypoint_id())
+                
+                # provides string for directory
+                dir_path =  self.get_dir_path(band_type)
+                
+                # creates directory path and return absolute directory path
+                abs_path = self.create_path(dir_path)
+                
+                # add file to path
+                file_name = os.path.join(abs_path, "%s.tif" % (self.get_waypoint_id()))
+
+                # write out bytes into file from image response 
+                with open(file_name, 'wb') as f:
+                    for chunk in r.iter_content(10240):
+                        f.write(chunk)
+
+                # not sure what to put in camera_name or uri
+                camera_dict = {
+                    'run_waypoint_id': self.get_waypoint_id(), 
+                    'camera_name': "Example Camera", 
+                    'image_type': band_type,
+                    'uri': abs_path + "%s.tif" % (self.get_waypoint_id()),
+                    'metadata': ""
+                    }
+
+                DB_QUERIES.add_image(camera_dict)
+                
+                # delete file off sd
+                s = self.session_for_src_addr(HOSTIP)
+                r = s.get(self.host + "/deletefile%s" % image_paths[str(count)], timeout=(1, 3))
+
+                count = count + 1        
+            except requests.exceptions.RequestException as e:
+                print("Error: not able to request camera" + str(e))
+    
+
+    #gets a json object with picture info based on id from micasense
+    def get_capture(self, id):
+        # get the /capture/:id
+        try:
+            url = self.host + '/capture/' + id
+            s = self.session_for_src_addr(HOSTIP)
+            r = s.get(url, timeout=1)
+            #print(r)
+            # return a json object as dict
+            return r.json()
+        except requests.exceptions.RequestException:
+            print('Waiting for camera response')
+
+    def set_camera_host(self, host):
+        if host == '' or host != str(host):
+            return DEFAULT_CAMERA_HOST
+        else:
+            self.host = host
+    
+    def set_config(self):
+        payload = self.config_payload()
+        s = self.session_for_src_addr(HOSTIP)
+        r = s.post(url = self.host + '/config/', data = payload, timeout=(1, 3))
+        r.raise_for_status()
+
+    # sets file path to ~/HyperRail/images/run_program_id/image_type/run_waypoint_id.tif
+    def get_file_path(self, band, waypoint):
+        #return self.image_path + '/' + str(band) + '/' + str(waypoint) + ".tif"
+        new_path = os.path.expanduser('~')
+        return  new_path + str(waypoint) + ".tif"
+
+    def get_dir_path(self, band):
+        return self.image_path + '/' + str(band) + '/'
+
+    def config_payload(self):
+        payload = {
+            'preview_band': self.preview_band,
+            'enabled_bands_raw': self.band_spectrum,
+            'enabled_bands_jpeg': self.enabled_bands_jpeg,
+            'raw_format': self.raw_format
+            }
+        return payload
+
+    # picture has 5 bands, each is represented as binary. Ex. 11111 = all bands
+    # this sets the binary to be decimal for micasense band specification
+    def set_band_spectrum(self, bands):
+        print(''.join(str(x) for x in bands))
+        bands_enabled = ''.join(str(x) for x in bands)
+        int_bands_enabled = int(bands_enabled, 2)
+        return int_bands_enabled
+    
+    def get_band_spectrum(self):
+        return self.band_spectrum
+
+    def create_path(self, file_path):
+        new_path = dir_concatination('HyperRail', file_path)
+        # define the name of the directory to be created
+        if not os.path.exists(os.path.dirname(new_path)):
+            try:
+                print("creating: %s" % new_path)
+                os.makedirs(new_path)
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+        return new_path

@@ -5,12 +5,13 @@ This is a quick mock to test the MachinePosition and GCodeFeed topics.
 Swap this usage with ESPController
 """
 
+from operator import and_
 from platform import machine
 import rospy
 import re
 import serial
 
-from queue import Queue                                                             # Queue is threadsafe, use for keeping keeping track of Programs
+from queue import PriorityQueue, Queue                                                             # Queue is threadsafe, use for keeping keeping track of Programs
 from threading import Thread                                                        # Each service spins off a request
 import time
 import math
@@ -25,7 +26,7 @@ machinePos = [0, 0, 0]
 workPos = [0, 0, 0]
 runningState = "ok"
 home_flag = 0
-serialQueue = Queue()
+serialQueue = PriorityQueue()
 
 def gcode_handler(data: GCodeFeed):
     #print("GCodeFeed Received: ", data.code)
@@ -44,14 +45,15 @@ def gcode_handler(data: GCodeFeed):
 
 def queueSerial(toSend):
     while not rospy.is_shutdown():
-        command = toSend.get() #grab the latest serial command to send
-        #print('QUEUE RECIEVED: %s' % command)
+        command = toSend.get()[2] #grab the latest serial command to send
+        #print('QUEUE RECIEVED: ')
+        #print(command)
         try:
             ser = serial.Serial('/dev/grbl_controller', 115200, timeout=2)
+            #print('Finish: %s' % command[1])
             ser.write(('%s\r\n' % command).encode())
             ser.flushInput()  # Flush startup text in serial input
             grbl_out = ser.readline().decode() # Wait for grbl response with carriage return
-            #print('Reply: ' + grbl_out.strip())
             if command == '?': #Special handling needs to happen for a status 
                 try:
                     grbl_out = grbl_out.split('|')
@@ -65,6 +67,12 @@ def queueSerial(toSend):
                     print(e) 
                 except Exception as e:
                     print(e)
+            if "$H" in command:
+                while 'ok' not in grbl_out and 'Idle' not in grbl_out: 
+                    ser.write(('?\r\n').encode())
+                    #print("RECIEVED:" + grbl_out)
+                    grbl_out = ser.readline().decode()
+                    time.sleep(.1)
             ser.close()
             toSend.task_done() #Indicate that this item is done
         except serial.SerialException as e:
@@ -78,19 +86,19 @@ def move(command):
     global home_flag, serialQueue
     if home_flag == 0:
         home()
-    serialQueue.put('G90')
+    serialQueue.put((1, serialQueue.qsize(),'G90'))
     move_cmd = "%s F2000\r\n" % command
     print("GCodeFeed Received: ", move_cmd)
-    serialQueue.put(move_cmd)
+    serialQueue.put((1, serialQueue.qsize(), move_cmd))
     return 1 
 
 def status():
     global serialQueue
-    serialQueue.put('?')
+    serialQueue.put((3, 1, '?'))
     return 1
 def home():
     global home_flag, serialQueue
-    serialQueue.put('$H')
+    serialQueue.put((1, 1, '$H'))
     home_flag = 1
     return 1
 

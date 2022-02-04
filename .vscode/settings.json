@@ -10,6 +10,7 @@
     "python.analysis.extraPaths": [
         "/opt/ros/noetic/lib/python3/dist-packages",
         "/home/hyperrail/Documents/ROS/HyperRail/HyperRail/src/hyper_rail/src",
-        "./src/hyper_rail/src"
+        "./src/hyper_rail/src",
+        "./src/hyper_rail/src/communication/python-common"
     ]
 }
