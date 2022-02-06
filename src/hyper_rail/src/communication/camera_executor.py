@@ -289,12 +289,10 @@ to run: python camera_executor.py'''
 #     print("Error: Image not capture")
 
 
-class DK33GP006(Camera):
-    def __init__(self, root=None, program_id=None, waypoint_id=None, bands=[1,1,1,1,1]):
+class DFK33GP006(Camera):
+    def __init__(self, root=None, program_id=None, waypoint_id=None):
         super().__init__(root, program_id, waypoint_id)
-        self.band_spectrum = self.set_band_spectrum(bands)
         self.raw_format = 'TIFF' # raw format
-        self.enabled_bands_jpeg = '31'
         self.host = DEFAULT_CAMERA_HOST
         self.preview_band = 'band1'
         self.capture_id = ''
