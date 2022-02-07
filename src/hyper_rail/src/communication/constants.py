@@ -10,6 +10,7 @@ GRBL_DRIVER_SERIAL = ("/dev/tty.usbmodem1811", 115200)
 DEFAULT_CAMERA_HOST =  "http://192.168.1.83:80"
 DEFAULT_ROSBRIDGE_HOST = ''
 HOSTIP = "192.168.1.82" # Change this value to whatever the interface talking to the camera should be 
+CAM_SERIAL = '31614320'
 
 class RequestType(Enum):
     """"""
