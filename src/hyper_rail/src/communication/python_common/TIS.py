@@ -51,6 +51,7 @@ class TIS:
         :return: none
         '''
         Gst.init([]) # Usually better to call in the main function.
+        Gst.debug_set_default_threshold(Gst.DebugLevel.ERROR)
         self.serialnumber = ""
         self.height = 0
         self.width = 0
@@ -81,6 +82,9 @@ class TIS:
         self.livedisplay = showvideo
         self._createPipeline()
         self.source.set_property("serial", self.serialnumber)
+
+    # autovideosink
+    # nvoverlaysink overlay-x=800 overlay-y=50 overlay-w=640 overlay-h=480 overlay=2
 
     def _createPipeline(self):
         p = 'tcambin name=source ! capsfilter name=caps'
@@ -151,6 +155,7 @@ class TIS:
             self.pipeline.set_state(Gst.State.PLAYING)
             error = self.pipeline.get_state(5000000000) 
             if error[1] != Gst.State.PLAYING:
+                print(error)
                 print("Error starting pipeline. {0}".format("") )    
                 return False
 
