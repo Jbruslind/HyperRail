@@ -83,7 +83,7 @@ class Compositor:
 
         # Calculate pixels per meter using camera height, fov, and image dimensions
         w_px = setup_image.width
-        t= math.tan(math.radians(self.camera_fov / 2.0))
+        t = math.tan(math.radians(self.camera_fov / 2.0))
         w_meters = 2 * ( self.camera_height * t)
         w_meters_cropped = w_meters * self.crop_percent
         self.px_per_m = w_px / w_meters
@@ -123,14 +123,24 @@ class Compositor:
                 if i['image_type'] == t['image_type']:
                     in_path = os.path.join(self.image_path, str(i['program_run_id']), i['image_type'], i['uri'])
                     print(f"adding {i['uri']} to composite")
-                    rotate_Img = PIL_Image.open(in_path)
-                    horz = rotate_Img.transpose(method=PIL_Image.FLIP_TOP_BOTTOM)
-                    rotate_Img.close()
-                    idx = in_path.index('.')
-                    new_pth = in_path[:idx] + "_rotated" + in_path[idx:]
-                    horz.save(new_pth)
-                    horz.close()
-                    image = self.crop_image(Image(new_pth))
+                    # rotate_Img = PIL_Image.open(in_path)
+                    # horz = rotate_Img.transpose(method=PIL_Image.FLIP_TOP_BOTTOM)
+                    # rotate_Img.close()
+                    # idx = in_path.index('.')
+                    # new_pth = in_path[:idx] + "_rotated" + in_path[idx:]
+                    # horz.save(new_pth)
+                    # horz.close()
+                    # image = self.crop_image(Image(new_pth))
+
+
+                    # rotate_Img = PIL_Image.open(in_path)
+                    # horz = rotate_Img.rotate(270)
+                    # rotate_Img.close()
+                    # idx = in_path.index('.')
+                    # new_pth = in_path[:idx] + "_rotated" + in_path[idx:]
+                    # horz.save(new_pth)
+                    # horz.close()
+                    image = self.crop_image(Image(in_path))
                     #print(x_coord_conversion)
                     # Calculate location to add image to composite
                     width = image.width
