@@ -94,7 +94,6 @@ class TIS:
             p += " t. ! queue ! appsink name=sink"
         else:
             p += ' ! appsink name=sink'
-
         print(p)
         try:
             self.pipeline = Gst.parse_launch(p)

@@ -297,13 +297,17 @@ class DFK33GP006(Camera):
         self.host = DEFAULT_CAMERA_HOST
         self.Tis = TIS.TIS() #Camera object
         self.CD = CustomData(False, None)
+        self.open = False
 
     def capture_image(self):
         try:
-            # set up camera
-            self.set_config()
+            # set up camera if not already done
+            if self.open is not True:
+                self.set_config()
+            self.image_path = self.set_image_path(self.root, self.program_id)
             # Send 10 req to get camera (allows image to stabilize)
             for i in range(10):
+                time.sleep(0.1)
                 self.Tis.Set_Property("Software Trigger", 1) # Send a software trigger
                 # Wait for a new image. Use 10 tries.
                 tries = 10
@@ -340,9 +344,17 @@ class DFK33GP006(Camera):
             file_name = os.path.join(abs_path, "%s.tif" % (self.get_waypoint_id()))
 
             # write out bytes into file from image response 
-            im = cv2.cvtColor(self.CD.image,cv2.COLOR_BGR2RGB) #This converts the BGR image to and RGB
-            im = Image.fromarray(im) #The Image modeul from PIL allows us to save direct images from numpy arrays
-            im.save(file_name) #Save the image to a known location 
+            image = cv2.rotate(self.CD.image, cv2.ROTATE_180)
+            scale_percent = 60
+            width = int(image.shape[1] * scale_percent / 100)
+            height = int(image.shape[0] * scale_percent / 100)
+            dim = (width, height)
+            resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
+            cv2.imwrite(file_name, resized)
+            #im = cv2.cvtColor(self.CD.image,cv2.COLOR_BGR2RGB) #This converts the BGR image to and RGB
+            #im = Image.fromarray(im) #The Image modeul from PIL allows us to save direct images from numpy arrays
+            #im = im.rotate(90)
+            #im.save(file_name) #Save the image to a known location 
             # not sure what to put in camera_name or uri
             camera_dict = {
                 'run_waypoint_id': self.get_waypoint_id(), 
@@ -351,6 +363,7 @@ class DFK33GP006(Camera):
                 'uri': abs_path + "%s.tif" % (self.get_waypoint_id()),
                 'metadata': ""
                 }
+            print("adding to database")
             DB_QUERIES.add_image(camera_dict)
         except Exception as e:
             print("Error: not able to request camera" + str(e))
@@ -374,10 +387,11 @@ class DFK33GP006(Camera):
     def set_config(self):
         # Open Camera with args: (Serial number, width px, height px, frame rate, color format, color/monochrome) 
         self.Tis.openDevice("31614320", 2592, 1944, "2/1",TIS.SinkFormats.BGRA, False)
-        #self.Tis.List_Properties()
+        self.Tis.List_Properties()
         self.Tis.Set_Image_Callback(self.on_new_image, self.CD)
         self.Tis.Set_Property("Trigger Mode", 'Off')
         self.Tis.Start_pipeline()
+        self.open = True
         self.Tis.Set_Property("Trigger Mode", 'On')
         cv2.waitKey(1000)
         self.CD.busy = False  # Now the callback function does something on a trigger
@@ -394,18 +408,18 @@ class DFK33GP006(Camera):
         # Check, whether gain auto is enabled. If so, disable it.
 
         if self.Tis.Get_Property("Gain Auto").value :
-                self.Tis.Set_Property("Gain Auto", "Off")
+                self.Tis.Set_Property("Gain Auto", "Continuous")
                 print("Gain Auto now : %s " % self.Tis.Get_Property("Gain Auto").value)
 
-        self.Tis.Set_Property("Gain",0)
+        #self.Tis.Set_Property("Gain",0)
 
         # Now do the same with exposure. Disable automatic if it was enabled
         # then set an exposure time.
         if self.Tis.Get_Property("Exposure Auto").value :
-                self.Tis.Set_Property("Exposure Auto", "Off")
+                self.Tis.Set_Property("Exposure Auto", "Continuous")
                 print("Exposure Auto now : %s " % self.Tis.Get_Property("Exposure Auto").value)
 
-        self.Tis.Set_Property("Exposure", 24000)
+        #self.Tis.Set_Property("Exposure", 4000)
 
     
 

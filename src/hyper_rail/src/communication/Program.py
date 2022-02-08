@@ -82,7 +82,7 @@ print("Gain : %d" % Tis.Get_Property("Gain").value)
 # Check, whether gain auto is enabled. If so, disable it.
 
 if Tis.Get_Property("Gain Auto").value :
-        Tis.Set_Property("Gain Auto", "Off")
+        Tis.Set_Property("Gain Auto", "On")
         print("Gain Auto now : %s " % Tis.Get_Property("Gain Auto").value)
 
 Tis.Set_Property("Gain",0)
