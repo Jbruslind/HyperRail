@@ -98,7 +98,8 @@ def status():
     return 1
 def home():
     global home_flag, serialQueue
-    serialQueue.put((1, 1, '$X'))
+    serialQueue.put((1, 1, '$H'))
+    serialQueue.put((1, 2, '?'))
     home_flag = 1
     return 1
 
