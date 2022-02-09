@@ -55,11 +55,13 @@ class Compositor:
     def calculate_dimensions(self):
         # Find the minimum and maximum x-y coordinates for the reference points in each image
         for i in self.images:
+            print(i['x'], i['y'])
             self.x_max = (i['x']) if (i['x']) > self.x_max else self.x_max
             self.y_max = (i['y']) if (i['y']) > self.y_max else self.y_max
             self.x_min = (i['x']) if (i['x']) < self.x_min else self.x_min
             self.y_min = (i['y']) if (i['y']) < self.y_min else self.y_min
             print("x_min, {}y_min {}".format(self.x_min, self.y_min))
+            print("x_max, {}y_max {}".format(self.x_max, self.y_max))
     
     def crop_image(self, image):
         h = round(image.height * self.crop_percent)
@@ -68,6 +70,7 @@ class Compositor:
         y_offset = round((image.height - h)/2)
         print(w, h, x_offset, y_offset)
         image.crop(Geometry(w, h, x_offset, y_offset))
+        #print(image.width, image.height)
         return image
         
     def draw_composite(self):
@@ -100,8 +103,11 @@ class Compositor:
 
         x_coord_conversion = (setup_image.width / 2) / (self.x_min - x_edge)
         y_coord_conversion = (setup_image.height / 2) / (self.y_min - y_edge)
-        outWidth = x_coord_conversion * self.x_max + (setup_image.width / 2)
-        outHeight = y_coord_conversion * self.y_max + (setup_image.height / 2)
+        #print(self.x_min, self.y_min, x_edge, y_edge)
+        # outWidth = x_coord_conversion * self.x_max + (setup_image.width / 2)
+        # outHeight = y_coord_conversion * self.y_max + (setup_image.height / 2)
+        outWidth = (self.x_max + self.x_min) * (setup_image.width / (self.x_min*2))
+        outHeight = (self.y_max + self.y_min) * (setup_image.height / (self.y_min*2))
         output_image= Image((outWidth, outHeight), 'black')
         print("Composited image will be {} x {} px".format(output_image.width, output_image.height))
 
@@ -145,8 +151,12 @@ class Compositor:
                     # Calculate location to add image to composite
                     width = image.width
                     height = image.height
-                    x = x_coord_conversion * i['x'] - (width/2)
-                    y = y_coord_conversion * i['y'] - (height/2)
+                    # x = x_coord_conversion * i['x'] - (width/2)
+                    # y = y_coord_conversion * i['y'] - (height/2)
+                    x = (i['x'] - self.x_min) * (outWidth / (self.x_min + self.x_max))
+                    y = (i['y'] - self.y_min) * (outHeight / (self.y_min + self.y_max))
+                    #print("paste x: %f", x)
+                    #print("paste y: %f", y)
                     output_image.draw(DrawableCompositeImage(x, y, image.img))
                     output_image.write(out_path)
             #rotate_Img = PIL_Image.open(out_path)
