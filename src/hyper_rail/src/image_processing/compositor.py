@@ -5,6 +5,8 @@ import errno
 import os
 import math
 from db_queries import DatabaseReader
+import shutil
+from communication.constants import IMAGE_PATH
 
 from pathlib import PosixPath
 
@@ -117,7 +119,7 @@ class Compositor:
             # TODO: optimize this by querying for each image type rather than iterating over entire set multiple times
             for i in self.images:
                 if i['image_type'] == t['image_type']:
-                    in_path = os.path.join(self.image_path, str(i['program_run_id']), i['image_type'], i['uri'])
+                    in_path = os.path.join(i['uri'])
                     print(f"adding {i['uri']} to composite")
                     # rotate_Img = PIL_Image.open(in_path)
                     # horz = rotate_Img.transpose(method=PIL_Image.FLIP_TOP_BOTTOM)
@@ -157,7 +159,18 @@ class Compositor:
             #horz.save(new_pth)
             #horz.close()
             print(f"Composite image written to {out_path}")
-
+    def add_archive(self):
+        try:
+            i = self.images[0]
+            print(i.keys())
+            in_path = IMAGE_PATH + '/' + str(i['program_run_id']) + '_' + str(i['camera_name'])
+            print("Creating archive of: %s" % in_path)
+            shutil.make_archive(os.path.expanduser(in_path), 'zip', os.path.expanduser(IMAGE_PATH), str(i['program_run_id']))
+            in_path = self.image_path + '/' + str(i['program_run_id']) + '_' + str(i['camera_name'])
+            print("Creating archive of: %s" % in_path)
+            shutil.make_archive(os.path.expanduser(in_path), 'zip', os.path.expanduser(self.image_path), str(i['program_run_id']))
+        except Exception as e: 
+            print(e)
 
     def create_composite(self):
         self.calculate_dimensions()
@@ -174,4 +187,5 @@ if __name__ == "__main__":
     comp = Compositor()
     comp.load_images(program_run_id)
     comp.create_composite()
+    comp.add_archive()
     print(comp)

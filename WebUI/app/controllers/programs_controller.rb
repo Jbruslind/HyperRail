@@ -3,7 +3,8 @@ class ProgramsController < ApplicationController
 
   # GET /programs or /programs.json
   def index
-    @programs = Program.select('programs.*', '(SELECT COUNT(*) FROM program_runs WHERE program_runs.program_id=programs.id) AS run_count').order(last_run: :desc)
+    @programs = Program.select('programs.*', '(SELECT COUNT(*) FROM program_runs WHERE program_runs.program_id=programs.id) AS run_count').order(started_at: :desc)
+    @latest = Program.select('latest.*', 'SELECT program_runs.id, name FROM program_runs INNER JOIN programs ON program_runs.program_id = programs.id GROUP BY programs.name')
   end
 
   # POST /progams/default
@@ -63,6 +64,10 @@ class ProgramsController < ApplicationController
     end
   end
 
+  def download_zip
+    send_file "#{Rails.root}/camera_images/4_Example Camera.zip", type: "application/zip", x_sendfile: true
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
@@ -74,4 +79,5 @@ class ProgramsController < ApplicationController
   def program_params
     params.fetch(:program, {}).permit!
   end
+  
 end

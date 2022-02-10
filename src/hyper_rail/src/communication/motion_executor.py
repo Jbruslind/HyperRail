@@ -161,8 +161,8 @@ class MotionWatcher:
         y_distance = abs(y - y_dest)
 
         angle = math.atan2(y_distance, x_distance)
-        x_inc = 50 * math.cos(angle)
-        y_inc = 50 * math.sin(angle)
+        x_inc = 200 * math.cos(angle)
+        y_inc = 200 * math.sin(angle)
         print("x-increment {} y-increment{}".format(round(x_inc, 5), round(y_inc, 5)))
 
 

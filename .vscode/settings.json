@@ -12,5 +12,7 @@
         "/home/hyperrail/Documents/ROS/HyperRail/HyperRail/src/hyper_rail/src",
         "./src/hyper_rail/src",
         "./src/hyper_rail/src/communication/python-common"
-    ]
+    ],
+    "ruby.codeCompletion": "rcodetools",
+    "ruby.intellisense": "rubyLocate"
 }

@@ -85,7 +85,7 @@ def move(command):
     if home_flag == 0:
         home()
     serialQueue.put((1, serialQueue.qsize(),'G90'))
-    move_cmd = "%s F2000\r\n" % command
+    move_cmd = "%s F3000\r\n" % command
     print("GCodeFeed Received: ", move_cmd)
     serialQueue.put((1, serialQueue.qsize(), move_cmd))
     return 1 

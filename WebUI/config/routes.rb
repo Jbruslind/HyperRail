@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     end
   end
 
+  match 'download_zip', to: 'programs#download_zip', as: 'download_zip', via: :get
+
   get '/camera_images/*path', format: false, to: 'camera_images#show', as: :camera_image
 
   get '/settings', to: 'settings#index', as: :settings

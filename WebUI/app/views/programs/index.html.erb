@@ -26,7 +26,7 @@
           <%= link_to 'Edit', edit_program_path(program) %>
           <%= link_to 'Run', '#', 'data-program-id' =>  program.id, class: 'run_link' %>
           <%= link_to 'Destroy', program, method: :delete, data: { confirm: 'Are you sure you wish to delete this program and all associated data?' } %>
-          <%= link_to 'Download Images'%>
+          <%= link_to "Download Images", download_zip_path, target: "_blank"%>
         </td>
       </tr>
     <% end %>
