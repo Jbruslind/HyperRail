@@ -190,10 +190,10 @@ class Micasense(Camera):
 
                 img = cv2.imread(file_name)        
                 scale_percent = 60
-                width = int(img * scale_percent / 100)
-                height = int(img * scale_percent / 100)
+                width = int(img.shape[1] * scale_percent / 100)
+                height = int(img.shape[0] * scale_percent / 100)
                 dim = (width, height)
-                image = cv2.resize(self.CD.image, dim, interpolation = cv2.INTER_AREA)
+                image = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
                 rotated = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
                 flip = cv2.flip(rotated, 1)
                 h, w, channels = flip.shape

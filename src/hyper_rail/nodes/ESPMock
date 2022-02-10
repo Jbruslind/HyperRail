@@ -46,8 +46,6 @@ def gcode_handler(data: GCodeFeed):
 def queueSerial(toSend):
     while not rospy.is_shutdown():
         command = toSend.get()[2] #grab the latest serial command to send
-        #print('QUEUE RECIEVED: ')
-        #print(command)
         try:
             ser = serial.Serial('/dev/grbl_controller', 115200, timeout=2)
             #print('Finish: %s' % command[1])
