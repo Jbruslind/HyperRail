@@ -127,7 +127,10 @@ def init_node():
     
     while not rospy.is_shutdown():
         # Publish the current position
-        status()
+        global home_flag
+        #only get position if we're homed and position is valid
+        if home_flag == 1:
+            status()
         publisher.publish(
             machinePosition=Vector3(machinePos[0],machinePos[1],machinePos[2]), 
             workPosition=Vector3(workPos[0], workPos[1], workPos[2]),

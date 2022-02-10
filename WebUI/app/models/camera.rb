@@ -18,18 +18,17 @@ class Camera
   def unit_sizes(rail_x: 20, rail_y: 5, crop: 25)
     # Size of image in meters after crop
     sizes = {unit_size: width_m * ((100 - crop) / 100.0)}
-
     # The number of units across in the x/y directions, rounding up to account for overage
-    # sizes[:x_units] = (rail_x / sizes[:unit_size]).ceil
-    # sizes[:x_unit_size] = rail_x / sizes[:x_units].to_f
-    # sizes[:y_units] = (rail_y / sizes[:unit_size]).ceil
-    # sizes[:y_unit_size] = rail_y / sizes[:y_units].to_f
-    sizes[:x_units] = (rail_x / sizes[:unit_size])
-    sizes[:x_unit_size] = rail_x / sizes[:x_units]
     sizes[:x_units] = (rail_x / sizes[:unit_size]).ceil
-    sizes[:y_units] = (rail_y / sizes[:unit_size])
-    sizes[:y_unit_size] = rail_y / sizes[:y_units]
+    sizes[:x_unit_size] = rail_x / sizes[:x_units].to_f
     sizes[:y_units] = (rail_y / sizes[:unit_size]).ceil
+    sizes[:y_unit_size] = rail_y / sizes[:y_units].to_f
+    # sizes[:x_units] = (rail_x / sizes[:unit_size])
+    # sizes[:x_unit_size] = rail_x / sizes[:x_units]
+    # sizes[:x_units] = (rail_x / sizes[:unit_size]).ceil
+    # sizes[:y_units] = (rail_y / sizes[:unit_size])
+    # sizes[:y_unit_size] = rail_y / sizes[:y_units]
+    # sizes[:y_units] = (rail_y / sizes[:unit_size]).ceil
 
     sizes
   end

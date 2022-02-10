@@ -188,6 +188,23 @@ class Micasense(Camera):
                     for chunk in r.iter_content(10240):
                         f.write(chunk)
 
+                img = cv2.imread(file_name)        
+                scale_percent = 60
+                width = int(img * scale_percent / 100)
+                height = int(img * scale_percent / 100)
+                dim = (width, height)
+                image = cv2.resize(self.CD.image, dim, interpolation = cv2.INTER_AREA)
+                rotated = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+                flip = cv2.flip(rotated, 1)
+                h, w, channels = flip.shape
+                dim = min(h,w)
+                y1 = int(h/2 - dim/2)
+                y2 = int(h/2 + dim/2)
+                x1 = int(w/2 - dim/2)
+                x2 = int(w/2 + dim/2)
+                crop_img = flip[y1:y2, x1:x2]
+                
+                cv2.imwrite(file_name, crop_img)
                 # not sure what to put in camera_name or uri
                 camera_dict = {
                     'run_waypoint_id': self.get_waypoint_id(), 
