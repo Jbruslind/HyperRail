@@ -27,7 +27,7 @@ class Compositor:
         self.camera_height = float(self.db.get_camera_height())
         self.camera_fov = float(self.db.get_camera_fov())
         self.program_run_id = ""
-        self.px_per_m = 0
+        self.px_per_mm = 0
         self.images = []
         self.x_min = float("inf")
         self.y_min = float("inf")
@@ -55,11 +55,13 @@ class Compositor:
     def calculate_dimensions(self):
         # Find the minimum and maximum x-y coordinates for the reference points in each image
         for i in self.images:
+            print(i['x'], i['y'])
             self.x_max = (i['x']) if (i['x']) > self.x_max else self.x_max
             self.y_max = (i['y']) if (i['y']) > self.y_max else self.y_max
             self.x_min = (i['x']) if (i['x']) < self.x_min else self.x_min
             self.y_min = (i['y']) if (i['y']) < self.y_min else self.y_min
             print("x_min, {}y_min {}".format(self.x_min, self.y_min))
+            print("x_max, {}y_max {}".format(self.x_max, self.y_max))
     
     def crop_image(self, image):
         h = round(image.height * self.crop_percent)
@@ -68,6 +70,7 @@ class Compositor:
         y_offset = round((image.height - h)/2)
         print(w, h, x_offset, y_offset)
         image.crop(Geometry(w, h, x_offset, y_offset))
+        #print(image.width, image.height)
         return image
         
     def draw_composite(self):
@@ -84,24 +87,17 @@ class Compositor:
         # Calculate pixels per meter using camera height, fov, and image dimensions
         w_px = setup_image.width
         t = math.tan(math.radians(self.camera_fov / 2.0))
-        w_meters = 2 * ( self.camera_height * t)
-        w_meters_cropped = w_meters * self.crop_percent
-        self.px_per_m = w_px / w_meters
+        w_mm = 2 * ( self.camera_height * t) * 1000
+        #print("w_mm: %f", w_mm)
+        w_mm_cropped = w_mm * self.crop_percent
+        self.px_per_mm = w_px / w_mm
+        #print("px/mm: %f", self.px_per_mm)
 
         setup_image = self.crop_image(setup_image)
 
         # Calculate size of final image and create a black base image
-        x_units = math.ceil(self.rail_x / w_meters_cropped)
-        x_unit_size = self.rail_x / x_units
-        y_units = math.ceil(self.rail_y / w_meters_cropped) 
-        y_unit_size = self.rail_y / y_units
-        x_edge = round(self.x_min - x_unit_size/2, 3)
-        y_edge = round(self.y_min - y_unit_size/2, 3)
-
-        x_coord_conversion = (setup_image.width / 2) / (self.x_min - x_edge)
-        y_coord_conversion = (setup_image.height / 2) / (self.y_min - y_edge)
-        outWidth = x_coord_conversion * self.x_max + (setup_image.width / 2)
-        outHeight = y_coord_conversion * self.y_max + (setup_image.height / 2)
+        outWidth = self.px_per_mm * ((self.x_max + self.x_min) * 1000)
+        outHeight = self.px_per_mm * ((self.y_max + self.y_min) * 1000)
         output_image= Image((outWidth, outHeight), 'black')
         print("Composited image will be {} x {} px".format(output_image.width, output_image.height))
 
@@ -145,8 +141,12 @@ class Compositor:
                     # Calculate location to add image to composite
                     width = image.width
                     height = image.height
-                    x = x_coord_conversion * i['x'] - (width/2)
-                    y = y_coord_conversion * i['y'] - (height/2)
+                    # x = x_coord_conversion * i['x'] - (width/2)
+                    # y = y_coord_conversion * i['y'] - (height/2)
+                    x = (i['x'] - self.x_min) * 1000 * (self.px_per_mm)
+                    y = (i['y'] - self.y_min) * 1000 * (self.px_per_mm)
+                    #print("paste x: %f", x)
+                    #print("paste y: %f", y)
                     output_image.draw(DrawableCompositeImage(x, y, image.img))
                     output_image.write(out_path)
             #rotate_Img = PIL_Image.open(out_path)

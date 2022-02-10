@@ -3,14 +3,14 @@
 from enum import Enum
 
 # Device paths for communication over serial
-GREENHOUSE_SENSOR_SERIAL = ("/dev/ttyUSB0", 9600)
-GRBL_DRIVER_SERIAL = ("/dev/tty.usbmodem1811", 115200)
+GREENHOUSE_SENSOR_SERIAL = ("/dev/ttyUSB0", 9600) #Currently unused, future sensor connection
+GRBL_DRIVER_SERIAL = ("/dev/grbl_controller", 115200) # Serial connection to GRBL
 
 # Host IPS
 DEFAULT_CAMERA_HOST =  "http://192.168.1.83:80"
 DEFAULT_ROSBRIDGE_HOST = ''
 HOSTIP = "192.168.1.82" # Change this value to whatever the interface talking to the camera should be 
-CAM_SERIAL = '31614320'
+CAM_SERIAL = '31614320' # This is used to interface to The Imaging Source Cameras (DFK33GP3600)
 
 class RequestType(Enum):
     """"""

@@ -46,8 +46,6 @@ def gcode_handler(data: GCodeFeed):
 def queueSerial(toSend):
     while not rospy.is_shutdown():
         command = toSend.get()[2] #grab the latest serial command to send
-        #print('QUEUE RECIEVED: ')
-        #print(command)
         try:
             ser = serial.Serial('/dev/grbl_controller', 115200, timeout=2)
             #print('Finish: %s' % command[1])
@@ -98,7 +96,8 @@ def status():
     return 1
 def home():
     global home_flag, serialQueue
-    serialQueue.put((1, 1, '$X'))
+    serialQueue.put((1, 1, '$H'))
+    serialQueue.put((1, 2, '?'))
     home_flag = 1
     return 1
 
@@ -126,7 +125,10 @@ def init_node():
     
     while not rospy.is_shutdown():
         # Publish the current position
-        status()
+        global home_flag
+        #only get position if we're homed and position is valid
+        if home_flag == 1:
+            status()
         publisher.publish(
             machinePosition=Vector3(machinePos[0],machinePos[1],machinePos[2]), 
             workPosition=Vector3(workPos[0], workPos[1], workPos[2]),

@@ -188,6 +188,23 @@ class Micasense(Camera):
                     for chunk in r.iter_content(10240):
                         f.write(chunk)
 
+                img = cv2.imread(file_name)        
+                scale_percent = 60
+                width = int(img.shape[1] * scale_percent / 100)
+                height = int(img.shape[0] * scale_percent / 100)
+                dim = (width, height)
+                image = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+                rotated = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+                flip = cv2.flip(rotated, 1)
+                h, w, channels = flip.shape
+                dim = min(h,w)
+                y1 = int(h/2 - dim/2)
+                y2 = int(h/2 + dim/2)
+                x1 = int(w/2 - dim/2)
+                x2 = int(w/2 + dim/2)
+                crop_img = flip[y1:y2, x1:x2]
+                
+                cv2.imwrite(file_name, crop_img)
                 # not sure what to put in camera_name or uri
                 camera_dict = {
                     'run_waypoint_id': self.get_waypoint_id(), 
@@ -306,8 +323,9 @@ class DFK33GP006(Camera):
                 self.set_config()
             self.image_path = self.set_image_path(self.root, self.program_id)
             # Send 10 req to get camera (allows image to stabilize)
-            for i in range(10):
-                time.sleep(0.1)
+            for i in range(5):
+                self.Tis.Set_Property("Software Trigger", 1) # Send a software trigger
+                time.sleep(0.5)
                 self.Tis.Set_Property("Software Trigger", 1) # Send a software trigger
                 # Wait for a new image. Use 10 tries.
                 tries = 10
@@ -344,13 +362,22 @@ class DFK33GP006(Camera):
             file_name = os.path.join(abs_path, "%s.tif" % (self.get_waypoint_id()))
 
             # write out bytes into file from image response 
-            image = cv2.rotate(self.CD.image, cv2.ROTATE_180)
             scale_percent = 60
-            width = int(image.shape[1] * scale_percent / 100)
-            height = int(image.shape[0] * scale_percent / 100)
+            width = int(self.CD.image.shape[1] * scale_percent / 100)
+            height = int(self.CD.image.shape[0] * scale_percent / 100)
             dim = (width, height)
-            resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
-            cv2.imwrite(file_name, resized)
+            image = cv2.resize(self.CD.image, dim, interpolation = cv2.INTER_AREA)
+            rotated = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+            flip = cv2.flip(rotated, 1)
+            h, w, channels = flip.shape
+            dim = min(h,w)
+            y1 = int(h/2 - dim/2)
+            y2 = int(h/2 + dim/2)
+            x1 = int(w/2 - dim/2)
+            x2 = int(w/2 + dim/2)
+            crop_img = flip[y1:y2, x1:x2]
+            
+            cv2.imwrite(file_name, crop_img)
             #im = cv2.cvtColor(self.CD.image,cv2.COLOR_BGR2RGB) #This converts the BGR image to and RGB
             #im = Image.fromarray(im) #The Image modeul from PIL allows us to save direct images from numpy arrays
             #im = im.rotate(90)
