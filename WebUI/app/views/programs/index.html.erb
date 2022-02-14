@@ -17,28 +17,55 @@
   </thead>
 
   <tbody>
-    <% @programs.each do |program| %>
-      <tr>
-        <td><%= link_to program.name, program %></td>
-        <td><%= program.run_count %></td>
-        <td><%= program.last_run_at&.strftime('%Y-%m-%d') || 'never' %></td>
-        <td>
-          <%= link_to 'Edit', edit_program_path(program) %>
-          <%= link_to 'Run', '#', 'data-program-id' =>  program.id, class: 'run_link' %>
-          <%= link_to 'Destroy', program, method: :delete, data: { confirm: 'Are you sure you wish to delete this program and all associated data?' } %>
-          <%= link_to "Download Images", download_zip_path, target: "_blank"%>
-        </td>
-      </tr>
-    <% end %>
-    <% if @programs.blank? %>
+  <% if @programs.blank? %>
       <tr>
         <td colspan="4" class="text-center">
           No programs defined yet.<br/>
         </td>
       </tr>
+    <% else %>
+      <% @program2.each do |program| %>
+      <tr>
+        <td><%= link_to program.name, program %></td>
+        <td><%= program.run_count %></td>
+        <td><%=  program.last_run_at || 'never' %></td>
+        <td>
+          <%= link_to 'Edit', edit_program_path(program) %>
+          <%= link_to 'Run', '#', 'data-program-id' =>  program.id, class: 'run_link' %>
+          <%= link_to 'Destroy', program, method: :delete, data: { confirm: 'Are you sure you wish to delete this program and all associated data?' } %>
+          <%= link_to 'Download latest composite', download_zip_url(:run => program.run_count, :camera_name => program.camera_name) %>
+        </td>
+      </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
+
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th>File Name</th>
+      <th>Time Stamp</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% if @files.blank? %>
+      <tr>
+        <td colspan="4" class="text-center">
+          No image files found<br/>
+        </td>
+      </tr>
+    <% else %>
+      <% @files.each do |file| %>
+      <tr>
+        <td><%= link_to file, "#{file}" %></td>
+        <td><%= @file_handler.ctime(file).strftime "%Y-%m-%d %H:%M:%S" %></td>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+
 
 <hr/>
 

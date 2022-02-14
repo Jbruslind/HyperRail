@@ -170,6 +170,7 @@ class Watcher:
         comp = Compositor()
         comp.load_images(run_id)
         comp.create_composite()
+        comp.add_archive()
 
         self.db.update_program_run_finished(run_id)
         return 'ok'
