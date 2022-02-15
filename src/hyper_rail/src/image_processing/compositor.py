@@ -162,7 +162,6 @@ class Compositor:
     def add_archive(self):
         try:
             i = self.images[0]
-            print(i.keys())
             in_path = IMAGE_PATH + '/' + str(i['program_run_id']) + '_' + str(i['camera_name'])
             print("Creating archive of: %s" % in_path)
             shutil.make_archive(os.path.expanduser(in_path), 'zip', os.path.expanduser(IMAGE_PATH), str(i['program_run_id']))
@@ -187,5 +186,4 @@ if __name__ == "__main__":
     comp = Compositor()
     comp.load_images(program_run_id)
     comp.create_composite()
-    comp.add_archive()
     print(comp)
