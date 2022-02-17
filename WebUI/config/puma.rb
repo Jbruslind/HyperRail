@@ -21,6 +21,13 @@ bind "tcp://0.0.0.0:#{ENV['PORT'] || 3000}"
 #
 environment ENV.fetch("RAILS_ENV") { "development" }
 
+# app_dir = File.expand_path("../..", __FILE__)
+# shared_dir = "#{app_dir}/shared"
+# # Set up socket location
+# bind "unix://#{shared_dir}/sockets/puma.sock"
+
+# stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.stderr.log", true
+
 # Specifies the `pidfile` that Puma will use.
 pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 

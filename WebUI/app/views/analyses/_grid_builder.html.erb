@@ -8,24 +8,29 @@
 <script>
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
     var areasOfInterest = <%= @analysis.areas_of_interest.to_json.html_safe %>;
-    var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
+    // var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
+    var unit_sizes = <%= Analysis.get_sizes.to_json.html_safe %>;
     // The image path will be pulled from the database with respect to the current analysis. The image link below is for testing.
-    var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    // var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    var image_path = <%= image_url(Analysis.get_image).to_json.html_safe %>;
     // The pixel conversion factor is calculated based on the parameters on the settings html page. Essentially,
     // one image is 1280 pixels and depicts ~1.5218 meters. However, 25% of the image is cropped out to exclude
     // the unnecessary edges. The image would then be 960 pixels wide and depict ~1.141 meters. 
     // Dividing: 960 pixels/1.141 meters derives ~841 pixels/meter.
+    // var PIXEL_CONVERSION_FACTOR = 841;
     var PIXEL_CONVERSION_FACTOR = 841;
     // The scale factor is number derived by simply trying different sizes that would properly fit the page.
-    var SCALE_FACTOR = .06;
+    var SCALE_FACTOR = .6;
 
     //Parameters for displaying the grid:
+    // (unit_sizes.x_unit_size*SCALE_FACTOR) * PIXEL_CONVERSION_FACTOR;
+    // (unit_sizes.y_unit_size*SCALE_FACTOR) * PIXEL_CONVERSION_FACTOR;
     var rectWidthDisplay = (unit_sizes.x_unit_size*SCALE_FACTOR) * PIXEL_CONVERSION_FACTOR;
     var rectHeightDisplay = (unit_sizes.y_unit_size*SCALE_FACTOR) * PIXEL_CONVERSION_FACTOR;
-    var gridWidthDisplay = rectWidthDisplay * unit_sizes.x_units;
-    var gridHeightDisplay = rectHeightDisplay * unit_sizes.y_units;
-    var numOfRects = unit_sizes.x_units * unit_sizes.y_units;
-    var numOfCols = unit_sizes.x_units;
+    var gridWidthDisplay = rectWidthDisplay * 2;//unit_sizes.x_units;
+    var gridHeightDisplay = rectHeightDisplay * 2;//unit_sizes.y_units;
+    var numOfRects = 4//unit_sizes.x_units * unit_sizes.y_units;
+    var numOfCols = 2//unit_sizes.x_units;
     var rectXOriginDisplay = 0;
     var rectYOriginDisplay = 0;
     var rectID = "rect";
@@ -52,6 +57,8 @@
     image.setAttributeNS(null, "x", 0);
     image.setAttributeNS(null, "y", 0);
     image.setAttributeNS(XLINK_NS, 'xlink:href', image_path);
+    //image.src = image_path;
+    //console.log(rails_blob_path(@analysis.image))
     svg.appendChild(image);
 
     // The g element allows the grid to be interactive.

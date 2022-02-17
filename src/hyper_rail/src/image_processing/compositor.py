@@ -6,7 +6,7 @@ import os
 import math
 from db_queries import DatabaseReader
 import shutil
-from communication.constants import IMAGE_PATH
+from communication.constants import IMAGE_PATH, WEBSITE_OUTPUT_PATH
 
 from pathlib import PosixPath
 
@@ -151,6 +151,8 @@ class Compositor:
                     #print("paste y: %f", y)
                     output_image.draw(DrawableCompositeImage(x, y, image.img))
                     output_image.write(out_path)
+                    website_path = os.path.join(WEBSITE_OUTPUT_PATH, f"{t['image_type']}_composite{self.program_run_id}.png")
+                    output_image.write(website_path)
             #rotate_Img = PIL_Image.open(out_path)
             #horz = rotate_Img.transpose(method=PIL_Image.FLIP_LEFT_RIGHT)
             #rotate_Img.close()

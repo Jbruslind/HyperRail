@@ -1,0 +1,1685 @@
+=== puma startup: 2022-02-16 16:12:11 -0800 ===
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2022-02-16 16:12:27 -0800 ===
+- Goodbye!
+Exiting
+=== puma startup: 2022-02-16 16:13:51 -0800 ===
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2022-02-16 16:14:57 -0800 ===
+- Goodbye!
+Exiting
+=== puma startup: 2022-02-16 16:16:08 -0800 ===
+Started GET "/settings" for 192.168.1.101 at 2022-02-16 16:16:19 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  [1m[35m (1.8ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by SettingsController#index as HTML
+  [1m[36mSetting Load (1.1ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering settings/index.html.erb within layouts/application
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "image_path"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered settings/index.html.erb within layouts/application (Duration: 40.8ms | Allocations: 6022)
+  Rendered layouts/_nav.html.erb (Duration: 6.3ms | Allocations: 542)
+  Rendered layouts/_flash.html.erb (Duration: 5.1ms | Allocations: 221)
+  Rendered layout layouts/application.html.erb (Duration: 150.4ms | Allocations: 15476)
+Completed 200 OK in 216ms (Views: 157.0ms | ActiveRecord: 4.2ms | Allocations: 23761)
+
+
+Started GET "/" for 192.168.1.101 at 2022-02-16 16:16:27 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by DashboardController#index as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mSensorReading Load (0.9ms)[0m  [1m[34mSELECT "sensor_readings".* FROM "sensor_readings" WHERE "sensor_readings"."sensor_name" = ? ORDER BY "sensor_readings"."created_at" DESC LIMIT ?[0m  [["sensor_name", "temperature"], ["LIMIT", 1]]
+  ↳ app/models/sensor_reading.rb:9:in `latest_for'
+  [1m[36mSensorReading Load (0.4ms)[0m  [1m[34mSELECT "sensor_readings".* FROM "sensor_readings" WHERE "sensor_readings"."sensor_name" = ? ORDER BY "sensor_readings"."created_at" DESC LIMIT ?[0m  [["sensor_name", "humidity"], ["LIMIT", 1]]
+  ↳ app/models/sensor_reading.rb:9:in `latest_for'
+  [1m[36mSensorReading Load (0.5ms)[0m  [1m[34mSELECT "sensor_readings".* FROM "sensor_readings" WHERE "sensor_readings"."sensor_name" = ? ORDER BY "sensor_readings"."created_at" DESC LIMIT ?[0m  [["sensor_name", "lux"], ["LIMIT", 1]]
+  ↳ app/models/sensor_reading.rb:9:in `latest_for'
+  Rendered dashboard/_status.html.erb (Duration: 56.7ms | Allocations: 8835)
+  Rendered dashboard/_gcode.html.erb (Duration: 1.8ms | Allocations: 310)
+  Rendered dashboard/_quick_controls.html.erb (Duration: 1.0ms | Allocations: 158)
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 64.4ms | Allocations: 10041)
+  Rendered layouts/_nav.html.erb (Duration: 1.1ms | Allocations: 213)
+  Rendered layouts/_flash.html.erb (Duration: 0.2ms | Allocations: 49)
+  Rendered layout layouts/application.html.erb (Duration: 77.2ms | Allocations: 13815)
+Completed 200 OK in 106ms (Views: 77.0ms | ActiveRecord: 3.7ms | Allocations: 15534)
+
+
+Started GET "/tasks" for 192.168.1.101 at 2022-02-16 16:16:33 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  
+ActionController::RoutingError (No route matches [GET] "/tasks"):
+  
+Started GET "/" for 192.168.1.101 at 2022-02-16 16:16:35 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by DashboardController#index as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mSensorReading Load (0.4ms)[0m  [1m[34mSELECT "sensor_readings".* FROM "sensor_readings" WHERE "sensor_readings"."sensor_name" = ? ORDER BY "sensor_readings"."created_at" DESC LIMIT ?[0m  [["sensor_name", "temperature"], ["LIMIT", 1]]
+  ↳ app/models/sensor_reading.rb:9:in `latest_for'
+  [1m[36mSensorReading Load (0.4ms)[0m  [1m[34mSELECT "sensor_readings".* FROM "sensor_readings" WHERE "sensor_readings"."sensor_name" = ? ORDER BY "sensor_readings"."created_at" DESC LIMIT ?[0m  [["sensor_name", "humidity"], ["LIMIT", 1]]
+  ↳ app/models/sensor_reading.rb:9:in `latest_for'
+  [1m[36mSensorReading Load (0.4ms)[0m  [1m[34mSELECT "sensor_readings".* FROM "sensor_readings" WHERE "sensor_readings"."sensor_name" = ? ORDER BY "sensor_readings"."created_at" DESC LIMIT ?[0m  [["sensor_name", "lux"], ["LIMIT", 1]]
+  ↳ app/models/sensor_reading.rb:9:in `latest_for'
+  Rendered dashboard/_status.html.erb (Duration: 18.2ms | Allocations: 2706)
+  Rendered dashboard/_gcode.html.erb (Duration: 0.5ms | Allocations: 104)
+  Rendered dashboard/_quick_controls.html.erb (Duration: 0.2ms | Allocations: 37)
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 20.2ms | Allocations: 3054)
+  Rendered layouts/_nav.html.erb (Duration: 1.1ms | Allocations: 226)
+  Rendered layouts/_flash.html.erb (Duration: 0.3ms | Allocations: 53)
+  Rendered layout layouts/application.html.erb (Duration: 33.5ms | Allocations: 6972)
+Completed 200 OK in 45ms (Views: 33.8ms | ActiveRecord: 1.6ms | Allocations: 8461)
+
+
+Started GET "/analyses" for 192.168.1.101 at 2022-02-16 16:16:37 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#index as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/index.html.erb within layouts/application
+  [1m[36mAnalysis Load (1.2ms)[0m  [1m[34mSELECT "analyses".* FROM "analyses"[0m
+  ↳ app/views/analyses/index.html.erb:20
+  Rendered analyses/_export_modal.html.erb (Duration: 3.0ms | Allocations: 234)
+  Rendered analyses/index.html.erb within layouts/application (Duration: 26.9ms | Allocations: 3627)
+  Rendered layouts/_nav.html.erb (Duration: 1.0ms | Allocations: 205)
+  Rendered layouts/_flash.html.erb (Duration: 0.2ms | Allocations: 53)
+  Rendered layout layouts/application.html.erb (Duration: 40.3ms | Allocations: 7519)
+Completed 200 OK in 64ms (Views: 40.8ms | ActiveRecord: 3.0ms | Allocations: 11252)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:16:38 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 42.7ms | Allocations: 7054)
+  Rendered analyses/_form.html.erb (Duration: 8.7ms | Allocations: 1294)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 58.8ms | Allocations: 9419)
+  Rendered layouts/_nav.html.erb (Duration: 0.9ms | Allocations: 199)
+  Rendered layouts/_flash.html.erb (Duration: 0.3ms | Allocations: 49)
+  Rendered layout layouts/application.html.erb (Duration: 71.5ms | Allocations: 13116)
+Completed 200 OK in 397ms (Views: 70.8ms | ActiveRecord: 5.5ms | Allocations: 30261)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif" for 192.168.1.101 at 2022-02-16 16:16:41 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as TIFF
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 4ms (ActiveRecord: 0.0ms | Allocations: 713)
+
+
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2022-02-16 16:17:09 -0800 ===
+- Goodbye!
+Exiting
+=== puma startup: 2022-02-16 16:21:54 -0800 ===
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:22:06 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  [1m[35m (1.6ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  Rendered analyses/new.html.erb within layouts/application (Duration: 4.2ms | Allocations: 1445)
+  Rendered layout layouts/application.html.erb (Duration: 4.8ms | Allocations: 1517)
+Completed 500 Internal Server Error in 529ms (ActiveRecord: 10.0ms | Allocations: 28497)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <h1>New Analysis</h1>
+<%= render 'grid_builder', analysis: @analysis %>
+<%= <%= image_tag('/images/RGB_composite4.png') %> %>
+<%= render 'form', analysis: @analysis %>
+):
+1:    <h1>New Analysis</h1>
+2:    <%= render 'grid_builder', analysis: @analysis %>
+3:    <%= <%= image_tag('/images/RGB_composite4.png') %> %>
+4:    <%= render 'form', analysis: @analysis %>
+  
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:22:28 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.5ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 77.0ms | Allocations: 11578)
+  Rendered analyses/_form.html.erb (Duration: 25.0ms | Allocations: 2782)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 105.8ms | Allocations: 14911)
+  Rendered layouts/_nav.html.erb (Duration: 2.5ms | Allocations: 545)
+  Rendered layouts/_flash.html.erb (Duration: 1.0ms | Allocations: 220)
+  Rendered layout layouts/application.html.erb (Duration: 159.7ms | Allocations: 24362)
+Completed 200 OK in 287ms (Views: 161.8ms | ActiveRecord: 3.0ms | Allocations: 27048)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif" for 192.168.1.101 at 2022-02-16 16:22:31 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as TIFF
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 4ms (ActiveRecord: 0.0ms | Allocations: 713)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:23:51 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  Rendered analyses/new.html.erb within layouts/application (Duration: 2.5ms | Allocations: 1103)
+  Rendered layout layouts/application.html.erb (Duration: 3.1ms | Allocations: 1171)
+Completed 500 Internal Server Error in 113ms (ActiveRecord: 0.4ms | Allocations: 3488)
+
+
+  
+ActionView::SyntaxErrorInTemplate (Encountered a syntax error while rendering template: check <h1>New Analysis</h1>
+<%= render 'grid_builder', analysis: @analysis %>
+<%= <img src="/images/RGB_composite4.png" style="padding-bottom:20px;" /> %> 
+<%= render 'form', analysis: @analysis %>
+):
+1:    <h1>New Analysis</h1>
+2:    <%= render 'grid_builder', analysis: @analysis %>
+3:    <%= <img src="/images/RGB_composite4.png" style="padding-bottom:20px;" /> %> 
+4:    <%= render 'form', analysis: @analysis %>
+  
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:3: syntax error, unexpected local variable or method, expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '>'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:3: syntax error, unexpected local variable or method, expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '>'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:3: syntax error, unexpected local variable or method, expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '>'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:3: syntax error, unexpected local variable or method, expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '>'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:3: syntax error, unexpected local variable or method, expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '>'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '<'
+app/views/analyses/new.html.erb:3: syntax error, unexpected local variable or method, expecting ')'
+app/views/analyses/new.html.erb:3: syntax error, unexpected '>'
+app/views/analyses/new.html.erb:6: syntax error, unexpected `end', expecting ')'
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:24:32 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 32.6ms | Allocations: 5056)
+  Rendered analyses/_form.html.erb (Duration: 5.9ms | Allocations: 865)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 41.6ms | Allocations: 6426)
+  Rendered layouts/_nav.html.erb (Duration: 2.5ms | Allocations: 543)
+  Rendered layouts/_flash.html.erb (Duration: 1.2ms | Allocations: 216)
+  Rendered layout layouts/application.html.erb (Duration: 60.0ms | Allocations: 11228)
+Completed 200 OK in 169ms (Views: 62.5ms | ActiveRecord: 1.6ms | Allocations: 13549)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif" for 192.168.1.101 at 2022-02-16 16:24:34 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as TIFF
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 603)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:27:55 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 33.9ms | Allocations: 5045)
+  Rendered analyses/_form.html.erb (Duration: 5.4ms | Allocations: 853)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 52.6ms | Allocations: 6953)
+  Rendered layouts/_nav.html.erb (Duration: 2.5ms | Allocations: 531)
+  Rendered layouts/_flash.html.erb (Duration: 1.0ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 72.3ms | Allocations: 11612)
+Completed 200 OK in 174ms (Views: 75.3ms | ActiveRecord: 1.7ms | Allocations: 13934)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif" for 192.168.1.101 at 2022-02-16 16:27:58 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as TIFF
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 2ms (ActiveRecord: 0.0ms | Allocations: 603)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:28:27 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 29.8ms | Allocations: 5045)
+  Rendered analyses/_form.html.erb (Duration: 4.5ms | Allocations: 853)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 37.6ms | Allocations: 6427)
+  Rendered layouts/_nav.html.erb (Duration: 2.2ms | Allocations: 531)
+  Rendered layouts/_flash.html.erb (Duration: 1.0ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 53.8ms | Allocations: 11198)
+Completed 200 OK in 151ms (Views: 56.1ms | ActiveRecord: 1.6ms | Allocations: 13520)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif" for 192.168.1.101 at 2022-02-16 16:28:30 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as TIFF
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:28:45 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 30.1ms | Allocations: 5046)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 37.3ms | Allocations: 6859)
+  Rendered layout layouts/application.html.erb (Duration: 38.4ms | Allocations: 6926)
+Completed 500 Internal Server Error in 269ms (ActiveRecord: 1.6ms | Allocations: 9244)
+
+
+  
+ActionView::Template::Error (The asset "images/RGB_composite4.png" is not present in the asset pipeline.
+):
+    1: <h1>New Analysis</h1>
+    2: <%= render 'grid_builder', analysis: @analysis %>
+    3: <%= image_tag "images/RGB_composite4.png" %>
+    4: <%= render 'form', analysis: @analysis %>
+  
+app/views/analyses/new.html.erb:3
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:30:57 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 28.1ms | Allocations: 4647)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 31.1ms | Allocations: 6213)
+  Rendered layout layouts/application.html.erb (Duration: 31.8ms | Allocations: 6279)
+Completed 500 Internal Server Error in 154ms (ActiveRecord: 1.6ms | Allocations: 7855)
+
+
+  
+ActionView::Template::Error (The asset "images/RGB_composite4.png" is not present in the asset pipeline.
+):
+    1: <h1>New Analysis</h1>
+    2: <%= render 'grid_builder', analysis: @analysis %>
+    3: <%= image_tag "images/RGB_composite4.png" %>
+    4: <%= render 'form', analysis: @analysis %>
+  
+app/views/analyses/new.html.erb:3
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:31:53 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 32.9ms | Allocations: 5040)
+  Rendered analyses/_form.html.erb (Duration: 11.5ms | Allocations: 865)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 50.3ms | Allocations: 6943)
+  Rendered layouts/_nav.html.erb (Duration: 2.5ms | Allocations: 543)
+  Rendered layouts/_flash.html.erb (Duration: 1.1ms | Allocations: 216)
+  Rendered layout layouts/application.html.erb (Duration: 72.0ms | Allocations: 11655)
+Completed 200 OK in 169ms (Views: 74.6ms | ActiveRecord: 1.7ms | Allocations: 13976)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif" for 192.168.1.101 at 2022-02-16 16:31:57 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as TIFF
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 603)
+
+
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2022-02-16 16:32:11 -0800 ===
+- Goodbye!
+Exiting
+=== puma startup: 2022-02-16 16:32:15 -0800 ===
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:32:25 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  [1m[35m (1.4ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.6ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 40.2ms | Allocations: 7069)
+  Rendered analyses/_form.html.erb (Duration: 16.9ms | Allocations: 2777)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 86.5ms | Allocations: 15314)
+  Rendered layouts/_nav.html.erb (Duration: 2.3ms | Allocations: 546)
+  Rendered layouts/_flash.html.erb (Duration: 1.0ms | Allocations: 221)
+  Rendered layout layouts/application.html.erb (Duration: 106.4ms | Allocations: 20390)
+Completed 200 OK in 514ms (Views: 112.1ms | ActiveRecord: 12.4ms | Allocations: 47406)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif" for 192.168.1.101 at 2022-02-16 16:32:29 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as TIFF
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 713)
+
+
+Started GET "/public/images/RGB_composite4.png" for 192.168.1.101 at 2022-02-16 16:36:15 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  
+ActionController::RoutingError (No route matches [GET] "/public/images/RGB_composite4.png"):
+  
+Started GET "/public/RGB_composite4.png" for 192.168.1.101 at 2022-02-16 16:36:21 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  
+ActionController::RoutingError (No route matches [GET] "/public/RGB_composite4.png"):
+  
+  
+ActionController::RoutingError (No route matches [GET] "/assets/demo.png"):
+  
+Started GET "/" for 192.168.1.101 at 2022-02-16 16:40:55 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by DashboardController#index as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.5ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering dashboard/index.html.erb within layouts/application
+  [1m[36mSensorReading Load (1.2ms)[0m  [1m[34mSELECT "sensor_readings".* FROM "sensor_readings" WHERE "sensor_readings"."sensor_name" = ? ORDER BY "sensor_readings"."created_at" DESC LIMIT ?[0m  [["sensor_name", "temperature"], ["LIMIT", 1]]
+  ↳ app/models/sensor_reading.rb:9:in `latest_for'
+  [1m[36mSensorReading Load (0.4ms)[0m  [1m[34mSELECT "sensor_readings".* FROM "sensor_readings" WHERE "sensor_readings"."sensor_name" = ? ORDER BY "sensor_readings"."created_at" DESC LIMIT ?[0m  [["sensor_name", "humidity"], ["LIMIT", 1]]
+  ↳ app/models/sensor_reading.rb:9:in `latest_for'
+  [1m[36mSensorReading Load (0.3ms)[0m  [1m[34mSELECT "sensor_readings".* FROM "sensor_readings" WHERE "sensor_readings"."sensor_name" = ? ORDER BY "sensor_readings"."created_at" DESC LIMIT ?[0m  [["sensor_name", "lux"], ["LIMIT", 1]]
+  ↳ app/models/sensor_reading.rb:9:in `latest_for'
+  Rendered dashboard/_status.html.erb (Duration: 46.2ms | Allocations: 7373)
+  Rendered dashboard/_gcode.html.erb (Duration: 1.7ms | Allocations: 317)
+  Rendered dashboard/_quick_controls.html.erb (Duration: 1.1ms | Allocations: 158)
+  Rendered dashboard/index.html.erb within layouts/application (Duration: 56.6ms | Allocations: 8583)
+  Rendered layouts/_nav.html.erb (Duration: 2.7ms | Allocations: 553)
+  Rendered layouts/_flash.html.erb (Duration: 1.1ms | Allocations: 215)
+  Rendered layout layouts/application.html.erb (Duration: 125.1ms | Allocations: 24155)
+Completed 200 OK in 144ms (Views: 125.3ms | ActiveRecord: 5.3ms | Allocations: 26998)
+
+
+Started GET "/analyses" for 192.168.1.101 at 2022-02-16 16:40:58 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#index as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/index.html.erb within layouts/application
+  [1m[36mAnalysis Load (1.1ms)[0m  [1m[34mSELECT "analyses".* FROM "analyses"[0m
+  ↳ app/views/analyses/index.html.erb:20
+  Rendered analyses/_export_modal.html.erb (Duration: 2.7ms | Allocations: 231)
+  Rendered analyses/index.html.erb within layouts/application (Duration: 15.6ms | Allocations: 1689)
+  Rendered layouts/_nav.html.erb (Duration: 1.2ms | Allocations: 203)
+  Rendered layouts/_flash.html.erb (Duration: 0.3ms | Allocations: 49)
+  Rendered layout layouts/application.html.erb (Duration: 30.0ms | Allocations: 5490)
+Completed 200 OK in 42ms (Views: 32.3ms | ActiveRecord: 1.5ms | Allocations: 7290)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:40:59 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 30.0ms | Allocations: 5055)
+  Rendered analyses/_form.html.erb (Duration: 5.1ms | Allocations: 893)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 81.2ms | Allocations: 16213)
+  Rendered layouts/_nav.html.erb (Duration: 1.2ms | Allocations: 199)
+  Rendered layouts/_flash.html.erb (Duration: 0.2ms | Allocations: 49)
+  Rendered layout layouts/application.html.erb (Duration: 94.0ms | Allocations: 19892)
+Completed 200 OK in 212ms (Views: 94.0ms | ActiveRecord: 1.6ms | Allocations: 21694)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif" for 192.168.1.101 at 2022-02-16 16:40:59 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as TIFF
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 2ms (ActiveRecord: 0.0ms | Allocations: 613)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:41:15 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 34.3ms | Allocations: 5040)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 40.6ms | Allocations: 6964)
+  Rendered layout layouts/application.html.erb (Duration: 41.2ms | Allocations: 7030)
+Completed 500 Internal Server Error in 172ms (ActiveRecord: 1.6ms | Allocations: 9329)
+
+
+  
+ActionView::Template::Error (The asset "RGB_composite.png" is not present in the asset pipeline.
+):
+    1: <h1>New Analysis</h1>
+    2: <%= render 'grid_builder', analysis: @analysis %>
+    3: <%= image_tag "RGB_composite.png" %>
+    4: <%= render 'form', analysis: @analysis %>
+  
+app/views/analyses/new.html.erb:3
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:43:33 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 32.0ms | Allocations: 5041)
+  Rendered analyses/_form.html.erb (Duration: 5.4ms | Allocations: 854)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 41.3ms | Allocations: 6390)
+  Rendered layouts/_nav.html.erb (Duration: 2.7ms | Allocations: 531)
+  Rendered layouts/_flash.html.erb (Duration: 1.4ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 62.8ms | Allocations: 11164)
+Completed 200 OK in 171ms (Views: 65.5ms | ActiveRecord: 1.7ms | Allocations: 13509)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.tif" for 192.168.1.101 at 2022-02-16 16:43:33 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as TIFF
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 2ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:44:51 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+Completed 500 Internal Server Error in 50ms (ActiveRecord: 5.5ms | Allocations: 8138)
+
+
+  
+Errno::ENOENT (No such file or directory @ rb_sysopen - /home/jetson/HyperRail/WebUI/app/assets/demo.png):
+  
+app/controllers/analyses_controller.rb:67:in `initialize'
+app/controllers/analyses_controller.rb:67:in `open'
+app/controllers/analyses_controller.rb:67:in `new'
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:45:21 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 40.9ms | Allocations: 5975)
+  Rendered analyses/_form.html.erb (Duration: 6.8ms | Allocations: 605)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 48.8ms | Allocations: 6724)
+  Rendered layouts/_nav.html.erb (Duration: 1.1ms | Allocations: 199)
+  Rendered layouts/_flash.html.erb (Duration: 0.3ms | Allocations: 49)
+  Rendered layout layouts/application.html.erb (Duration: 69.0ms | Allocations: 10523)
+Completed 200 OK in 188ms (Views: 69.1ms | ActiveRecord: 10.1ms | Allocations: 30537)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:45:21 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 693)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:52:30 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 37.5ms | Allocations: 6228)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 49.8ms | Allocations: 8311)
+  Rendered layout layouts/application.html.erb (Duration: 50.5ms | Allocations: 8378)
+Completed 500 Internal Server Error in 155ms (ActiveRecord: 3.1ms | Allocations: 27411)
+
+
+  
+ActionView::Template::Error (undefined method `deep_symbolize_keys' for :thumb:Symbol):
+    1: <h1>New Analysis</h1>
+    2: <%= render 'grid_builder', analysis: @analysis %>
+    3: <%= image_tag @analysis.image.variant(:thumb) %>
+    4: <%= render 'form', analysis: @analysis %>
+  
+app/views/analyses/new.html.erb:3
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:52:49 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 41.4ms | Allocations: 5041)
+  Rendered analyses/_form.html.erb (Duration: 7.1ms | Allocations: 910)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 52.6ms | Allocations: 6603)
+  Rendered layouts/_nav.html.erb (Duration: 2.8ms | Allocations: 531)
+  Rendered layouts/_flash.html.erb (Duration: 1.2ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 71.3ms | Allocations: 11374)
+Completed 200 OK in 89ms (Views: 73.8ms | ActiveRecord: 1.9ms | Allocations: 13695)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:52:50 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 692)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:52:50 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 603)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:53:25 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:54:22 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 31.0ms | Allocations: 5040)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 47.0ms | Allocations: 9406)
+  Rendered layout layouts/application.html.erb (Duration: 47.6ms | Allocations: 9472)
+Completed 500 Internal Server Error in 65ms (ActiveRecord: 1.7ms | Allocations: 11763)
+
+
+  
+ActionView::Template::Error (undefined method `img' for #<ActionView::Base:0x0000000000f488>):
+    1: <h1>New Analysis</h1>
+    2: <%= render 'grid_builder', analysis: @analysis %>
+    3: <%= img src=rails_blob_path(@analysis.image) %>
+    4: <%= render 'form', analysis: @analysis %>
+  
+app/views/analyses/new.html.erb:3
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:54:36 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 45.5ms | Allocations: 5040)
+  Rendered analyses/_form.html.erb (Duration: 6.4ms | Allocations: 857)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 55.9ms | Allocations: 6396)
+  Rendered layouts/_nav.html.erb (Duration: 2.4ms | Allocations: 531)
+  Rendered layouts/_flash.html.erb (Duration: 1.3ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 75.4ms | Allocations: 11167)
+Completed 200 OK in 95ms (Views: 78.3ms | ActiveRecord: 2.0ms | Allocations: 13485)
+
+
+Started GET "/analyses/rails_blob_path(@analysis.image)" for 192.168.1.101 at 2022-02-16 16:54:37 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#show as */*
+  Parameters: {"id"=>"rails_blob_path(@analysis"}
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mAnalysis Load (0.4ms)[0m  [1m[34mSELECT "analyses".* FROM "analyses" WHERE "analyses"."id" = ? LIMIT ?[0m  [["id", nil], ["LIMIT", 1]]
+  ↳ app/controllers/analyses_controller.rb:160:in `set_analysis'
+Completed 404 Not Found in 12ms (ActiveRecord: 0.7ms | Allocations: 2073)
+
+
+  
+ActiveRecord::RecordNotFound (Couldn't find Analysis with 'id'=rails_blob_path(@analysis):
+  
+app/controllers/analyses_controller.rb:160:in `set_analysis'
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:54:44 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 604)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:55:05 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 31.8ms | Allocations: 5040)
+  Rendered analyses/_form.html.erb (Duration: 5.9ms | Allocations: 854)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 41.6ms | Allocations: 6532)
+  Rendered layouts/_nav.html.erb (Duration: 2.5ms | Allocations: 531)
+  Rendered layouts/_flash.html.erb (Duration: 1.1ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 59.7ms | Allocations: 11284)
+Completed 200 OK in 77ms (Views: 62.2ms | ActiveRecord: 1.7ms | Allocations: 13602)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:55:05 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 2ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:55:16 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 31.8ms | Allocations: 5040)
+  Rendered analyses/_form.html.erb (Duration: 4.9ms | Allocations: 854)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 40.7ms | Allocations: 6536)
+  Rendered layouts/_nav.html.erb (Duration: 2.4ms | Allocations: 531)
+  Rendered layouts/_flash.html.erb (Duration: 1.1ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 59.5ms | Allocations: 11272)
+Completed 200 OK in 76ms (Views: 62.0ms | ActiveRecord: 1.6ms | Allocations: 13586)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:55:17 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 2ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:55:30 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 30.2ms | Allocations: 4655)
+  Rendered analyses/_form.html.erb (Duration: 3.1ms | Allocations: 551)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 35.1ms | Allocations: 5483)
+  Rendered layouts/_nav.html.erb (Duration: 1.0ms | Allocations: 199)
+  Rendered layouts/_flash.html.erb (Duration: 0.2ms | Allocations: 49)
+  Rendered layout layouts/application.html.erb (Duration: 47.7ms | Allocations: 9248)
+Completed 200 OK in 61ms (Views: 47.6ms | ActiveRecord: 1.7ms | Allocations: 10850)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:55:30 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "//rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:55:34 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 2ms (ActiveRecord: 0.0ms | Allocations: 603)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:55:38 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 2ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 16:56:55 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 31.6ms | Allocations: 5041)
+  Rendered analyses/_form.html.erb (Duration: 4.8ms | Allocations: 854)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 40.6ms | Allocations: 6534)
+  Rendered layouts/_nav.html.erb (Duration: 2.3ms | Allocations: 531)
+  Rendered layouts/_flash.html.erb (Duration: 1.1ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 58.4ms | Allocations: 11305)
+Completed 200 OK in 75ms (Views: 61.0ms | ActiveRecord: 1.7ms | Allocations: 13624)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:56:55 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 16:57:01 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 2ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 17:00:20 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 28.8ms | Allocations: 4655)
+  Rendered analyses/_form.html.erb (Duration: 3.5ms | Allocations: 551)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 33.9ms | Allocations: 5476)
+  Rendered layouts/_nav.html.erb (Duration: 1.0ms | Allocations: 199)
+  Rendered layouts/_flash.html.erb (Duration: 0.2ms | Allocations: 49)
+  Rendered layout layouts/application.html.erb (Duration: 46.4ms | Allocations: 9255)
+Completed 200 OK in 59ms (Views: 46.4ms | ActiveRecord: 1.6ms | Allocations: 10857)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 17:00:20 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 2ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 17:00:29 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2022-02-16 17:00:43 -0800 ===
+- Goodbye!
+Exiting
+=== puma startup: 2022-02-16 17:00:46 -0800 ===
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 17:00:58 -0800
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 17:00:58 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  [1m[35m (1.0ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 52ms (ActiveRecord: 0.0ms | Allocations: 9203)
+
+
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.5ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 40.0ms | Allocations: 7069)
+  Rendered analyses/_form.html.erb (Duration: 19.8ms | Allocations: 2796)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 64.3ms | Allocations: 10619)
+  Rendered layouts/_nav.html.erb (Duration: 2.7ms | Allocations: 635)
+  Rendered layouts/_flash.html.erb (Duration: 1.1ms | Allocations: 221)
+  Rendered layout layouts/application.html.erb (Duration: 109.1ms | Allocations: 20385)
+Completed 200 OK in 336ms (Views: 112.4ms | ActiveRecord: 12.3ms | Allocations: 41024)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 17:00:59 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 615)
+
+
+Started GET "/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png" for 192.168.1.101 at 2022-02-16 17:01:05 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by ActiveStorage::Blobs::RedirectController#show as PNG
+  Parameters: {"signed_id"=>"eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7", "filename"=>"image"}
+Filter chain halted as :set_blob rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.0ms | Allocations: 601)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 17:45:22 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+Completed 500 Internal Server Error in 112ms (ActiveRecord: 1.7ms | Allocations: 20875)
+
+
+  
+NoMethodError (undefined method `save!' for #<AnalysesController:0x0000000000a988>):
+  
+app/controllers/analyses_controller.rb:69:in `new'
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 18:08:30 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+Completed 500 Internal Server Error in 32ms (ActiveRecord: 1.7ms | Allocations: 5139)
+
+
+  
+NoMethodError (undefined method `save!' for #<AnalysesController:0x0000000000abe0>):
+  
+app/controllers/analyses_controller.rb:69:in `new'
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 18:08:43 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+Completed 422 Unprocessable Entity in 122ms (ActiveRecord: 8.4ms | Allocations: 21041)
+
+
+  
+ActiveRecord::RecordInvalid (Validation failed: Name can't be blank):
+  
+app/controllers/analyses_controller.rb:69:in `new'
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:00:00 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (1.5ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 55.6ms | Allocations: 9505)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 60.6ms | Allocations: 9840)
+  Rendered layout layouts/application.html.erb (Duration: 61.1ms | Allocations: 9907)
+Completed 500 Internal Server Error in 118ms (ActiveRecord: 6.0ms | Allocations: 17911)
+
+
+  
+ActionView::Template::Error (undefined method `persisted?' for nil:NilClass):
+    12:     var unit_sizes = <%= Analysis.get_sizes.to_json.html_safe %>;
+    13:     // The image path will be pulled from the database with respect to the current analysis. The image link below is for testing.
+    14:     // var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    15:     var image_path = <%= url_for(@analysis.image).to_json.html_safe %>;
+    16:     // The pixel conversion factor is calculated based on the parameters on the settings html page. Essentially,
+    17:     // one image is 1280 pixels and depicts ~1.5218 meters. However, 25% of the image is cropped out to exclude
+    18:     // the unnecessary edges. The image would then be 960 pixels wide and depict ~1.141 meters. 
+  
+app/views/analyses/_grid_builder.html.erb:15
+app/views/analyses/new.html.erb:2
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:00:45 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 56.4ms | Allocations: 8878)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 59.2ms | Allocations: 9208)
+  Rendered layout layouts/application.html.erb (Duration: 59.7ms | Allocations: 9274)
+Completed 500 Internal Server Error in 72ms (ActiveRecord: 1.8ms | Allocations: 11226)
+
+
+  
+ActionView::Template::Error (undefined method `image_src' for #<ActionView::Base:0x0000000000e6f0>
+Did you mean?  image_url
+               image_tag):
+    12:     var unit_sizes = <%= Analysis.get_sizes.to_json.html_safe %>;
+    13:     // The image path will be pulled from the database with respect to the current analysis. The image link below is for testing.
+    14:     // var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    15:     var image_path = <%= image_src("demo.png") %>;
+    16:     // The pixel conversion factor is calculated based on the parameters on the settings html page. Essentially,
+    17:     // one image is 1280 pixels and depicts ~1.5218 meters. However, 25% of the image is cropped out to exclude
+    18:     // the unnecessary edges. The image would then be 960 pixels wide and depict ~1.141 meters. 
+  
+app/views/analyses/_grid_builder.html.erb:15
+app/views/analyses/new.html.erb:2
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:01:22 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 37.8ms | Allocations: 5515)
+  Rendered analyses/_form.html.erb (Duration: 6.8ms | Allocations: 993)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 48.6ms | Allocations: 7248)
+  Rendered layouts/_nav.html.erb (Duration: 3.4ms | Allocations: 622)
+  Rendered layouts/_flash.html.erb (Duration: 1.4ms | Allocations: 215)
+  Rendered layout layouts/application.html.erb (Duration: 70.0ms | Allocations: 12055)
+Completed 200 OK in 83ms (Views: 72.6ms | ActiveRecord: 1.6ms | Allocations: 14044)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:02:43 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 31.3ms | Allocations: 4885)
+  Rendered analyses/_form.html.erb (Duration: 5.2ms | Allocations: 879)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 42.7ms | Allocations: 6799)
+  Rendered layouts/_nav.html.erb (Duration: 2.7ms | Allocations: 616)
+  Rendered layouts/_flash.html.erb (Duration: 1.0ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 61.1ms | Allocations: 11526)
+Completed 200 OK in 73ms (Views: 63.3ms | ActiveRecord: 1.6ms | Allocations: 13502)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:03:15 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 31.0ms | Allocations: 4898)
+  Rendered analyses/_form.html.erb (Duration: 5.3ms | Allocations: 879)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 41.9ms | Allocations: 6812)
+  Rendered layouts/_nav.html.erb (Duration: 3.0ms | Allocations: 616)
+  Rendered layouts/_flash.html.erb (Duration: 1.1ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 60.2ms | Allocations: 11539)
+Completed 200 OK in 72ms (Views: 62.4ms | ActiveRecord: 1.7ms | Allocations: 13515)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:04:25 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 29.2ms | Allocations: 4894)
+  Rendered analyses/_form.html.erb (Duration: 5.0ms | Allocations: 879)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 39.5ms | Allocations: 6819)
+  Rendered layouts/_nav.html.erb (Duration: 2.7ms | Allocations: 616)
+  Rendered layouts/_flash.html.erb (Duration: 1.0ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 56.5ms | Allocations: 11570)
+Completed 200 OK in 69ms (Views: 58.6ms | ActiveRecord: 1.7ms | Allocations: 13552)
+
+
+Started GET "/analyses/demo.png" for 192.168.1.101 at 2022-02-16 19:04:25 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#show as PNG
+  Parameters: {"id"=>"demo"}
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mAnalysis Load (0.4ms)[0m  [1m[34mSELECT "analyses".* FROM "analyses" WHERE "analyses"."id" = ? LIMIT ?[0m  [["id", nil], ["LIMIT", 1]]
+  ↳ app/controllers/analyses_controller.rb:161:in `set_analysis'
+Completed 404 Not Found in 13ms (ActiveRecord: 0.7ms | Allocations: 2074)
+
+
+  
+ActiveRecord::RecordNotFound (Couldn't find Analysis with 'id'=demo):
+  
+app/controllers/analyses_controller.rb:161:in `set_analysis'
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:06:07 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 57.7ms | Allocations: 9162)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 60.7ms | Allocations: 9492)
+  Rendered layout layouts/application.html.erb (Duration: 62.1ms | Allocations: 9558)
+Completed 500 Internal Server Error in 93ms (ActiveRecord: 2.1ms | Allocations: 11510)
+
+
+  
+ActionView::Template::Error (undefined local variable or method `image' for #<ActionView::Base:0x0000000000f280>
+Did you mean?  image_url):
+    12:     var unit_sizes = <%= Analysis.get_sizes.to_json.html_safe %>;
+    13:     // The image path will be pulled from the database with respect to the current analysis. The image link below is for testing.
+    14:     // var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    15:     var image_path = <%= image-url("demo.png").to_json.html_safe %>;
+    16:     // The pixel conversion factor is calculated based on the parameters on the settings html page. Essentially,
+    17:     // one image is 1280 pixels and depicts ~1.5218 meters. However, 25% of the image is cropped out to exclude
+    18:     // the unnecessary edges. The image would then be 960 pixels wide and depict ~1.141 meters. 
+  
+app/views/analyses/_grid_builder.html.erb:15
+app/views/analyses/new.html.erb:2
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:07:18 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 34.1ms | Allocations: 5438)
+  Rendered analyses/_form.html.erb (Duration: 6.0ms | Allocations: 875)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 44.7ms | Allocations: 7054)
+  Rendered layouts/_nav.html.erb (Duration: 2.8ms | Allocations: 616)
+  Rendered layouts/_flash.html.erb (Duration: 1.0ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 63.0ms | Allocations: 11824)
+Completed 200 OK in 76ms (Views: 65.6ms | ActiveRecord: 1.6ms | Allocations: 13804)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:08:57 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 36.3ms | Allocations: 5445)
+  Rendered analyses/_form.html.erb (Duration: 5.0ms | Allocations: 875)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 48.0ms | Allocations: 7236)
+  Rendered layouts/_nav.html.erb (Duration: 2.8ms | Allocations: 616)
+  Rendered layouts/_flash.html.erb (Duration: 1.1ms | Allocations: 211)
+  Rendered layout layouts/application.html.erb (Duration: 65.8ms | Allocations: 11963)
+Completed 200 OK in 78ms (Views: 68.1ms | ActiveRecord: 1.6ms | Allocations: 13939)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:11:50 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[36mSetting Load (0.5ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 72.3ms | Allocations: 6244)
+  Rendered analyses/_form.html.erb (Duration: 3.9ms | Allocations: 575)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 79.2ms | Allocations: 7374)
+  Rendered layouts/_nav.html.erb (Duration: 1.5ms | Allocations: 284)
+  Rendered layouts/_flash.html.erb (Duration: 0.2ms | Allocations: 49)
+  Rendered layout layouts/application.html.erb (Duration: 93.5ms | Allocations: 11171)
+Completed 200 OK in 103ms (Views: 93.4ms | ActiveRecord: 1.8ms | Allocations: 12439)
+
+
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:14:25 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 49.5ms | Allocations: 7168)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 54.4ms | Allocations: 7503)
+  Rendered layout layouts/application.html.erb (Duration: 55.0ms | Allocations: 7569)
+Completed 500 Internal Server Error in 134ms (ActiveRecord: 8.6ms | Allocations: 16291)
+
+
+  
+ActionView::Template::Error (nil is not a valid asset source):
+    12:     var unit_sizes = <%= Analysis.get_sizes.to_json.html_safe %>;
+    13:     // The image path will be pulled from the database with respect to the current analysis. The image link below is for testing.
+    14:     // var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    15:     var image_path = <%= image_url(Analysis.get_image).to_json.html_safe %>;
+    16:     // The pixel conversion factor is calculated based on the parameters on the settings html page. Essentially,
+    17:     // one image is 1280 pixels and depicts ~1.5218 meters. However, 25% of the image is cropped out to exclude
+    18:     // the unnecessary edges. The image would then be 960 pixels wide and depict ~1.141 meters. 
+  
+app/views/analyses/_grid_builder.html.erb:15
+app/views/analyses/new.html.erb:2
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:15:28 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 38.3ms | Allocations: 6786)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 39.0ms | Allocations: 6878)
+  Rendered layout layouts/application.html.erb (Duration: 39.6ms | Allocations: 6944)
+Completed 500 Internal Server Error in 93ms (ActiveRecord: 6.7ms | Allocations: 15063)
+
+
+  
+ActionView::Template::Error (nil is not a valid asset source):
+    12:     var unit_sizes = <%= Analysis.get_sizes.to_json.html_safe %>;
+    13:     // The image path will be pulled from the database with respect to the current analysis. The image link below is for testing.
+    14:     // var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    15:     var image_path = <%= image_url(Analysis.get_image).to_json.html_safe %>;
+    16:     // The pixel conversion factor is calculated based on the parameters on the settings html page. Essentially,
+    17:     // one image is 1280 pixels and depicts ~1.5218 meters. However, 25% of the image is cropped out to exclude
+    18:     // the unnecessary edges. The image would then be 960 pixels wide and depict ~1.141 meters. 
+  
+app/views/analyses/_grid_builder.html.erb:15
+app/views/analyses/new.html.erb:2
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:16:43 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  
+SyntaxError (/home/jetson/HyperRail/WebUI/app/controllers/analyses_controller.rb:173: syntax error, unexpected end-of-input, expecting `end'):
+  
+app/controllers/analyses_controller.rb:173: syntax error, unexpected end-of-input, expecting `end'
+app/controllers/analyses_controller.rb:173: syntax error, unexpected end-of-input, expecting `end'
+app/controllers/analyses_controller.rb:173: syntax error, unexpected end-of-input, expecting `end'
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:17:27 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.5ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+/home/jetson/HyperRail/WebUI/storage/RGB_composite4.tif
+http://hyperrail-jetson:3000/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBZ3ciLCJleHAiOm51bGwsInB1ciI6ImJsb2JfaWQifX0=--4c63c9b3b244bdad525b154b16f0b4e77bef34b7/image.png
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/controllers/analyses_controller.rb:69:in `new'
+  [1m[36mAnalysis Create (5.9ms)[0m  [1m[32mINSERT INTO "analyses" ("created_at", "updated_at") VALUES (?, ?)[0m  [["created_at", "2022-02-17 03:17:28.221387"], ["updated_at", "2022-02-17 03:17:28.221387"]]
+  ↳ app/controllers/analyses_controller.rb:69:in `new'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mrollback transaction[0m
+  ↳ app/controllers/analyses_controller.rb:69:in `new'
+Completed 500 Internal Server Error in 145ms (ActiveRecord: 14.2ms | Allocations: 22802)
+
+
+  
+ActiveRecord::NotNullViolation (SQLite3::ConstraintException: NOT NULL constraint failed: analyses.name):
+  
+app/controllers/analyses_controller.rb:69:in `new'
+Started GET "/analyses/new" for 192.168.1.101 at 2022-02-16 19:19:28 -0800
+Cannot render console from 192.168.1.101! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+Processing by AnalysesController#new as HTML
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "password"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendering layout layouts/application.html.erb
+  Rendering analyses/new.html.erb within layouts/application
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_height"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.3ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_fov"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_x"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.2ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "rail_y"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  [1m[36mSetting Load (0.4ms)[0m  [1m[34mSELECT "settings"."value" FROM "settings" WHERE "settings"."name" = ? ORDER BY "settings"."id" ASC LIMIT ?[0m  [["name", "camera_crop"], ["LIMIT", 1]]
+  ↳ app/models/setting.rb:8:in `block in fetch'
+  Rendered analyses/_grid_builder.html.erb (Duration: 38.9ms | Allocations: 7168)
+  Rendered analyses/new.html.erb within layouts/application (Duration: 41.6ms | Allocations: 7501)
+  Rendered layout layouts/application.html.erb (Duration: 42.2ms | Allocations: 7567)
+Completed 500 Internal Server Error in 96ms (ActiveRecord: 6.7ms | Allocations: 16083)
+
+
+  
+ActionView::Template::Error (nil is not a valid asset source):
+    12:     var unit_sizes = <%= Analysis.get_sizes.to_json.html_safe %>;
+    13:     // The image path will be pulled from the database with respect to the current analysis. The image link below is for testing.
+    14:     // var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    15:     var image_path = <%= image_url(Analysis.get_image).to_json.html_safe %>;
+    16:     // The pixel conversion factor is calculated based on the parameters on the settings html page. Essentially,
+    17:     // one image is 1280 pixels and depicts ~1.5218 meters. However, 25% of the image is cropped out to exclude
+    18:     // the unnecessary edges. The image would then be 960 pixels wide and depict ~1.141 meters. 
+  
+app/views/analyses/_grid_builder.html.erb:15
+app/views/analyses/new.html.erb:2
+- Gracefully stopping, waiting for requests to finish
+=== puma shutdown: 2022-02-16 19:20:30 -0800 ===
+- Goodbye!
+Exiting

@@ -39,6 +39,7 @@ class Axis(Enum):
 DB_PATH = "~/HyperRail/WebUI/db"
 IMAGE_PATH = "~/HyperRail/images"
 IMAGE_OUTPUT_PATH = "~/HyperRail/images/output"
+WEBSITE_OUTPUT_PATH = "~HyperRail/WebUI/app/assets/images/"
 
 # Scaling factor for creating GCodes.
 # Waypoints are saved in meters, ESP32 reads in ??

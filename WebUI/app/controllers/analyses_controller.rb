@@ -61,6 +61,12 @@ class AnalysesController < ApplicationController
   # GET /analyses/new
   def new
     @analysis = Analysis.new
+    # @files = Dir.glob("#{Rails.root}/storage/*.tif").select { |f| File.file?(f) }
+    # @files.sort_by{ |f| File.ctime(f) }
+    # puts @files.last
+    # @analysis.image.attach(io: File.open("/home/jetson/HyperRail/WebUI/app/assets/images/demo.png"), filename: 'image.png', content_type: 'image/png')
+    # puts url_for(@analysis.image.attachment)
+    # @analysis.save!
   end
 
   # GET /analyses/1/edit
@@ -72,7 +78,6 @@ class AnalysesController < ApplicationController
     respond_to do |format|
       begin
         @analysis = Analysis.new(analysis_params)
-
         Analysis.transaction do
           # Save our analysis, raising an exception if it can't be saved
           @analysis.save!
@@ -158,6 +163,6 @@ class AnalysesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def analysis_params
-    params.fetch(:analysis).permit(:name)
+    params.fetch(:analysis).permit(:name, :image)
   end
 end
