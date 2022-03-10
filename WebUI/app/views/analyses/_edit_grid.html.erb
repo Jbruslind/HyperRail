@@ -8,8 +8,11 @@
 <script>
     // The JSON attributes of the selection grid (Camera.from_settings.unit_sizes)
     var areasOfInterest = <%= @analysis.areas_of_interest.to_json.html_safe %>;
-    var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
-    var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    // var unit_sizes = <%= Camera.from_settings.unit_sizes.to_json.html_safe %>;
+    var unit_sizes = <%= Analysis.get_sizes.to_json.html_safe %>;
+    // The image path will be pulled from the database with respect to the current analysis. The image link below is for testing.
+    // var image_path = <%= 'https://jooinn.com/images1280_/aerial-photography-of-wide-green-grass-field-4.jpg'.to_json.html_safe %>;
+    var image_path = <%= image_url(Analysis.get_image).to_json.html_safe %>;
     var PIXEL_CONVERSION_FACTOR = 841.1;
     var SCALE_FACTOR = .06;
     console.log(areasOfInterest);

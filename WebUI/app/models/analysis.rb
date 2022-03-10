@@ -17,6 +17,9 @@ class Analysis < ApplicationRecord
     # @files = Dir.glob("#{Rails.root}/app/assets/images/*.png").select { |f| File.file?(f) }
     @files = Dir.entries("#{Rails.root}/app/assets/images/").select { |f| f.include? ".png" }
     @files.sort_by{ |f| File.ctime("#{Rails.root}/app/assets/images/#{f}") }
+    @files.each {|item| 
+      puts ((File.ctime("#{Rails.root}/app/assets/images/#{item}"))).to_s
+    }
     puts @files
     file = @files.first
   end

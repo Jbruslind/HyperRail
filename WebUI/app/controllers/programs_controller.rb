@@ -23,9 +23,9 @@ class ProgramsController < ApplicationController
     else
       @programs2 = []
     end
-    puts @programs.inspect 
+    #puts @programs.inspect 
     # puts !@programs.blank? 
-    puts @program2.inspect
+    #puts @program2.inspect
 
     @files = Dir.glob("#{Rails.root}/camera_images/**/*.tif").sort_by{ |f| File.ctime(f) }
     @file_handler = File
