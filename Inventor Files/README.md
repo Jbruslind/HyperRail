@@ -26,7 +26,7 @@ The main design objectives for this system were:
     * Minimize User Manufacturing
 ## X Carriage Subassembly
 
-![Carriage Subassembly](/assets/Mechanical_assets/Carriage_Assembly.png "Carriage Subassembly")
+<img src="/assets/Mechanical_assets/Carriage_Assembly.png">
 
 The X Carriage Subassembly is the main motion platform for the HyperRail system. The assembly should allow for smooth motion along the lower 4060 T-slot track while also allowing the motor mechanism to interface to the belt track. 
 
