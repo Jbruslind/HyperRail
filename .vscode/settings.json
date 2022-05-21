@@ -14,5 +14,6 @@
         "./src/hyper_rail/src/communication/python-common"
     ],
     "ruby.codeCompletion": "rcodetools",
-    "ruby.intellisense": "rubyLocate"
+    "ruby.intellisense": "rubyLocate",
+    "cmake.configureOnOpen": false
 }

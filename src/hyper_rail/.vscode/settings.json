@@ -1,0 +1,7 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/xavier2/HyperRail/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/xavier2/HyperRail/src/hyper_rail/src"
+    ]
+}
