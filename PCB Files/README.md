@@ -18,21 +18,16 @@ Plug-and-Play operation was taken to mean minimal requirements for hookups and o
 
 A system diagram was created to help design the infrastructure and architecture for the overall system. In this case my idea was to approach every operable component as a "node" which could act as an independent unit. The reasoning being that I could assign each "node" to team members and give them a black box explanation for each. As an example, the motor node circuit needed to operate using the following parameters: 
 
-+----------------------+-----------------------------------+
-| Parameter            | Valid ranges                      |
-+======================+===================================+
-| Vin Range            | 12 - 30V                          |
-+----------------------+-----------------------------------+
-| Motor Current (rms)  |  2A                               |
-+----------------------+-----------------------------------+
-| Signal Inputs        | Step, En, Dir (STEP/DIR control)  |
-+----------------------+-----------------------------------+
-| Step Frequency       | < = 5Khz                          |
-+----------------------+-----------------------------------+
-| Microstepping        | 1x - 16x                          |
-+----------------------+-----------------------------------+
-| Input Interface      | RJ45 8 pin                        |
-+----------------------+-----------------------------------+
+
+| Parameter             | Valid Ranges                        |
+|---------------------|--------------------------------------:|
+| Vin Range           | 12 -30 V                              |
+| Motor Current (rms) | 2A                                    |
+| Signal Inputs       | Step, EN, DIR, (STEP/DIR CNC Control) |
+| Step Frequency      | <= 5Khz                               |
+| Microstepping       | 1x - 16x                              |
+| Input Interface     | RJ45 - 8 pin                          |
+
 
 By providing the specification and known inputs / outputs I could keep each node organized and have the ability to assign its development to any members that were working under my at the time. 
 
@@ -96,7 +91,51 @@ The ESP-32 Controller was designed to be the liaison between motion requests by 
 
 ![GRBL Controller](image_assets/Electrical_assets/ESP32GRBLController.png)
 
+### GRBL Interfaces 
+The main interfaces to GRBL is through the USB port on the ESP32 Microcontroller, there is a secondary interface through a web-http server based locally on the ESP32 itself. GRBL is a G-code interpreter which means it will take standard GCode formatted information to command the stepper motors. Common examples are: 
 
+"G0 X100 Y10 Z20" - Fast linear move to 100mm X, 10mm Y, 20mm Z at the fastest rate possible (max speed)
+
+"G01 X100 Y100 Z10 F2000" - Normal linear move to 100mm X, 100mm Y, 10mm Z at a rate of 2000mm/min 
+
+There are internal "machine" specific settings that can be changed within GRBL to adapt to different designs. These are normally modified by sending a "$\<X\>" where X is the command number to modify. A full list is provided below:
+
+| Settings and sample values | Description |
+| --- | --- |
+| $0=10        | [Step pulse, microseconds]             |
+| $1=25        | [Step idle delay, milliseconds]  |
+| $2=0         | [Step port invert, mask]                 |
+| $3=0         | [Direction port invert, mask]       |
+| $4=0         | [Step enable invert, boolean]      |
+| $5=0         | [Limit pins invert, boolean]       |
+| $6=0         | [Probe pin invert, boolean]         |
+| $10=1        | [Status report, mask]                   |
+| $11=0.010    | [Junction deviation, mm]               |
+| $12=0.002    | [Arc tolerance, mm]                         |
+| $13=0        | [Report inches, boolean]               |
+| $20=0        | [Soft limits, boolean]                   |
+| $21=0        | [Hard limits, boolean]                 |
+| $22=1        | [Homing cycle, boolean]                 |
+| $23=0        | [Homing dir invert, mask]            |
+| $24=25.000   | [Homing feed, mm/min]                    |
+| $25=500.000  | [Homing seek, mm/min]                     |
+| $26=250      | [Homing debounce, milliseconds] |
+| $27=1.000    | [Homing pull-off, mm]                     |
+| $30=1000.    | [Max spindle speed, RPM]             |
+| $31=0.       | [Min spindle speed, RPM]              |
+| $32=0        | [Laser mode, boolean]                     |
+| $100=250.000 | [X steps/mm]                       |
+| $101=250.000 | [Y steps/mm]                         |
+| $102=250.000 | [Z steps/mm]                         |
+| $110=500.000 | [X Max rate, mm/min]
+| $111=500.000 | [Y Max rate, mm/min]          |
+| $112=500.000 | [Z Max rate, mm/min]         |
+| $120=10.000  | [X Acceleration, mm/sec^2])   |
+| $121=10.000  | [Y Acceleration, mm/sec^2]   |
+| $122=10.000  | [Z Acceleration, mm/sec^2]   |
+| $130=200.000 | [X Max travel, mm]                 |
+| $131=200.000 | [Y Max travel, mm]                 |
+| $132=200.000 | [Z Max travel, mm]                 |
 
 ## Magnetic End Stops
 
