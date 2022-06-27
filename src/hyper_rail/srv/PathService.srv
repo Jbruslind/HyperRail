@@ -1,9 +1,0 @@
-# Structure for packets sent from the LocationTracker to the PathPlanner
-# Tells path planner whent to continue to the next location
-
-string status_id    # Tells PathPlanner whether or not to send the next action
-string waypoint_id  # Verifies that the instructions havent gotten out of order somehow
-
----
-
-string path_response # Response from the PathPlanner if any

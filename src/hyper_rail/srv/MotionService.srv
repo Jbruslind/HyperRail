@@ -1,9 +1,0 @@
-# Structure for packets sent from the Program Node to the Motion Node
-
-float32 x       # x coordinate in mm
-float32 y       # y coordinate in mm
-int16 program   # flag to indicate final waypoint in a program
-
----
-
-string status # location status, should include or change this to an int?

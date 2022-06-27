@@ -1,8 +1,0 @@
-# Structure for packets sent from the user interface to the PathPlanner
-# Sends the uuid of the program to be executed
-
-string program_id # Any other required data
-
----
-
-string path_response # Response from the PathPlanner if any
