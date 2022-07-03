@@ -137,6 +137,32 @@ There are internal "machine" specific settings that can be changed within GRBL t
 | $131=200.000 | [Y Max travel, mm]                 |
 | $132=200.000 | [Z Max travel, mm]                 |
 
+### Stepper Outputs 
+
+The Stepper outputs are provided from the ESP32 as STEP-EN-DIR pins in the RJ45 form-factor. A pulse is sent on each line to command specific instructions to the stepper drivers. 
+
+In this case the STEP pin will pulse each time the controller wants the motor to "step" forward by one increment. Depending on the motor this could be 1/2° or more. Most general stepper motors you can buy online are rated at 200 steps/revolution so a simple calculation means every "step" pulse will move the motor shaft forward by 1 * 360/200 degrees or 1.8°. 
+
+The EN pin simply enables the stepper driver and can be used to quickly disable the steppers whenever necessary. 
+
+The DIR pin is used to indicate the direction the stepper motor should move. HIGH/LOW will control the clockwise/counter-clockwise directions and will depend on the specific stepper driver being used. 
+
+All the pins are using 3.3V as a standard voltage. The ESP32 controls each stepper's outputs independently using a single I2C bus and packets sent to a decoder downstream. These decoders will be the ones to actually toggle the output pins HIGH/LOW. 
+
+A consideration is that these signals are only 3.3V standard with no current control meaning for extended lengths of cable there could be induced noise at the end termination. Since 2/3 of these signals can be approximated as DC (EN and DIR do not change rapidly) they can be ignored. The STEP pin has the potential to induce EMI due to its switching nature but so long as the frequency stays below the 10s of KHz and the cabling is shielded there shouldn't be too many issues. 
+
+#### Basic I2C command structure
+
+GRBL32 can be configured to send commands using the I2C protocol to save on pin space on the actual microcontroller. For most implementations you would need a separate pin for STEP/DIR for each motor (and then each motor can share an EN pin) but that would mean reserving up to 3*2 + 1 = 7 pins for just 3 motors. With the I2C protocol you can use a 2-pin serial bus to quickly send packets of binary information to a decoder which will then act as the output pins. This gives more pin space for the microcontroller at the cost of increasing the circuit overhead. 
+
+### End Stop Inputs 
+
+### Status LEDs
+
+### Input Power 
+
+### Secondary ESP32 
+
 ## Magnetic End Stops
 
 ## Main System
