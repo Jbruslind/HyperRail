@@ -149,7 +149,13 @@ The DIR pin is used to indicate the direction the stepper motor should move. HIG
 
 All the pins are using 3.3V as a standard voltage. The ESP32 controls each stepper's outputs independently using a single I2C bus and packets sent to a decoder downstream. These decoders will be the ones to actually toggle the output pins HIGH/LOW. 
 
-A consideration is that these signals are only 3.3V standard with no current control meaning for extended lengths of cable there could be induced noise at the end termination. Since 2/3 of these signals can be approximated as DC (EN and DIR do not change rapidly) they can be ignored. The STEP pin has the potential to induce EMI due to its switching nature but so long as the frequency stays below the 10s of KHz and the cabling is shielded there shouldn't be too many issues. 
+A consideration is that these signals are only 3.3V standard with no current control meaning for extended lengths of cable there could be induced noise at the end termination. Since 2/3 of these signals can be approximated as DC (EN and DIR do not change rapidly) they can be ignored. The STEP pin has the potential to induce EMI due to its switching nature but so long as the frequency stays below the 10s of KHz and the cabling is shielded there shouldn't be too many issues.
+
+The TMC2209 specifies a max step frequency of 1/2 fclk which for a default configuration fclk ~= 12MHz so max step freq is 6MHz. This does not translate well to a physical motor however since the inertial load and current demand for a 6MHz motor stepping would be astronomical. The best way to calculate the max step frequency is to derive the max speed from the Torque-speed curve of the desired motor and translate that into steps/sec. For example, a typical NEMA 17 motor has the following motor curve (this can be different per manufacturer): 
+
+![Torque Curve](image_assets/Electrical_assets/motor_curve_17BK05-07.png)
+
+Let's say the desired torque is ~0.45 Nm meaning the max speed would be 300 rpm. 300 rpm translates to 300 rev/min * 200 pulse/rev = 60000 pulses/minute or 1000 pulses/sec. Meaning the max step frequency for this motor at our desired torque would be 1000 Hz or 1KHz. This is well below our recommended max of 6MHz and is sufficiently slow to not cause EMI in our lines. 
 
 #### Basic I2C command structure
 
